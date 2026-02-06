@@ -254,9 +254,38 @@ NEXT_PUBLIC_SENTRY_DSN=https://xxx@yyy.ingest.sentry.io/zzz
 
 Le cron traite la queue d'emails toutes les 5 minutes.
 
-### 7.1 Vérifier la Configuration
+### 7.1 Limitation Plan Hobby
 
-Le fichier `vercel.json` contient déjà :
+⚠️ **IMPORTANT** : Le plan **Vercel Hobby (gratuit)** limite les crons à **1 exécution par jour maximum**.
+
+Notre application nécessite un cron toutes les 5 minutes pour traiter les emails rapidement.
+
+**Deux solutions** :
+
+#### Option A : Service Cron Externe Gratuit (Recommandé pour Hobby)
+
+Utiliser **cron-job.org** (gratuit) pour appeler l'endpoint toutes les 5 minutes.
+
+📖 **Voir le guide complet** : `CRON_SETUP.md`
+
+**Résumé rapide** :
+1. Créer compte sur https://cron-job.org (gratuit)
+2. Créer cron job :
+   - URL : `https://votre-domaine.vercel.app/api/cron/process-email-queue`
+   - Schedule : Every 5 minutes
+   - Header : `Authorization: Bearer VOTRE_CRON_SECRET`
+3. Tester avec "Run now"
+4. Activer les alertes email
+
+**Avantages** :
+- ✅ 100% gratuit
+- ✅ Fiable (99.9% uptime)
+- ✅ Dashboard de monitoring
+- ✅ Alertes email si échec
+
+#### Option B : Upgrade Vercel Pro ($20/mois)
+
+Si vous upgradez vers **Vercel Pro**, le `vercel.json` natif fonctionne directement :
 
 ```json
 {
@@ -269,23 +298,47 @@ Le fichier `vercel.json` contient déjà :
 }
 ```
 
+**Avantages Pro** :
+- ✅ Intégration native Vercel
+- ✅ Crons illimités
+- ✅ Logs dans Vercel Dashboard
+- ✅ Plus de fonctions concurrentes
+
 ### 7.2 Sécuriser l'Endpoint
 
 L'endpoint vérifie un header `Authorization` avec le `CRON_SECRET`.
 
-Vercel Cron envoie automatiquement ce header avec la valeur configurée.
+**Avec cron-job.org** : Ajouter manuellement le header dans la config.
+
+**Avec Vercel Pro** : Vercel envoie automatiquement le header.
+
+**Format attendu** :
+```
+Authorization: Bearer VOTRE_CRON_SECRET
+```
 
 ### 7.3 Monitoring
 
-**Vercel Dashboard → Cron Jobs** :
-- Voir l'historique d'exécution
-- Vérifier les erreurs
-- Voir les logs
+**Avec cron-job.org** :
+- Dashboard cron-job.org : Historique des 100 dernières exécutions
+- Alertes email si échecs répétés
+- Status codes et durées d'exécution
+
+**Avec Vercel Pro** :
+- Vercel Dashboard → Cron Jobs
+- Historique d'exécution
+- Logs intégrés
+
+**Dans tous les cas** :
+- Vercel Logs : `/api/cron/process-email-queue`
+- Table `email_queue` : Vérifier status des jobs
+- Resend Dashboard : Emails envoyés
 
 En cas d'échec répété, vérifier :
-- Les credentials Resend
-- Les quotas Resend (limite d'envois)
-- Les logs dans Vercel
+- Les credentials Resend (`RESEND_API_KEY`)
+- Les quotas Resend (3000 emails/mois gratuit)
+- La connexion DB (`DATABASE_URL`)
+- Les logs Vercel pour l'erreur exacte
 
 ## 🔍 Étape 8 : Tests Post-Déploiement
 
