@@ -39,3 +39,26 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# playwright
+/test-results/
+/playwright-report/
+/playwright/.cache/
+
+# drizzle
+/drizzle/*.sql
+
+# ide
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# credentials (extra safety)
+CREDENTIALS.txt
+credentials.json
+
+# test coverage
+.coverage/
+coverage/
