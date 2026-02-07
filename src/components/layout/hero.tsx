@@ -34,7 +34,7 @@ const floatingAnimation = {
   transition: {
     duration: 3,
     repeat: Infinity,
-    ease: "easeInOut",
+    ease: "easeInOut" as const,
   },
 };
 
@@ -58,7 +58,7 @@ export function Hero() {
           transition: {
             duration: 4,
             repeat: Infinity,
-            ease: "easeInOut",
+            ease: "easeInOut" as const,
             delay: 0.5,
           },
         }}
