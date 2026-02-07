@@ -1,12 +1,31 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Playfair_Display, DM_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "@/components/theme-provider";
+import { ThemeScript } from "./theme-script";
 import { Header } from "@/components/layout/header";
+import { CartStickyMobile } from "@/components/cart/cart-sticky-mobile";
 import { Toaster } from "@/components/ui/sonner";
 
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+  variable: '--font-playfair',
+  weight: ['400', '700', '900'],
+  display: 'swap',
+});
+
+const dmSans = DM_Sans({
+  subsets: ['latin'],
+  variable: '--font-dm',
+  weight: ['400', '500', '700'],
+  display: 'swap',
+});
+
+const jetbrains = JetBrains_Mono({
+  subsets: ['latin'],
+  variable: '--font-mono',
+  weight: ['400', '700'],
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
@@ -61,27 +80,33 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr">
-      <body className={`${inter.variable} font-sans antialiased`}>
-        <Header />
-        <main className="min-h-[calc(100vh-4rem)]">{children}</main>
-        <footer className="border-t py-8 mt-12">
-          <div className="container text-center text-sm text-muted-foreground">
-            <div className="flex justify-center gap-4 mb-4">
-              <a href="/mentions-legales" className="hover:underline">
-                Mentions légales
-              </a>
-              <a href="/politique-confidentialite" className="hover:underline">
-                Politique de confidentialité
-              </a>
-              <a href="/cgv" className="hover:underline">
-                CGV
-              </a>
+    <html lang="fr" suppressHydrationWarning>
+      <head>
+        <ThemeScript />
+      </head>
+      <body className={`${playfair.variable} ${dmSans.variable} ${jetbrains.variable} font-sans antialiased`}>
+        <ThemeProvider>
+          <Header />
+          <main className="min-h-[calc(100vh-4rem)]">{children}</main>
+          <CartStickyMobile />
+          <footer className="border-t py-8 mt-12">
+            <div className="container text-center text-sm text-muted-foreground">
+              <div className="flex justify-center gap-4 mb-4">
+                <a href="/mentions-legales" className="hover:underline focus-magenta rounded px-2 py-1">
+                  Mentions légales
+                </a>
+                <a href="/politique-confidentialite" className="hover:underline focus-magenta rounded px-2 py-1">
+                  Politique de confidentialité
+                </a>
+                <a href="/cgv" className="hover:underline focus-magenta rounded px-2 py-1">
+                  CGV
+                </a>
+              </div>
+              <p>© 2026 Boutique 1885 - Édition municipale</p>
             </div>
-            <p>© 2024 Ville - Boutique officielle</p>
-          </div>
-        </footer>
-        <Toaster />
+          </footer>
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );

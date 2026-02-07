@@ -2,213 +2,268 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
+import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { type Product, formatCurrency } from '@/lib/catalogue';
 import { useCart } from '@/store/cart';
-import { ShoppingCart, Loader2, Package } from 'lucide-react';
+import { ShoppingCart, Loader2, Sparkles, Package } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 type ProductCardProps = {
   product: Product;
+  index?: number;
 };
 
 /**
- * Enhanced ProductCard Component
+ * Editorial ProductCard Component - Boutique 1885
  *
- * Modern e-commerce card with:
- * - Smooth hover animations (image scale + shadow elevation)
- * - Shipping badge overlay on product image
- * - Skeleton loading state
- * - Click animation feedback
- * - Full accessibility support
- * - Responsive design (mobile-first)
- *
- * Usage:
- * <ProductCard product={productFromCatalogue} />
+ * Aesthetic: Dark editorial gallery meets luxury boutique
+ * - Framer Motion orchestrated animations
+ * - Magenta accents for CTAs
+ * - Large breathing space
+ * - Hover micro-interactions
  */
-export function ProductCard({ product }: ProductCardProps) {
+export function ProductCard({ product, index = 0 }: ProductCardProps) {
   const [isAdding, setIsAdding] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const addItem = useCart((state) => state.addItem);
 
   const isOutOfStock = product.stockQuantity !== undefined && product.stockQuantity === 0;
   const isLowStock = product.stockQuantity !== undefined && product.stockQuantity < 10 && product.stockQuantity > 0;
+  const isNew = product.tags?.includes('nouveau') || product.tags?.includes('new');
 
   const handleAddToCart = async () => {
     setIsAdding(true);
 
     try {
-      // Small delay for UX feedback
-      await new Promise((resolve) => setTimeout(resolve, 300));
+      await new Promise((resolve) => setTimeout(resolve, 400));
 
       addItem(product.id, 1);
 
-      toast.success('Produit ajouté au panier', {
+      toast.success('Ajouté au panier', {
         description: product.name,
-        duration: 3000,
+        duration: 2500,
       });
     } catch (error) {
-      toast.error('Erreur lors de l\'ajout au panier');
+      toast.error('Erreur lors de l\'ajout');
     } finally {
       setIsAdding(false);
     }
   };
 
   return (
-    <Card
-      className="group flex flex-col h-full overflow-hidden border border-slate-200 transition-all duration-300 hover:shadow-xl focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2"
+    <motion.article
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{
+        duration: 0.5,
+        delay: index * 0.1,
+        ease: [0.22, 1, 0.36, 1],
+      }}
+      onHoverStart={() => setIsHovered(true)}
+      onHoverEnd={() => setIsHovered(false)}
+      className={cn(
+        "group relative flex flex-col h-full overflow-hidden rounded-lg",
+        "bg-card border border-border",
+        "transition-all duration-300",
+        "hover:border-primary/50 hover:card-shadow-lg focus-within:ring-2 focus-within:ring-primary"
+      )}
       role="article"
       aria-label={`Produit: ${product.name}`}
     >
       {/* Product Image Section */}
-      <CardHeader className="p-0">
-        <div className="relative aspect-square w-full overflow-hidden bg-slate-100">
-          {/* Skeleton loader */}
-          {!imageLoaded && (
-            <div className="absolute inset-0 animate-pulse bg-slate-200" />
-          )}
+      <div className="relative aspect-[4/5] w-full overflow-hidden bg-muted">
+        {/* Skeleton loader */}
+        {!imageLoaded && (
+          <div className="absolute inset-0 animate-pulse bg-muted" />
+        )}
 
-          {/* Product Image with hover scale animation */}
+        {/* Product Image with parallax hover */}
+        <motion.div
+          animate={{
+            scale: isHovered ? 1.08 : 1,
+          }}
+          transition={{
+            duration: 0.6,
+            ease: [0.22, 1, 0.36, 1],
+          }}
+          className="relative w-full h-full"
+        >
           <Image
             src={product.image}
             alt={`Photo du produit ${product.name}`}
             fill
-            className={`object-cover transition-all duration-500 ease-out group-hover:scale-105 ${
+            className={cn(
+              "object-cover transition-opacity duration-500",
               imageLoaded ? 'opacity-100' : 'opacity-0'
-            }`}
+            )}
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             onLoad={() => setImageLoaded(true)}
-            priority={false}
+            priority={index < 3}
           />
+        </motion.div>
 
-          {/* Shipping Badge Overlay - Bottom Left */}
-          {product.shippingCents > 0 && (
-            <div className="absolute bottom-2 left-2">
-              <Badge
-                variant="secondary"
-                className="bg-white/90 backdrop-blur-sm border border-slate-200 text-slate-700 shadow-sm font-medium px-2.5 py-1"
-              >
-                <Package className="w-3 h-3 mr-1 inline" aria-hidden="true" />
-                Livraison +{formatCurrency(product.shippingCents)}
-              </Badge>
-            </div>
-          )}
+        {/* Gradient Overlay on Hover */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: isHovered ? 1 : 0 }}
+          transition={{ duration: 0.3 }}
+          className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"
+        />
 
-          {/* Low Stock Badge - Top Right */}
-          {isLowStock && (
-            <div className="absolute top-2 right-2">
-              <Badge
-                variant="destructive"
-                className="bg-red-600 text-white shadow-sm font-medium px-2.5 py-1"
-              >
-                Plus que {product.stockQuantity}
-              </Badge>
-            </div>
-          )}
-
-          {/* Out of Stock Overlay */}
-          {isOutOfStock && (
-            <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-[2px] flex items-center justify-center">
-              <Badge
-                variant="destructive"
-                className="bg-slate-800 text-white text-lg px-4 py-2"
-              >
-                Rupture de stock
-              </Badge>
-            </div>
-          )}
-        </div>
-      </CardHeader>
-
-      {/* Product Details Section */}
-      <CardContent className="flex-1 p-4 sm:p-6">
-        {/* Product Name - 2 lines max with ellipsis */}
-        <CardTitle className="mb-2 text-lg sm:text-xl font-bold text-slate-900 line-clamp-2 leading-tight">
-          {product.name}
-        </CardTitle>
-
-        {/* Product Description - 3 lines max */}
-        <CardDescription className="mb-4 text-sm sm:text-base text-slate-600 line-clamp-3">
-          {product.description}
-        </CardDescription>
-
-        {/* Price - Large and prominent */}
-        <div className="flex items-baseline gap-2 mb-2">
-          <span
-            className="text-2xl sm:text-3xl font-bold text-blue-600"
-            aria-label={`Prix: ${formatCurrency(product.priceCents)}`}
+        {/* New Badge - Top Left */}
+        {isNew && (
+          <motion.div
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.2 }}
+            className="absolute top-3 left-3"
           >
-            {formatCurrency(product.priceCents)}
-          </span>
-        </div>
+            <Badge className={cn(
+              "bg-primary text-primary-foreground",
+              "dark:magenta-glow-sm",
+              "font-semibold px-3 py-1 gap-1"
+            )}>
+              <Sparkles className="w-3 h-3" />
+              Nouveau
+            </Badge>
+          </motion.div>
+        )}
 
-        {/* Product Tags */}
-        {product.tags && product.tags.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 mt-3" aria-label="Catégories du produit">
-            {product.tags.slice(0, 2).map((tag) => (
-              <Badge
-                key={tag}
-                variant="outline"
-                className="text-xs text-slate-600 border-slate-300"
-              >
-                {tag}
-              </Badge>
-            ))}
+        {/* Low Stock Badge - Top Right */}
+        {isLowStock && (
+          <div className="absolute top-3 right-3">
+            <Badge className="bg-destructive text-destructive-foreground font-medium px-3 py-1">
+              Plus que {product.stockQuantity}
+            </Badge>
           </div>
         )}
-      </CardContent>
+
+        {/* Out of Stock Overlay */}
+        {isOutOfStock && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center"
+          >
+            <Badge variant="outline" className="text-base px-4 py-2 border-2">
+              Rupture de stock
+            </Badge>
+          </motion.div>
+        )}
+      </div>
+
+      {/* Product Details Section */}
+      <Link href={`/produit/${product.id}`} className="flex-1 p-5 space-y-4 block group-hover:bg-card/80 transition-colors">
+        {/* Product Name */}
+        <h3 className="font-display text-xl font-bold text-foreground line-clamp-2 leading-tight group-hover:text-primary transition-colors">
+          {product.name}
+        </h3>
+
+        {/* Product Description */}
+        <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
+          {product.description}
+        </p>
+
+        {/* Price & Shipping */}
+        <div className="space-y-2">
+          <div className="flex items-baseline gap-2">
+            <span
+              className="font-display text-3xl font-bold text-foreground"
+              aria-label={`Prix: ${formatCurrency(product.priceCents)}`}
+            >
+              {formatCurrency(product.priceCents)}
+            </span>
+          </div>
+
+          {product.shippingCents > 0 && (
+            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+              <Package className="w-3.5 h-3.5" />
+              <span>+ {formatCurrency(product.shippingCents)} livraison</span>
+            </div>
+          )}
+        </div>
+      </Link>
 
       {/* Add to Cart Button Section */}
-      <CardFooter className="p-4 sm:p-6 pt-0">
-        <Button
-          onClick={handleAddToCart}
-          disabled={isAdding || isOutOfStock}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-sm hover:shadow-md transition-all duration-200 active:scale-95 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
-          size="lg"
-          aria-label={isOutOfStock ? 'Produit en rupture de stock' : `Ajouter ${product.name} au panier`}
+      <div className="p-5 pt-0">
+        <motion.div
+          whileTap={{ scale: 0.97 }}
+          transition={{ duration: 0.1 }}
         >
-          {isAdding ? (
-            <>
-              <Loader2 className="mr-2 h-5 w-5 animate-spin" aria-hidden="true" />
-              Ajout en cours...
-            </>
-          ) : isOutOfStock ? (
-            <>Rupture de stock</>
-          ) : (
-            <>
-              <ShoppingCart className="mr-2 h-5 w-5" aria-hidden="true" />
-              Ajouter au panier
-            </>
-          )}
-        </Button>
-      </CardFooter>
-    </Card>
+          <Button
+            onClick={handleAddToCart}
+            disabled={isAdding || isOutOfStock}
+            className={cn(
+              "w-full relative overflow-hidden",
+              "bg-primary text-primary-foreground hover:bg-primary/90",
+              "dark:magenta-glow-sm hover:dark:magenta-glow",
+              "font-semibold transition-all duration-300",
+              "disabled:opacity-50 disabled:cursor-not-allowed",
+              "focus-magenta"
+            )}
+            size="lg"
+            aria-label={isOutOfStock ? 'Produit en rupture de stock' : `Ajouter ${product.name} au panier`}
+          >
+            <span className="relative z-10 flex items-center justify-center gap-2">
+              {isAdding ? (
+                <>
+                  <Loader2 className="h-5 w-5 animate-spin" />
+                  Ajout...
+                </>
+              ) : isOutOfStock ? (
+                <>Rupture de stock</>
+              ) : (
+                <>
+                  <ShoppingCart className="h-5 w-5" />
+                  Ajouter au panier
+                </>
+              )}
+            </span>
+
+            {/* Shimmer effect on hover */}
+            {!isAdding && !isOutOfStock && (
+              <motion.div
+                initial={{ x: '-100%' }}
+                animate={{ x: isHovered ? '100%' : '-100%' }}
+                transition={{ duration: 0.6, ease: 'easeInOut' }}
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+              />
+            )}
+          </Button>
+        </motion.div>
+      </div>
+    </motion.article>
   );
 }
 
 /**
- * Accessibility Checklist:
- * ✓ ARIA labels on card and interactive elements
- * ✓ Semantic HTML (article role for card)
- * ✓ Keyboard navigation support (focus-within ring)
- * ✓ Focus indicators (ring-2 ring-blue-500)
- * ✓ Descriptive alt text for images
- * ✓ Disabled state clearly communicated
- * ✓ Loading state with spinner icon
+ * Boutique 1885 - Editorial Product Card
  *
- * Performance Optimizations:
- * ✓ Next.js Image component with optimized sizes
- * ✓ Skeleton loader during image load
- * ✓ CSS transitions (GPU-accelerated)
- * ✓ Priority false for below-fold images
- * ✓ Lazy loading by default
+ * Aesthetic Features:
+ * ✓ Framer Motion orchestrated animations (staggered entry)
+ * ✓ Parallax image scale on hover
+ * ✓ Magenta glow on CTA (dark mode)
+ * ✓ Shimmer effect on button hover
+ * ✓ Gradient overlay reveals
+ * ✓ 4:5 aspect ratio (portrait, editorial)
+ * ✓ Playfair Display for product names
+ * ✓ Generous spacing (breathing room)
  *
- * Responsive Design:
- * ✓ Mobile-first approach
- * ✓ Touch-friendly targets (min 44px height on buttons)
- * ✓ Responsive spacing (p-4 sm:p-6)
- * ✓ Responsive text sizing (text-lg sm:text-xl)
- * ✓ aspect-square for consistent grid layout
+ * Interactions:
+ * ✓ Tap scale feedback
+ * ✓ Hover state tracking
+ * ✓ Border highlight on hover
+ * ✓ Focus ring (magenta)
+ * ✓ Loading states
+ *
+ * Accessibility:
+ * ✓ ARIA labels
+ * ✓ Semantic HTML
+ * ✓ Keyboard navigation
+ * ✓ Screen reader support
  */
