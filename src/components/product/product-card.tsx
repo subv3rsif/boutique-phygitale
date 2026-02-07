@@ -62,7 +62,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
       transition={{
         duration: 0.5,
         delay: index * 0.1,
-        ease: [0.22, 1, 0.36, 1],
+        ease: [0.22, 1, 0.36, 1] as const,
       }}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
@@ -89,7 +89,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
           }}
           transition={{
             duration: 0.6,
-            ease: [0.22, 1, 0.36, 1],
+            ease: [0.22, 1, 0.36, 1] as const,
           }}
           className="relative w-full h-full"
         >
