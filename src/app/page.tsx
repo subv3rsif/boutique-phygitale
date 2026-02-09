@@ -1,17 +1,25 @@
 'use client';
 
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { getAllActiveProducts } from '@/lib/catalogue';
 import { ProductCardZara } from '@/components/product/product-card-zara';
+import { ProductCarousel } from '@/components/product/product-carousel';
 import { HeroZara } from '@/components/layout/hero-zara';
 import { BrandStory } from '@/components/sections/brand-story';
 import { Badge } from '@/components/ui/badge';
-import { Sparkles, TrendingUp } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Sparkles, TrendingUp, ChevronDown } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 export default function HomePage() {
   const products = getAllActiveProducts();
   const newProducts = products.filter(p => p.tags?.includes('nouveau'));
   const bestSellers = products.filter(p => p.tags?.includes('best-seller'));
+
+  // State for "Load More" in all products section
+  const [showAllProducts, setShowAllProducts] = useState(false);
+  const displayedProducts = showAllProducts ? products : products.slice(0, 3);
 
   return (
     <>
@@ -44,8 +52,19 @@ export default function HomePage() {
               </div>
             </motion.div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
-              {newProducts.map((product, index) => (
+            {/* Mobile: Carousel */}
+            <div className="block lg:hidden">
+              <ProductCarousel
+                products={newProducts}
+                viewAllHref="/#collection"
+                viewAllLabel="Toutes les Nouveautés"
+                viewAllIcon={Sparkles}
+              />
+            </div>
+
+            {/* Desktop: Grid - 3 products max */}
+            <div className="hidden lg:grid grid-cols-3 gap-8 lg:gap-10">
+              {newProducts.slice(0, 3).map((product, index) => (
                 <ProductCardZara key={product.id} product={product} index={index} />
               ))}
             </div>
@@ -72,8 +91,19 @@ export default function HomePage() {
               </div>
             </motion.div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
-              {bestSellers.map((product, index) => (
+            {/* Mobile: Carousel */}
+            <div className="block lg:hidden">
+              <ProductCarousel
+                products={bestSellers}
+                viewAllHref="/#collection"
+                viewAllLabel="Tous les Best-sellers"
+                viewAllIcon={TrendingUp}
+              />
+            </div>
+
+            {/* Desktop: Grid - 3 products max */}
+            <div className="hidden lg:grid grid-cols-3 gap-8 lg:gap-10">
+              {bestSellers.slice(0, 3).map((product, index) => (
                 <ProductCardZara key={product.id} product={product} index={index} />
               ))}
             </div>
@@ -119,11 +149,48 @@ export default function HomePage() {
               </p>
             </motion.div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
-              {products.map((product, index) => (
-                <ProductCardZara key={product.id} product={product} index={index} />
-              ))}
-            </div>
+            <>
+              {/* Mobile: Carousel */}
+              <div className="block lg:hidden">
+                <ProductCarousel
+                  products={products}
+                  viewAllHref="/#collection"
+                  viewAllLabel="Toute la Collection"
+                  viewAllIcon={Sparkles}
+                />
+              </div>
+
+              {/* Desktop: Grid with Load More */}
+              <div className="hidden lg:block">
+                <div className="grid grid-cols-3 gap-8 lg:gap-10">
+                  {displayedProducts.map((product, index) => (
+                    <ProductCardZara key={product.id} product={product} index={index} />
+                  ))}
+                </div>
+
+                {/* Load More Button */}
+                {!showAllProducts && products.length > 3 && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6 }}
+                    className="flex justify-center mt-12"
+                  >
+                    <Button
+                      onClick={() => setShowAllProducts(true)}
+                      size="lg"
+                      className="group relative px-8 py-6 rounded-2xl bg-gradient-love text-primary-foreground font-semibold text-lg hover-glow transition-vibrant shadow-vibrant"
+                    >
+                      <span className="flex items-center gap-3">
+                        Charger la suite
+                        <ChevronDown className="h-5 w-5 group-hover:translate-y-1 transition-transform" />
+                      </span>
+                    </Button>
+                  </motion.div>
+                )}
+              </div>
+            </>
           )}
         </section>
 
