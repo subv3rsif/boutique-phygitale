@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { getAllActiveProducts } from '@/lib/catalogue';
-import { ProductCardZara } from '@/components/product/product-card-zara';
+import { ProductCardZaraZara } from '@/components/product/product-card-zara';
 import { HeroZara } from '@/components/layout/hero-zara';
 import { Badge } from '@/components/ui/badge';
 import { Sparkles, TrendingUp } from 'lucide-react';
@@ -42,7 +42,7 @@ export default function HomePage() {
 
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-12">
               {newProducts.map((product, index) => (
-                <ProductCardZara key={product.id} product={product} index={index} />
+                <ProductCardZaraZara key={product.id} product={product} index={index} />
               ))}
             </div>
           </section>
@@ -70,7 +70,7 @@ export default function HomePage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {bestSellers.map((product, index) => (
-                <ProductCard key={product.id} product={product} index={index} />
+                <ProductCardZara key={product.id} product={product} index={index} />
               ))}
             </div>
           </section>
@@ -115,7 +115,7 @@ export default function HomePage() {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {products.map((product, index) => (
-                <ProductCard key={product.id} product={product} index={index} />
+                <ProductCardZara key={product.id} product={product} index={index} />
               ))}
             </div>
           )}
