@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { Playfair_Display, DM_Sans, JetBrains_Mono } from "next/font/google";
+// Luxury Minimal Fonts - Zara/COS inspired
+import { Cormorant_Garamond, Work_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ThemeScript } from "./theme-script";
@@ -7,24 +8,28 @@ import { Header } from "@/components/layout/header";
 import { CartStickyMobile } from "@/components/cart/cart-sticky-mobile";
 import { Toaster } from "@/components/ui/sonner";
 
-const playfair = Playfair_Display({
+// Display: Elegant serif for titles (très mode/luxe)
+const cormorant = Cormorant_Garamond({
   subsets: ['latin'],
-  variable: '--font-playfair',
-  weight: ['400', '700', '900'],
+  variable: '--font-display',
+  weight: ['300', '400', '500', '600', '700'],
+  display: 'swap',
+  style: ['normal', 'italic'],
+});
+
+// Sans: Modern geometric for UI (clean, architectural)
+const workSans = Work_Sans({
+  subsets: ['latin'],
+  variable: '--font-sans',
+  weight: ['300', '400', '500', '600'],
   display: 'swap',
 });
 
-const dmSans = DM_Sans({
-  subsets: ['latin'],
-  variable: '--font-dm',
-  weight: ['400', '500', '700'],
-  display: 'swap',
-});
-
+// Mono: Technical details
 const jetbrains = JetBrains_Mono({
   subsets: ['latin'],
   variable: '--font-mono',
-  weight: ['400', '700'],
+  weight: ['400', '500'],
   display: 'swap',
 });
 
@@ -84,7 +89,7 @@ export default function RootLayout({
       <head>
         <ThemeScript />
       </head>
-      <body className={`${playfair.variable} ${dmSans.variable} ${jetbrains.variable} font-sans antialiased`}>
+      <body className={`${cormorant.variable} ${workSans.variable} ${jetbrains.variable} font-sans antialiased`}>
         <ThemeProvider>
           <Header />
           <main className="min-h-[calc(100vh-4rem)]">{children}</main>

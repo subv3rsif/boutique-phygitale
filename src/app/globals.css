@@ -48,102 +48,99 @@
 }
 
 :root {
-  --radius: 0.5rem;
+  --radius: 0rem; /* Brutal - no radius */
 
-  /* Boutique Phygitale - Editorial Palette */
-  /* Core Colors (RGB for flexibility) */
-  --dust-rose: 144 104 115; /* #906873 */
-  --neon-magenta: 185 57 155; /* #B9399B */
-  --royal-plum: 75 30 89; /* #4B1E59 */
-  --deep-indigo: 39 30 70; /* #271E46 */
-  --ink-navy: 29 25 46; /* #1D192E */
-  --paper: 227 217 220; /* #E3D9DC */
-  --ink: 10 9 16; /* #0A0910 */
+  /* Boutique 1885 - Luxury Minimal Palette (Zara-inspired) */
+  /* Violet/Pourpre dominante (couleur ville) */
+  --purple-950: 28 15 40;      /* #1C0F28 - Ultra deep purple, almost black */
+  --purple-900: 45 25 65;      /* #2D1941 - Deep purple */
+  --purple-800: 65 35 95;      /* #41235F - Rich purple */
+  --purple-700: 85 45 125;     /* #552D7D - Royal purple */
+  --purple-600: 110 60 160;    /* #6E3CA0 - Violet (SIGNATURE) */
+  --purple-500: 130 75 185;    /* #824BB9 - Bright violet */
+  --purple-400: 155 100 210;   /* #9B64D2 - Light violet */
+  --purple-300: 180 130 230;   /* #B482E6 */
+  --purple-200: 210 170 245;   /* #D2AAF5 */
+  --purple-100: 235 215 250;   /* #EBD7FA */
+  --purple-50: 250 245 252;    /* #FAF5FC */
 
-  /* Light Mode - Premium "papier + encre" */
-  --bg: #E3D9DC;
-  --surface: #F6F1F3;
-  --text: #0A0910;
-  --text-secondary: #5D5674;
-  --muted: #5D5674;
-  --border: #9E9AAC;
-  --accent: #B9399B;
-  --accent-2: #4B1E59;
+  /* Neutrals - Brutal minimal */
+  --stone-950: 10 10 11;       /* #0A0A0B - True black */
+  --stone-900: 23 23 25;       /* #171719 - Near black */
+  --stone-800: 38 38 41;       /* #262629 */
+  --stone-700: 63 63 67;       /* #3F3F43 */
+  --stone-600: 115 115 120;    /* #737378 */
+  --stone-500: 161 161 165;    /* #A1A1A5 */
+  --stone-400: 190 190 193;    /* #BEBEBC1 */
+  --stone-300: 212 212 215;    /* #D4D4D7 */
+  --stone-200: 230 230 233;    /* #E6E6E9 */
+  --stone-100: 245 245 247;    /* #F5F5F7 - Off-white */
+  --stone-50: 252 252 253;     /* #FCFCFD - Pure white */
 
-  /* Semantic mapping for components */
-  --background: var(--bg);
-  --foreground: var(--text);
-  --card: var(--surface);
-  --card-foreground: var(--text);
-  --popover: var(--surface);
-  --popover-foreground: var(--text);
-  --primary: var(--accent); /* Neon Magenta for CTA */
-  --primary-foreground: #FFFFFF;
-  --secondary: var(--accent-2); /* Royal Plum */
-  --secondary-foreground: #FFFFFF;
-  --muted: #F6F1F3;
-  --muted-foreground: var(--text-secondary);
-  --accent: var(--accent);
-  --accent-foreground: #FFFFFF;
-  --destructive: #DC2626;
-  --destructive-foreground: #FFFFFF;
-  --border: var(--border);
-  --input: var(--border);
-  --ring: var(--accent);
+  /* Light Mode - Brutal Minimal (Zara aesthetic) */
+  --background: rgb(var(--stone-50));
+  --foreground: rgb(var(--stone-950));
+  --card: rgb(var(--stone-100));
+  --card-foreground: rgb(var(--stone-950));
+  --popover: rgb(var(--stone-50));
+  --popover-foreground: rgb(var(--stone-950));
+  --primary: rgb(var(--purple-600)); /* Violet signature */
+  --primary-foreground: rgb(var(--stone-50));
+  --secondary: rgb(var(--stone-900));
+  --secondary-foreground: rgb(var(--stone-50));
+  --muted: rgb(var(--stone-200));
+  --muted-foreground: rgb(var(--stone-600));
+  --accent: rgb(var(--purple-600));
+  --accent-foreground: rgb(var(--stone-50));
+  --destructive: rgb(220 38 38);
+  --destructive-foreground: rgb(var(--stone-50));
+  --border: rgb(var(--stone-300));
+  --input: rgb(var(--stone-300));
+  --ring: rgb(var(--purple-600));
 
-  /* Sidebar/Drawer - Light */
-  --sidebar: var(--surface);
-  --sidebar-foreground: var(--text);
-  --sidebar-primary: var(--accent);
-  --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: rgb(var(--dust-rose) / 0.1);
-  --sidebar-accent-foreground: var(--text);
-  --sidebar-border: var(--border);
-  --sidebar-ring: var(--accent);
+  /* Sidebar */
+  --sidebar: rgb(var(--stone-50));
+  --sidebar-foreground: rgb(var(--stone-950));
+  --sidebar-primary: rgb(var(--purple-600));
+  --sidebar-primary-foreground: rgb(var(--stone-50));
+  --sidebar-accent: rgb(var(--stone-200));
+  --sidebar-accent-foreground: rgb(var(--stone-950));
+  --sidebar-border: rgb(var(--stone-300));
+  --sidebar-ring: rgb(var(--purple-600));
 }
 
 [data-theme="dark"],
 .dark {
-  /* Dark Mode - Editorial "galerie sombre" */
-  --bg: #0A0910;
-  --surface: #120D1F;
-  --text: #E3D9DC;
-  --text-secondary: #9998A1;
-  --muted: #9998A1;
-  --border: #161322;
-  --accent: #B9399B;
-  --accent-2: #785682;
+  /* Dark Mode - Luxury Minimal (deep purple base) */
+  --background: rgb(var(--purple-950));
+  --foreground: rgb(var(--stone-100));
+  --card: rgb(var(--purple-900));
+  --card-foreground: rgb(var(--stone-100));
+  --popover: rgb(var(--purple-900));
+  --popover-foreground: rgb(var(--stone-100));
+  --primary: rgb(var(--purple-500)); /* Bright violet on dark */
+  --primary-foreground: rgb(var(--purple-950));
+  --secondary: rgb(var(--stone-100));
+  --secondary-foreground: rgb(var(--purple-950));
+  --muted: rgb(var(--purple-800));
+  --muted-foreground: rgb(var(--stone-400));
+  --accent: rgb(var(--purple-500));
+  --accent-foreground: rgb(var(--purple-950));
+  --destructive: rgb(239 68 68);
+  --destructive-foreground: rgb(var(--stone-100));
+  --border: rgb(var(--purple-800) / 0.5);
+  --input: rgb(var(--purple-800) / 0.5);
+  --ring: rgb(var(--purple-500));
 
-  /* Semantic mapping for components */
-  --background: var(--bg);
-  --foreground: var(--text);
-  --card: var(--surface);
-  --card-foreground: var(--text);
-  --popover: var(--surface);
-  --popover-foreground: var(--text);
-  --primary: var(--accent); /* Neon Magenta with glow */
-  --primary-foreground: var(--text);
-  --secondary: var(--accent-2); /* Royal Plum lighter */
-  --secondary-foreground: var(--text);
-  --muted: #1A1523;
-  --muted-foreground: var(--text-secondary);
-  --accent: var(--accent);
-  --accent-foreground: var(--text);
-  --destructive: #EF4444;
-  --destructive-foreground: var(--text);
-  --border: var(--border);
-  --input: rgba(227, 217, 220, 0.1);
-  --ring: var(--accent);
-
-  /* Sidebar/Drawer - Dark */
-  --sidebar: rgb(var(--deep-indigo));
-  --sidebar-foreground: var(--text);
-  --sidebar-primary: var(--accent);
-  --sidebar-primary-foreground: var(--text);
-  --sidebar-accent: rgba(75, 30, 89, 0.3);
-  --sidebar-accent-foreground: var(--text);
-  --sidebar-border: var(--border);
-  --sidebar-ring: var(--accent);
+  /* Sidebar */
+  --sidebar: rgb(var(--purple-900));
+  --sidebar-foreground: rgb(var(--stone-100));
+  --sidebar-primary: rgb(var(--purple-500));
+  --sidebar-primary-foreground: rgb(var(--purple-950));
+  --sidebar-accent: rgb(var(--purple-800));
+  --sidebar-accent-foreground: rgb(var(--stone-100));
+  --sidebar-border: rgb(var(--purple-800) / 0.5);
+  --sidebar-ring: rgb(var(--purple-500));
 }
 
 @layer base {
@@ -154,17 +151,26 @@
     @apply bg-background text-foreground;
   }
 
-  /* Editorial Typography */
+  /* Luxury Minimal Typography */
   .font-display {
-    font-family: var(--font-playfair), serif;
+    font-family: var(--font-display), serif;
+    font-feature-settings: 'liga' 1, 'calt' 1;
   }
 
   .font-sans {
-    font-family: var(--font-dm), sans-serif;
+    font-family: var(--font-sans), sans-serif;
+    font-feature-settings: 'liga' 1, 'calt' 1;
   }
 
   .font-mono {
     font-family: var(--font-mono), monospace;
+  }
+
+  /* Ultra-smooth text rendering */
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
 
   /* Animations */
@@ -186,54 +192,71 @@
   }
 }
 
-/* Editorial Boutique Utilities */
+/* Luxury Minimal Utilities (Zara-inspired) */
 @layer utilities {
-  /* Magenta glow for dark mode CTAs */
-  .magenta-glow {
-    box-shadow: 0 0 20px rgba(185, 57, 155, 0.3), 0 0 40px rgba(185, 57, 155, 0.15);
+  /* Purple glow for violet accents (subtle, pas fluo) */
+  .purple-glow {
+    box-shadow: 0 0 30px rgba(110, 60, 160, 0.15), 0 0 60px rgba(110, 60, 160, 0.08);
   }
 
-  .magenta-glow-sm {
-    box-shadow: 0 0 10px rgba(185, 57, 155, 0.2), 0 0 20px rgba(185, 57, 155, 0.1);
+  .purple-glow-sm {
+    box-shadow: 0 0 15px rgba(110, 60, 160, 0.12), 0 0 30px rgba(110, 60, 160, 0.06);
   }
 
-  /* Subtle shadows for cards */
-  .card-shadow {
-    box-shadow: 0 2px 8px rgba(10, 9, 16, 0.06);
+  /* Brutal shadows - harsh, architectural */
+  .shadow-brutal {
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05);
   }
 
-  .card-shadow-lg {
-    box-shadow: 0 4px 16px rgba(10, 9, 16, 0.08);
+  .shadow-brutal-lg {
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
   }
 
-  /* Active indicator (vertical bar) */
-  .active-indicator::before {
+  /* Active indicator (thick underline, Zara-style) */
+  .active-indicator::after {
     content: '';
     position: absolute;
-    left: 0;
-    top: 0;
     bottom: 0;
-    width: 3px;
+    left: 0;
+    right: 0;
+    height: 2px;
     background: var(--accent);
   }
 
-  /* Focus ring magenta */
-  .focus-magenta:focus-visible {
+  /* Focus ring purple */
+  .focus-purple:focus-visible {
     outline: 2px solid var(--accent);
-    outline-offset: 2px;
+    outline-offset: 4px;
   }
 
-  /* Smooth transitions */
-  .transition-smooth {
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Instant snap transitions (no easing, brutal) */
+  .transition-brutal {
+    transition: all 0.15s linear;
   }
 
-  /* Gradient backgrounds */
-  .gradient-hero {
-    background: linear-gradient(135deg, rgb(var(--deep-indigo)) 0%, rgb(var(--ink)) 100%);
+  /* Ultra-smooth luxury transitions */
+  .transition-luxury {
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  .gradient-hero-light {
-    background: linear-gradient(135deg, rgb(var(--dust-rose) / 0.1) 0%, rgb(var(--paper)) 100%);
+  /* Gradient overlay (dark to transparent) */
+  .gradient-overlay {
+    background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.6) 100%);
+  }
+
+  /* Text gradient purple */
+  .text-gradient-purple {
+    background: linear-gradient(135deg, rgb(var(--purple-600)) 0%, rgb(var(--purple-400)) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Architectural grid lines (subtle) */
+  .grid-lines {
+    background-image:
+      linear-gradient(rgba(0, 0, 0, 0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 0, 0, 0.02) 1px, transparent 1px);
+    background-size: 20px 20px;
   }
 }

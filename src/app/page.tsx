@@ -2,8 +2,8 @@
 
 import { motion } from 'framer-motion';
 import { getAllActiveProducts } from '@/lib/catalogue';
-import { ProductCard } from '@/components/product/product-card';
-import { Hero } from '@/components/layout/hero';
+import { ProductCardZara } from '@/components/product/product-card-zara';
+import { HeroZara } from '@/components/layout/hero-zara';
 import { Badge } from '@/components/ui/badge';
 import { Sparkles, TrendingUp } from 'lucide-react';
 
@@ -14,11 +14,11 @@ export default function HomePage() {
 
   return (
     <>
-      {/* Hero Section */}
-      <Hero />
+      {/* Hero Section - Zara Style */}
+      <HeroZara />
 
       {/* Main Content */}
-      <div className="container py-16 px-4 space-y-20" id="catalogue">
+      <div className="container py-20 px-4 space-y-32" id="collection">
 
         {/* Nouveautés Section */}
         {newProducts.length > 0 && (
@@ -30,20 +30,19 @@ export default function HomePage() {
               transition={{ duration: 0.6 }}
               className="mb-10"
             >
-              <div className="flex items-center gap-3 mb-3">
-                <Sparkles className="h-6 w-6 text-primary" />
-                <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground">
+              <div className="space-y-3">
+                <h2 className="font-display text-4xl md:text-5xl font-light italic text-foreground">
                   Nouveautés
                 </h2>
+                <p className="text-muted-foreground text-base font-sans font-light max-w-xl">
+                  Dernières créations de la collection municipale
+                </p>
               </div>
-              <p className="text-muted-foreground text-lg max-w-2xl">
-                Découvrez nos dernières créations, fraîchement arrivées dans la collection.
-              </p>
             </motion.div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-12">
               {newProducts.map((product, index) => (
-                <ProductCard key={product.id} product={product} index={index} />
+                <ProductCardZara key={product.id} product={product} index={index} />
               ))}
             </div>
           </section>
@@ -59,15 +58,14 @@ export default function HomePage() {
               transition={{ duration: 0.6 }}
               className="mb-10"
             >
-              <div className="flex items-center gap-3 mb-3">
-                <TrendingUp className="h-6 w-6 text-primary" />
-                <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground">
+              <div className="space-y-3">
+                <h2 className="font-display text-4xl md:text-5xl font-light italic text-foreground">
                   Best-sellers
                 </h2>
+                <p className="text-muted-foreground text-base font-sans font-light max-w-xl">
+                  Les favoris de la communauté
+                </p>
               </div>
-              <p className="text-muted-foreground text-lg max-w-2xl">
-                Les favoris de notre communauté, plébiscités par les citoyens.
-              </p>
             </motion.div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -87,14 +85,14 @@ export default function HomePage() {
             transition={{ duration: 0.6 }}
             className="mb-10"
           >
-            <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-3">
-              Toute la collection
-            </h2>
-            <div className="flex items-center gap-2 text-muted-foreground">
-              <span>{products.length} produit{products.length > 1 ? 's' : ''} disponible{products.length > 1 ? 's' : ''}</span>
-              <Badge variant="outline" className="ml-2">
-                Édition limitée
-              </Badge>
+            <div className="space-y-3">
+              <h2 className="font-display text-4xl md:text-5xl font-light italic text-foreground">
+                Toute la collection
+              </h2>
+              <div className="flex items-baseline gap-4 text-muted-foreground text-sm font-sans font-light">
+                <span>{products.length} pièce{products.length > 1 ? 's' : ''}</span>
+                <span className="text-xs tracking-wider uppercase">Édition limitée</span>
+              </div>
             </div>
           </motion.div>
 
