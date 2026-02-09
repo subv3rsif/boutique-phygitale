@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { getAllActiveProducts } from '@/lib/catalogue';
-import { ProductCardZaraZara } from '@/components/product/product-card-zara';
+import { ProductCardZara } from '@/components/product/product-card-zara';
 import { HeroZara } from '@/components/layout/hero-zara';
 import { Badge } from '@/components/ui/badge';
 import { Sparkles, TrendingUp } from 'lucide-react';
