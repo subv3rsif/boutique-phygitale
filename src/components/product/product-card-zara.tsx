@@ -17,13 +17,13 @@ type ProductCardZaraProps = {
 };
 
 /**
- * Zara-style ProductCard Component
+ * Premium Glassmorphism ProductCard Component
  *
- * Aesthetic: Brutal minimal, photographique, hover states subtils
+ * Aesthetic: Luxury minimal with liquid glass effects
  * - Images en ratio 3:4 (portrait mode)
- * - Texte minimal (nom + prix)
- * - Hover = opacity + CTA slide-in from bottom
- * - Zero radius, zero glow
+ * - Premium shadows & glassmorphism
+ * - Hover = subtle lift + glass glow
+ * - Rounded corners with glass borders
  */
 export function ProductCardZara({ product, index = 0 }: ProductCardZaraProps) {
   const [isAdding, setIsAdding] = useState(false);
@@ -68,17 +68,18 @@ export function ProductCardZara({ product, index = 0 }: ProductCardZaraProps) {
       className="group relative"
     >
       <Link href={`/produit/${product.id}`} className="block">
-        {/* Image container - 3:4 ratio (Zara standard) */}
-        <div className="relative aspect-[3/4] overflow-hidden bg-stone-200 dark:bg-purple-900/20">
+        {/* Image container - 3:4 ratio with premium glass effect */}
+        <div className="relative aspect-[3/4] overflow-hidden rounded-2xl bg-stone-100 dark:bg-purple-900/30 glass-border shadow-premium group-hover:shadow-premium-purple transition-all duration-500">
           {/* Skeleton */}
           {!imageLoaded && (
             <div className="absolute inset-0 animate-pulse bg-stone-300 dark:bg-purple-800/30" />
           )}
 
-          {/* Image - subtle scale on hover */}
+          {/* Image - subtle scale + lift on hover */}
           <motion.div
             animate={{
-              scale: isHovered ? 1.05 : 1,
+              scale: isHovered ? 1.08 : 1,
+              y: isHovered ? -4 : 0,
             }}
             transition={{
               duration: 0.6,
@@ -100,25 +101,25 @@ export function ProductCardZara({ product, index = 0 }: ProductCardZaraProps) {
             />
           </motion.div>
 
-          {/* Badge NEW - top left, minimal */}
+          {/* Badge NEW - glassmorphism style */}
           {isNew && (
-            <div className="absolute top-3 left-3 z-10">
-              <span className="inline-block bg-primary text-primary-foreground px-3 py-1 text-xs tracking-wider uppercase font-sans font-medium">
+            <div className="absolute top-4 left-4 z-10">
+              <span className="inline-block glass-purple text-primary px-4 py-1.5 rounded-full text-xs tracking-wider uppercase font-sans font-semibold shadow-premium-sm backdrop-blur-md">
                 Nouveau
               </span>
             </div>
           )}
 
-          {/* Out of stock overlay */}
+          {/* Out of stock overlay - glassmorphism */}
           {isOutOfStock && (
-            <div className="absolute inset-0 bg-background/80 flex items-center justify-center">
-              <span className="text-sm tracking-wider uppercase text-foreground/60 font-sans">
+            <div className="absolute inset-0 glass dark:glass-dark flex items-center justify-center rounded-2xl">
+              <span className="text-sm tracking-wider uppercase text-foreground/70 font-sans font-semibold px-6 py-2 rounded-full bg-background/50 backdrop-blur-sm">
                 Rupture de stock
               </span>
             </div>
           )}
 
-          {/* Hover CTA - slide from bottom (très Zara) */}
+          {/* Hover CTA - glassmorphism slide from bottom */}
           <motion.div
             initial={{ y: '100%', opacity: 0 }}
             animate={{
@@ -126,10 +127,10 @@ export function ProductCardZara({ product, index = 0 }: ProductCardZaraProps) {
               opacity: isHovered && !isOutOfStock ? 1 : 0,
             }}
             transition={{
-              duration: 0.3,
+              duration: 0.4,
               ease: [0.16, 1, 0.3, 1],
             }}
-            className="absolute bottom-0 inset-x-0 p-4 bg-background/95 backdrop-blur-sm"
+            className="absolute bottom-0 inset-x-0 p-5 glass dark:glass-dark rounded-b-2xl"
           >
             <Button
               onClick={handleAddToCart}
@@ -137,10 +138,11 @@ export function ProductCardZara({ product, index = 0 }: ProductCardZaraProps) {
               className={cn(
                 "w-full h-12",
                 "bg-primary text-primary-foreground hover:bg-primary/90",
-                "rounded-none", // Brutal
-                "font-sans font-medium tracking-wide uppercase text-xs",
-                "transition-brutal",
-                "disabled:opacity-50"
+                "rounded-xl shadow-premium-purple", // Premium rounded
+                "font-sans font-semibold tracking-wide uppercase text-xs",
+                "transition-luxury",
+                "disabled:opacity-50",
+                "hover:scale-[1.02] active:scale-[0.98]"
               )}
             >
               {isAdding ? (

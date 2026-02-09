@@ -18,7 +18,7 @@ export default function HomePage() {
       <HeroZara />
 
       {/* Main Content */}
-      <div className="container py-20 px-4 space-y-32" id="collection">
+      <div className="container max-w-7xl mx-auto py-20 px-4 space-y-32" id="collection">
 
         {/* Nouveautés Section */}
         {newProducts.length > 0 && (
@@ -30,17 +30,17 @@ export default function HomePage() {
               transition={{ duration: 0.6 }}
               className="mb-10"
             >
-              <div className="space-y-3">
-                <h2 className="font-display text-4xl md:text-5xl font-light italic text-foreground">
+              <div className="space-y-4 text-center">
+                <h2 className="font-display text-5xl md:text-6xl font-light italic text-foreground">
                   Nouveautés
                 </h2>
-                <p className="text-muted-foreground text-base font-sans font-light max-w-xl">
+                <p className="text-muted-foreground text-lg font-sans font-light max-w-2xl mx-auto">
                   Dernières créations de la collection municipale
                 </p>
               </div>
             </motion.div>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-12">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8 justify-items-center">
               {newProducts.map((product, index) => (
                 <ProductCardZara key={product.id} product={product} index={index} />
               ))}
@@ -58,17 +58,17 @@ export default function HomePage() {
               transition={{ duration: 0.6 }}
               className="mb-10"
             >
-              <div className="space-y-3">
-                <h2 className="font-display text-4xl md:text-5xl font-light italic text-foreground">
+              <div className="space-y-4 text-center">
+                <h2 className="font-display text-5xl md:text-6xl font-light italic text-foreground">
                   Best-sellers
                 </h2>
-                <p className="text-muted-foreground text-base font-sans font-light max-w-xl">
+                <p className="text-muted-foreground text-lg font-sans font-light max-w-2xl mx-auto">
                   Les favoris de la communauté
                 </p>
               </div>
             </motion.div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8 justify-items-center">
               {bestSellers.map((product, index) => (
                 <ProductCardZara key={product.id} product={product} index={index} />
               ))}
@@ -85,13 +85,15 @@ export default function HomePage() {
             transition={{ duration: 0.6 }}
             className="mb-10"
           >
-            <div className="space-y-3">
-              <h2 className="font-display text-4xl md:text-5xl font-light italic text-foreground">
+            <div className="space-y-4 text-center">
+              <h2 className="font-display text-5xl md:text-6xl font-light italic text-foreground">
                 Toute la collection
               </h2>
-              <div className="flex items-baseline gap-4 text-muted-foreground text-sm font-sans font-light">
-                <span>{products.length} pièce{products.length > 1 ? 's' : ''}</span>
-                <span className="text-xs tracking-wider uppercase">Édition limitée</span>
+              <div className="flex items-center justify-center gap-6 text-muted-foreground text-sm font-sans font-medium">
+                <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-purple">
+                  {products.length} pièce{products.length > 1 ? 's' : ''}
+                </span>
+                <span className="text-xs tracking-wider uppercase px-4 py-2 rounded-full glass-purple">Édition limitée</span>
               </div>
             </div>
           </motion.div>
@@ -113,7 +115,7 @@ export default function HomePage() {
               </p>
             </motion.div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8 justify-items-center">
               {products.map((product, index) => (
                 <ProductCardZara key={product.id} product={product} index={index} />
               ))}
@@ -121,13 +123,13 @@ export default function HomePage() {
           )}
         </section>
 
-        {/* Bottom CTA Section */}
+        {/* Bottom CTA Section - Premium Glass */}
         <motion.section
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="relative overflow-hidden rounded-2xl bg-card border border-border p-12 text-center"
+          className="relative overflow-hidden rounded-3xl glass dark:glass-dark shadow-premium-lg p-12 text-center"
         >
           {/* Background pattern */}
           <div className="absolute inset-0 opacity-5">

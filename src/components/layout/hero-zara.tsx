@@ -94,9 +94,10 @@ export function HeroZara() {
                 className={cn(
                   "group relative h-14 px-10",
                   "bg-primary text-primary-foreground hover:bg-primary/90",
-                  "rounded-none border-0", // Brutal - no radius
-                  "font-sans font-medium tracking-wide uppercase text-sm",
+                  "rounded-2xl shadow-premium-purple", // Premium rounded
+                  "font-sans font-semibold tracking-wide uppercase text-sm",
                   "transition-luxury",
+                  "hover:scale-105 active:scale-95",
                   "dark:purple-glow"
                 )}
               >
