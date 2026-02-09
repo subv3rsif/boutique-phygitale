@@ -5,7 +5,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ThemeScript } from "./theme-script";
 import { Header } from "@/components/layout/header";
-import { CartStickyMobile } from "@/components/cart/cart-sticky-mobile";
+import { FloatingCart } from "@/components/layout/floating-cart";
 import { Toaster } from "@/components/ui/sonner";
 
 // Display: Elegant serif for titles (très mode/luxe)
@@ -93,7 +93,7 @@ export default function RootLayout({
         <ThemeProvider>
           <Header />
           <main className="min-h-[calc(100vh-4rem)]">{children}</main>
-          <CartStickyMobile />
+          <FloatingCart />
           <footer className="border-t py-8 mt-12">
             <div className="container text-center text-sm text-muted-foreground">
               <div className="flex justify-center gap-4 mb-4">

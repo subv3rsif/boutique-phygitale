@@ -1,8 +1,9 @@
 'use client';
 
-import { Fragment } from 'react';
+import { useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
 import { X, Sparkles, TrendingUp, ShoppingBag, Sun, Moon } from 'lucide-react';
 import { useCart } from '@/store/cart';
 import { Button } from '@/components/ui/button';
@@ -64,163 +65,256 @@ export function DrawerMenu({ isOpen, onClose, theme, onToggleTheme }: DrawerMenu
   const pathname = usePathname();
   const totalItems = useCart((state) => state.totalItems());
 
+  // Prevent body scroll when menu is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
+
   return (
-    <>
-      {/* Overlay */}
+    <AnimatePresence>
       {isOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 transition-opacity"
-          onClick={onClose}
-        />
-      )}
+        <>
+          {/* Fullscreen Overlay Background */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 bg-purple-950/95 dark:bg-purple-950/98 backdrop-blur-xl z-50"
+            onClick={onClose}
+          >
+            {/* Subtle gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-transparent to-purple-600/10" />
 
-      {/* Drawer */}
-      <div
-        className={cn(
-          'fixed top-0 left-0 h-full w-80 max-w-[85vw] z-50 transition-transform duration-300 ease-out',
-          'bg-card border-r border-border shadow-2xl',
-          isOpen ? 'translate-x-0' : '-translate-x-full'
-        )}
-      >
-        <div className="flex flex-col h-full">
-          {/* Header */}
-          <div className="flex items-center justify-between p-6 border-b border-border">
-            <span className="font-display text-xl font-bold text-foreground">Menu</span>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={onClose}
-              className="focus-magenta"
+            {/* Decorative grid */}
+            <div className="absolute inset-0 grid-lines opacity-5" />
+          </motion.div>
+
+          {/* Fullscreen Menu Content */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
+            className="fixed inset-0 z-50 flex flex-col items-center justify-center pointer-events-none"
+          >
+            {/* Close Button - Top Right */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8, rotate: -90 }}
+              animate={{ opacity: 1, scale: 1, rotate: 0 }}
+              exit={{ opacity: 0, scale: 0.8, rotate: 90 }}
+              transition={{ duration: 0.4, delay: 0.2 }}
+              className="absolute top-8 right-8 pointer-events-auto"
             >
-              <X className="h-5 w-5" />
-              <span className="sr-only">Fermer le menu</span>
-            </Button>
-          </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={onClose}
+                className={cn(
+                  "h-12 w-12 rounded-full glass-purple text-cloud-dancer",
+                  "hover:bg-primary/20 hover:scale-110 transition-all duration-300"
+                )}
+                aria-label="Fermer le menu"
+              >
+                <X className="h-6 w-6" />
+              </Button>
+            </motion.div>
 
-          {/* Content */}
-          <div className="flex-1 overflow-y-auto">
-            {/* Fast Lanes */}
-            <div className="p-6 space-y-2 border-b border-border">
-              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3">
-                Accès rapide
-              </p>
-              {menuSections.fastLanes.map((item) => {
-                const Icon = item.icon;
-                const isActive = pathname === item.href;
+            {/* Menu Content - Centered */}
+            <div className="w-full max-w-4xl px-8 pointer-events-auto">
+              <div className="space-y-12">
+                {/* Main Navigation - Large */}
+                <nav className="space-y-3">
+                  {/* Fast Lanes with icons */}
+                  {menuSections.fastLanes.map((item, index) => {
+                    const Icon = item.icon;
+                    const isActive = pathname === item.href;
 
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    onClick={onClose}
-                    className={cn(
-                      'relative flex items-center gap-3 px-4 py-3 rounded-lg transition-smooth',
-                      'hover:bg-sidebar-accent focus-magenta',
-                      isActive && 'bg-sidebar-accent active-indicator'
-                    )}
+                    return (
+                      <motion.div
+                        key={item.href}
+                        initial={{ opacity: 0, x: -50 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{
+                          duration: 0.5,
+                          delay: 0.2 + index * 0.08,
+                          ease: [0.16, 1, 0.3, 1],
+                        }}
+                      >
+                        <Link
+                          href={item.href}
+                          onClick={onClose}
+                          className={cn(
+                            "group relative block py-4 px-8 rounded-2xl transition-all duration-300",
+                            "hover:bg-primary/10 hover:pl-12",
+                            isActive && "bg-primary/15 pl-12"
+                          )}
+                        >
+                          <div className="flex items-center gap-4">
+                            <Icon className={cn(
+                              "h-6 w-6 transition-colors",
+                              isActive ? "text-primary" : "text-cloud-dancer/60 group-hover:text-primary"
+                            )} />
+                            <span className={cn(
+                              "font-display text-4xl md:text-5xl font-light italic transition-colors",
+                              isActive ? "text-cloud-dancer" : "text-cloud-dancer/80 group-hover:text-cloud-dancer"
+                            )}>
+                              {item.label}
+                            </span>
+                            {item.badge && (
+                              <Badge className="ml-4 bg-primary text-primary-foreground rounded-full px-3">
+                                {item.badge}
+                              </Badge>
+                            )}
+                          </div>
+
+                          {/* Active indicator line */}
+                          {isActive && (
+                            <motion.div
+                              layoutId="activeMenuLine"
+                              className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-12 bg-primary rounded-r-full"
+                              transition={{ duration: 0.3 }}
+                            />
+                          )}
+                        </Link>
+                      </motion.div>
+                    );
+                  })}
+
+                  {/* Main items without icons */}
+                  {menuSections.main.map((item, index) => {
+                    const isActive = pathname === item.href;
+                    const totalIndex = menuSections.fastLanes.length + index;
+
+                    return (
+                      <motion.div
+                        key={item.href}
+                        initial={{ opacity: 0, x: -50 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{
+                          duration: 0.5,
+                          delay: 0.2 + totalIndex * 0.08,
+                          ease: [0.16, 1, 0.3, 1],
+                        }}
+                      >
+                        <Link
+                          href={item.href}
+                          onClick={onClose}
+                          className={cn(
+                            "group relative block py-4 px-8 rounded-2xl transition-all duration-300",
+                            "hover:bg-primary/10 hover:pl-12",
+                            isActive && "bg-primary/15 pl-12"
+                          )}
+                        >
+                          <span className={cn(
+                            "font-display text-4xl md:text-5xl font-light italic transition-colors",
+                            isActive ? "text-cloud-dancer" : "text-cloud-dancer/80 group-hover:text-cloud-dancer"
+                          )}>
+                            {item.label}
+                          </span>
+
+                          {/* Active indicator line */}
+                          {isActive && (
+                            <motion.div
+                              layoutId="activeMenuLine"
+                              className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-12 bg-primary rounded-r-full"
+                              transition={{ duration: 0.3 }}
+                            />
+                          )}
+                        </Link>
+                      </motion.div>
+                    );
+                  })}
+                </nav>
+
+                {/* Cart CTA if items */}
+                {totalItems > 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.6 }}
                   >
-                    <Icon className="h-5 w-5 text-primary" />
-                    <span className={cn(
-                      'font-medium',
-                      isActive ? 'text-foreground' : 'text-muted-foreground'
-                    )}>
-                      {item.label}
-                    </span>
-                    {item.badge && (
-                      <Badge variant="secondary" className="ml-auto text-xs">
-                        {item.badge}
+                    <Link
+                      href="/panier"
+                      onClick={onClose}
+                      className={cn(
+                        "flex items-center justify-between p-6 rounded-2xl",
+                        "glass-purple border-2 border-primary/30",
+                        "hover:border-primary/60 hover:scale-[1.02] transition-all duration-300"
+                      )}
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className="h-12 w-12 rounded-full bg-primary/20 flex items-center justify-center">
+                          <ShoppingBag className="h-6 w-6 text-primary" />
+                        </div>
+                        <div>
+                          <p className="font-display text-xl text-cloud-dancer">Mon panier</p>
+                          <p className="text-sm text-cloud-dancer/60">{totalItems} article{totalItems > 1 ? 's' : ''}</p>
+                        </div>
+                      </div>
+                      <Badge className="bg-primary text-primary-foreground text-lg px-4 py-2 rounded-full">
+                        {totalItems}
                       </Badge>
-                    )}
-                  </Link>
-                );
-              })}
+                    </Link>
+                  </motion.div>
+                )}
 
-              {/* Cart Resume */}
-              {totalItems > 0 && (
-                <Link
-                  href="/panier"
-                  onClick={onClose}
-                  className={cn(
-                    'relative flex items-center gap-3 px-4 py-3 rounded-lg transition-smooth',
-                    'bg-primary/10 border border-primary/20 hover:bg-primary/15 focus-magenta'
-                  )}
+                {/* Bottom Row - Footer Links & Theme Toggle */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5, delay: 0.7 }}
+                  className="flex flex-col sm:flex-row items-center justify-between gap-6 pt-8 border-t border-cloud-dancer/10"
                 >
-                  <ShoppingBag className="h-5 w-5 text-primary" />
-                  <span className="font-medium text-foreground">
-                    Reprendre mon panier
-                  </span>
-                  <Badge className="ml-auto bg-primary text-primary-foreground">
-                    {totalItems}
-                  </Badge>
-                </Link>
-              )}
-            </div>
+                  {/* Footer Links */}
+                  <div className="flex flex-wrap items-center gap-4 text-sm">
+                    {menuSections.footer.map((item) => (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        onClick={onClose}
+                        className="text-cloud-dancer/60 hover:text-cloud-dancer transition-colors"
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
+                  </div>
 
-            {/* Main Navigation */}
-            <nav className="p-6 space-y-1">
-              {menuSections.main.map((item) => {
-                const isActive = pathname === item.href;
-
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    onClick={onClose}
+                  {/* Theme Toggle */}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={onToggleTheme}
                     className={cn(
-                      'relative block px-4 py-3 rounded-lg transition-smooth',
-                      'hover:bg-sidebar-accent focus-magenta',
-                      isActive && 'bg-sidebar-accent active-indicator'
+                      "rounded-full glass-purple border-cloud-dancer/20",
+                      "hover:bg-cloud-dancer/10 text-cloud-dancer"
                     )}
                   >
-                    <span className={cn(
-                      'font-medium',
-                      isActive ? 'text-foreground' : 'text-muted-foreground'
-                    )}>
-                      {item.label}
-                    </span>
-                  </Link>
-                );
-              })}
-            </nav>
-
-            {/* Footer Links */}
-            <div className="p-6 pt-0 space-y-1 border-t border-border">
-              {menuSections.footer.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={onClose}
-                  className="block px-4 py-2 text-sm text-muted-foreground hover:text-foreground transition-smooth focus-magenta rounded"
-                >
-                  {item.label}
-                </Link>
-              ))}
+                    {theme === 'dark' ? (
+                      <>
+                        <Sun className="h-4 w-4 mr-2" />
+                        <span>Mode clair</span>
+                      </>
+                    ) : (
+                      <>
+                        <Moon className="h-4 w-4 mr-2" />
+                        <span>Mode sombre</span>
+                      </>
+                    )}
+                  </Button>
+                </motion.div>
+              </div>
             </div>
-          </div>
-
-          {/* Theme Toggle */}
-          <div className="p-6 border-t border-border">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={onToggleTheme}
-              className="w-full justify-start gap-3 focus-magenta"
-            >
-              {theme === 'dark' ? (
-                <>
-                  <Sun className="h-4 w-4" />
-                  <span>Mode clair</span>
-                </>
-              ) : (
-                <>
-                  <Moon className="h-4 w-4" />
-                  <span>Mode sombre</span>
-                </>
-              )}
-            </Button>
-          </div>
-        </div>
-      </div>
-    </>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
   );
 }
