@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { getAllActiveProducts } from '@/lib/catalogue';
 import { ProductCardZara } from '@/components/product/product-card-zara';
 import { HeroZara } from '@/components/layout/hero-zara';
+import { BrandStory } from '@/components/sections/brand-story';
 import { Badge } from '@/components/ui/badge';
 import { Sparkles, TrendingUp } from 'lucide-react';
 
@@ -16,6 +17,9 @@ export default function HomePage() {
     <>
       {/* Hero Section - Zara Style */}
       <HeroZara />
+
+      {/* Brand Story Section */}
+      <BrandStory />
 
       {/* Main Content */}
       <div className="container max-w-7xl mx-auto py-20 px-4 space-y-32" id="collection">

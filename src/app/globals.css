@@ -48,101 +48,95 @@
 }
 
 :root {
-  --radius: 1rem; /* Premium rounded - 16px base */
+  --radius: 1.25rem; /* Vibrant rounded - 20px base */
 
-  /* Boutique 1885 - Luxury Minimal Palette avec Cloud Dancer */
-  /* Violet/Pourpre dominante (couleur ville) */
-  --purple-950: 28 15 40;      /* #1C0F28 - Ultra deep purple, almost black */
-  --purple-900: 45 25 65;      /* #2D1941 - Deep purple */
-  --purple-800: 65 35 95;      /* #41235F - Rich purple */
-  --purple-700: 85 45 125;     /* #552D7D - Royal purple */
-  --purple-600: 110 60 160;    /* #6E3CA0 - Violet (SIGNATURE) */
-  --purple-500: 130 75 185;    /* #824BB9 - Bright violet */
+  /* Boutique 1885 - Vibrant Gradient Luxe */
+  /* Love Symbol (#503B64) - Couleur signature profonde */
+  --love-symbol-900: 35 20 45;     /* #231429 - Ultra deep */
+  --love-symbol: 80 59 100;        /* #503B64 - Love Symbol MAIN */
+  --love-symbol-light: 100 80 120; /* #64507
 
-  /* Cloud Dancer (PANTONE 11-4201) - Remplace les violet clair */
-  --cloud-dancer: 243 239 234; /* #F3EFEA - Cloud Dancer principal */
-  --cloud-dancer-warm: 245 241 237; /* #F5F1ED - Plus chaud */
-  --cloud-dancer-cool: 240 237 233; /* #F0EDE9 - Plus frais */
-  --cloud-dancer-soft: 248 245 242; /* #F8F5F2 - Très doux */
-  --cloud-dancer-deep: 235 230 225; /* #EBE6E1 - Plus profond */
+8 - Plus clair */
+  --love-symbol-lighter: 130 110 150; /* #82 6E96 - Encore plus clair */
+  --love-symbol-pale: 160 145 175;  /* #A091AF - Très pâle */
 
-  /* Neutrals - Brutal minimal */
-  --stone-950: 10 10 11;       /* #0A0A0B - True black */
-  --stone-900: 23 23 25;       /* #171719 - Near black */
-  --stone-800: 38 38 41;       /* #262629 */
-  --stone-700: 63 63 67;       /* #3F3F43 */
-  --stone-600: 115 115 120;    /* #737378 */
-  --stone-500: 161 161 165;    /* #A1A1A5 */
-  --stone-400: 190 190 193;    /* #BEBEBC1 */
-  --stone-300: 212 212 215;    /* #D4D4D7 */
-  --stone-200: 230 230 233;    /* #E6E6E9 */
-  --stone-100: 245 245 247;    /* #F5F5F7 - Off-white */
-  --stone-50: 252 252 253;     /* #FCFCFD - Pure white */
+  /* Cloud Dancer (PANTONE 11-4201) - Couleur secondaire douce */
+  --cloud-dancer: 243 239 234;      /* #F3EFEA - Cloud Dancer principal */
+  --cloud-dancer-warm: 247 243 239; /* #F7F3EF - Plus chaud */
+  --cloud-dancer-bright: 250 248 245; /* #FAF8F5 - Très lumineux */
+  --cloud-dancer-soft: 240 235 230; /* #F0EBE6 - Plus doux */
+  --cloud-dancer-deep: 230 225 220; /* #E6E1DC - Plus profond */
 
-  /* Light Mode - Premium avec Cloud Dancer */
-  --background: rgb(var(--cloud-dancer-soft));
-  --foreground: rgb(var(--stone-950));
+  /* Neutrals minimalistes */
+  --neutral-950: 15 12 18;         /* #0F0C12 - Presque noir */
+  --neutral-900: 30 25 35;         /* #1E1923 */
+  --neutral-100: 245 243 248;      /* #F5F3F8 */
+  --neutral-50: 252 251 253;       /* #FCFBFD */
+
+  /* Light Mode - Vibrant & Lumineux */
+  --background: rgb(var(--cloud-dancer-bright));
+  --foreground: rgb(var(--love-symbol));
   --card: rgb(var(--cloud-dancer));
-  --card-foreground: rgb(var(--stone-950));
+  --card-foreground: rgb(var(--love-symbol));
   --popover: rgb(var(--cloud-dancer-warm));
-  --popover-foreground: rgb(var(--stone-950));
-  --primary: rgb(var(--purple-600)); /* Violet signature */
+  --popover-foreground: rgb(var(--love-symbol));
+  --primary: rgb(var(--love-symbol)); /* Love Symbol signature */
   --primary-foreground: rgb(var(--cloud-dancer));
-  --secondary: rgb(var(--stone-900));
-  --secondary-foreground: rgb(var(--cloud-dancer));
-  --muted: rgb(var(--cloud-dancer-deep));
-  --muted-foreground: rgb(var(--stone-600));
-  --accent: rgb(var(--purple-600));
+  --secondary: rgb(var(--love-symbol-lighter));
+  --secondary-foreground: rgb(var(--neutral-50));
+  --muted: rgb(var(--cloud-dancer-soft));
+  --muted-foreground: rgb(var(--love-symbol-light));
+  --accent: rgb(var(--love-symbol-light));
   --accent-foreground: rgb(var(--cloud-dancer));
   --destructive: rgb(220 38 38);
   --destructive-foreground: rgb(var(--cloud-dancer));
   --border: rgb(var(--cloud-dancer-deep));
   --input: rgb(var(--cloud-dancer-deep));
-  --ring: rgb(var(--purple-600));
+  --ring: rgb(var(--love-symbol));
 
   /* Sidebar */
-  --sidebar: rgb(var(--cloud-dancer-warm));
-  --sidebar-foreground: rgb(var(--stone-950));
-  --sidebar-primary: rgb(var(--purple-600));
+  --sidebar: rgb(var(--cloud-dancer));
+  --sidebar-foreground: rgb(var(--love-symbol));
+  --sidebar-primary: rgb(var(--love-symbol));
   --sidebar-primary-foreground: rgb(var(--cloud-dancer));
-  --sidebar-accent: rgb(var(--cloud-dancer-deep));
-  --sidebar-accent-foreground: rgb(var(--stone-950));
+  --sidebar-accent: rgb(var(--cloud-dancer-soft));
+  --sidebar-accent-foreground: rgb(var(--love-symbol));
   --sidebar-border: rgb(var(--cloud-dancer-deep));
-  --sidebar-ring: rgb(var(--purple-600));
+  --sidebar-ring: rgb(var(--love-symbol));
 }
 
 [data-theme="dark"],
 .dark {
-  /* Dark Mode - Luxury Minimal avec Cloud Dancer comme accent */
-  --background: rgb(var(--purple-950));
+  /* Dark Mode - Love Symbol profond avec Cloud Dancer accent */
+  --background: rgb(var(--love-symbol-900));
   --foreground: rgb(var(--cloud-dancer));
-  --card: rgb(var(--purple-900));
+  --card: rgb(var(--love-symbol));
   --card-foreground: rgb(var(--cloud-dancer));
-  --popover: rgb(var(--purple-900));
+  --popover: rgb(var(--love-symbol));
   --popover-foreground: rgb(var(--cloud-dancer));
-  --primary: rgb(var(--purple-500)); /* Bright violet on dark */
-  --primary-foreground: rgb(var(--purple-950));
+  --primary: rgb(var(--love-symbol-lighter)); /* Plus clair en dark */
+  --primary-foreground: rgb(var(--neutral-950));
   --secondary: rgb(var(--cloud-dancer));
-  --secondary-foreground: rgb(var(--purple-950));
-  --muted: rgb(var(--purple-800));
-  --muted-foreground: rgb(var(--cloud-dancer-cool));
-  --accent: rgb(var(--purple-500));
-  --accent-foreground: rgb(var(--purple-950));
+  --secondary-foreground: rgb(var(--love-symbol));
+  --muted: rgb(var(--love-symbol-light));
+  --muted-foreground: rgb(var(--cloud-dancer-soft));
+  --accent: rgb(var(--love-symbol-lighter));
+  --accent-foreground: rgb(var(--neutral-950));
   --destructive: rgb(239 68 68);
   --destructive-foreground: rgb(var(--cloud-dancer));
-  --border: rgb(var(--purple-800) / 0.5);
-  --input: rgb(var(--purple-800) / 0.5);
-  --ring: rgb(var(--purple-500));
+  --border: rgb(var(--love-symbol-light) / 0.4);
+  --input: rgb(var(--love-symbol-light) / 0.4);
+  --ring: rgb(var(--love-symbol-lighter));
 
   /* Sidebar */
-  --sidebar: rgb(var(--purple-900));
+  --sidebar: rgb(var(--love-symbol));
   --sidebar-foreground: rgb(var(--cloud-dancer));
-  --sidebar-primary: rgb(var(--purple-500));
-  --sidebar-primary-foreground: rgb(var(--purple-950));
-  --sidebar-accent: rgb(var(--purple-800));
+  --sidebar-primary: rgb(var(--love-symbol-lighter));
+  --sidebar-primary-foreground: rgb(var(--neutral-950));
+  --sidebar-accent: rgb(var(--love-symbol-light));
   --sidebar-accent-foreground: rgb(var(--cloud-dancer));
-  --sidebar-border: rgb(var(--purple-800) / 0.5);
-  --sidebar-ring: rgb(var(--purple-500));
+  --sidebar-border: rgb(var(--love-symbol-light) / 0.4);
+  --sidebar-ring: rgb(var(--love-symbol-lighter));
 }
 
 @layer base {
@@ -175,7 +169,7 @@
     text-rendering: optimizeLegibility;
   }
 
-  /* Animations */
+  /* Vibrant Animations */
   @keyframes grain {
     0%, 100% { transform: translate(0, 0); }
     10% { transform: translate(-5%, -10%); }
@@ -189,134 +183,275 @@
     90% { transform: translate(-10%, 10%); }
   }
 
+  @keyframes shimmer {
+    0% { background-position: -200% center; }
+    100% { background-position: 200% center; }
+  }
+
+  @keyframes glow-pulse {
+    0%, 100% { opacity: 1; filter: brightness(1); }
+    50% { opacity: 0.8; filter: brightness(1.2); }
+  }
+
+  @keyframes gradient-shift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
   .animate-grain {
     animation: grain 8s steps(10) infinite;
   }
+
+  .animate-shimmer {
+    animation: shimmer 3s linear infinite;
+  }
+
+  .animate-glow {
+    animation: glow-pulse 2s ease-in-out infinite;
+  }
+
+  .animate-gradient {
+    animation: gradient-shift 8s ease infinite;
+  }
 }
 
-/* Luxury Premium Utilities (Glassmorphism + Elegant) */
+/* Vibrant Gradient Luxe Utilities */
 @layer utilities {
-  /* Purple glow for violet accents (subtle, pas fluo) */
-  .purple-glow {
-    box-shadow: 0 0 30px rgba(110, 60, 160, 0.15), 0 0 60px rgba(110, 60, 160, 0.08);
-  }
-
-  .purple-glow-sm {
-    box-shadow: 0 0 15px rgba(110, 60, 160, 0.12), 0 0 30px rgba(110, 60, 160, 0.06);
-  }
-
-  /* Premium shadows - layered depth */
-  .shadow-premium {
+  /* Love Symbol Glow - Vibrant */
+  .love-glow {
     box-shadow:
-      0 1px 2px rgba(0, 0, 0, 0.03),
-      0 4px 8px rgba(0, 0, 0, 0.04),
-      0 8px 16px rgba(0, 0, 0, 0.05);
+      0 0 40px rgba(80, 59, 100, 0.3),
+      0 0 80px rgba(80, 59, 100, 0.15),
+      0 0 120px rgba(80, 59, 100, 0.08);
   }
 
-  .shadow-premium-lg {
+  .love-glow-sm {
     box-shadow:
-      0 2px 4px rgba(0, 0, 0, 0.04),
-      0 8px 16px rgba(0, 0, 0, 0.06),
-      0 16px 32px rgba(0, 0, 0, 0.08),
-      0 32px 64px rgba(0, 0, 0, 0.1);
+      0 0 20px rgba(80, 59, 100, 0.25),
+      0 0 40px rgba(80, 59, 100, 0.12);
   }
 
-  .shadow-premium-purple {
+  /* Premium Vibrant Shadows */
+  .shadow-vibrant {
     box-shadow:
-      0 2px 4px rgba(0, 0, 0, 0.04),
-      0 8px 16px rgba(110, 60, 160, 0.08),
-      0 16px 32px rgba(110, 60, 160, 0.12);
+      0 2px 8px rgba(80, 59, 100, 0.08),
+      0 8px 24px rgba(80, 59, 100, 0.12),
+      0 16px 48px rgba(80, 59, 100, 0.16);
   }
 
-  /* Glassmorphism effects */
-  .glass {
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+  .shadow-vibrant-lg {
+    box-shadow:
+      0 4px 12px rgba(80, 59, 100, 0.1),
+      0 12px 32px rgba(80, 59, 100, 0.15),
+      0 24px 64px rgba(80, 59, 100, 0.2),
+      0 48px 96px rgba(80, 59, 100, 0.25);
   }
 
-  .glass-dark {
-    background: rgba(28, 15, 40, 0.6);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+  /* Gradients Vivants - Love Symbol × Cloud Dancer */
+  .bg-gradient-love {
+    background: linear-gradient(135deg,
+      rgb(var(--love-symbol)) 0%,
+      rgb(var(--love-symbol-lighter)) 100%);
   }
 
-  .glass-purple {
-    background: linear-gradient(135deg, rgba(110, 60, 160, 0.1) 0%, rgba(155, 100, 210, 0.05) 100%);
-    backdrop-filter: blur(16px) saturate(180%);
-    -webkit-backdrop-filter: blur(16px) saturate(180%);
-    border: 1px solid rgba(110, 60, 160, 0.2);
+  .bg-gradient-love-vibrant {
+    background: linear-gradient(135deg,
+      rgb(var(--love-symbol)) 0%,
+      rgb(var(--love-symbol-light)) 50%,
+      rgb(var(--love-symbol-lighter)) 100%);
+    background-size: 200% 200%;
   }
 
-  /* Liquid glass border effect */
-  .glass-border {
+  .bg-gradient-cloud {
+    background: linear-gradient(135deg,
+      rgb(var(--cloud-dancer-bright)) 0%,
+      rgb(var(--cloud-dancer)) 50%,
+      rgb(var(--cloud-dancer-soft)) 100%);
+  }
+
+  .bg-gradient-love-cloud {
+    background: linear-gradient(135deg,
+      rgb(var(--love-symbol-lighter)) 0%,
+      rgb(var(--cloud-dancer)) 100%);
+  }
+
+  /* Shimmer Effect - Surbrillance Interactive */
+  .shimmer {
     position: relative;
-    isolation: isolate;
+    overflow: hidden;
   }
 
-  .glass-border::before {
+  .shimmer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(243, 239, 234, 0.3) 50%,
+      transparent 100%
+    );
+    transition: left 0.8s ease;
+  }
+
+  .shimmer:hover::before {
+    left: 100%;
+  }
+
+  /* Shimmer Auto-animé */
+  .shimmer-auto::after {
     content: '';
     position: absolute;
     inset: 0;
-    border-radius: inherit;
-    padding: 1px;
+    background: linear-gradient(
+      110deg,
+      transparent 0%,
+      transparent 40%,
+      rgba(243, 239, 234, 0.4) 50%,
+      transparent 60%,
+      transparent 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 3s linear infinite;
+  }
+
+  /* Glassmorphism Vibrant */
+  .glass-vibrant {
+    background: rgba(243, 239, 234, 0.6);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid rgba(80, 59, 100, 0.15);
+  }
+
+  .glass-love {
     background: linear-gradient(135deg,
-      rgba(255, 255, 255, 0.4) 0%,
-      rgba(110, 60, 160, 0.3) 50%,
-      rgba(255, 255, 255, 0.2) 100%);
+      rgba(80, 59, 100, 0.15) 0%,
+      rgba(130, 110, 150, 0.08) 100%);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border: 1px solid rgba(80, 59, 100, 0.25);
+  }
+
+  /* Gradient Border - Vivant */
+  .gradient-border {
+    position: relative;
+    background: linear-gradient(var(--background), var(--background)) padding-box,
+      linear-gradient(135deg,
+        rgb(var(--love-symbol-lighter)),
+        rgb(var(--cloud-dancer)),
+        rgb(var(--love-symbol-pale))
+      ) border-box;
+    border: 2px solid transparent;
+  }
+
+  .gradient-border-animated {
+    position: relative;
+    background: var(--background);
+  }
+
+  .gradient-border-animated::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    padding: 2px;
+    background: linear-gradient(135deg,
+      rgb(var(--love-symbol)) 0%,
+      rgb(var(--love-symbol-lighter)) 50%,
+      rgb(var(--cloud-dancer)) 100%);
+    background-size: 200% 200%;
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
     z-index: -1;
+    animation: gradient-shift 4s ease infinite;
   }
 
-  /* Active indicator (thick underline, Zara-style) */
-  .active-indicator::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: var(--accent);
-  }
-
-  /* Focus ring purple */
-  .focus-purple:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 4px;
-  }
-
-  /* Instant snap transitions (no easing, brutal) */
-  .transition-brutal {
-    transition: all 0.15s linear;
-  }
-
-  /* Ultra-smooth luxury transitions */
-  .transition-luxury {
-    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  /* Gradient overlay (dark to transparent) */
-  .gradient-overlay {
-    background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.6) 100%);
-  }
-
-  /* Text gradient purple */
-  .text-gradient-purple {
-    background: linear-gradient(135deg, rgb(var(--purple-600)) 0%, rgb(var(--purple-400)) 100%);
+  /* Text Gradients - Vibrants */
+  .text-gradient-love {
+    background: linear-gradient(135deg,
+      rgb(var(--love-symbol)) 0%,
+      rgb(var(--love-symbol-lighter)) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
-  /* Architectural grid lines (subtle) */
+  .text-gradient-love-vibrant {
+    background: linear-gradient(135deg,
+      rgb(var(--love-symbol)) 0%,
+      rgb(var(--love-symbol-light)) 33%,
+      rgb(var(--love-symbol-lighter)) 66%,
+      rgb(var(--love-symbol-pale)) 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Hover Gradient Glow */
+  .hover-glow {
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .hover-glow:hover {
+    box-shadow:
+      0 0 30px rgba(80, 59, 100, 0.3),
+      0 0 60px rgba(80, 59, 100, 0.2),
+      inset 0 0 20px rgba(243, 239, 234, 0.1);
+    transform: translateY(-2px);
+  }
+
+  /* Interactive Elements - Surbrillance */
+  .interactive-glow {
+    position: relative;
+    transition: all 0.3s ease;
+  }
+
+  .interactive-glow::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+      circle at center,
+      rgba(80, 59, 100, 0.15) 0%,
+      transparent 70%
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .interactive-glow:hover::after {
+    opacity: 1;
+  }
+
+  /* Transitions */
+  .transition-vibrant {
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .transition-glow {
+    transition: box-shadow 0.4s ease, transform 0.3s ease;
+  }
+
+  /* Grid lines subtiles */
   .grid-lines {
     background-image:
-      linear-gradient(rgba(0, 0, 0, 0.02) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0, 0, 0, 0.02) 1px, transparent 1px);
-    background-size: 20px 20px;
+      linear-gradient(rgba(80, 59, 100, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(80, 59, 100, 0.03) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  /* Radial gradient overlay */
+  .radial-gradient-overlay {
+    background: radial-gradient(
+      circle at 50% 0%,
+      rgba(80, 59, 100, 0.08) 0%,
+      transparent 50%
+    );
   }
 }
