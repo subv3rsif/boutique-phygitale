@@ -50,7 +50,7 @@
 :root {
   --radius: 1rem; /* Premium rounded - 16px base */
 
-  /* Boutique 1885 - Luxury Minimal Palette (Zara-inspired) */
+  /* Boutique 1885 - Luxury Minimal Palette avec Cloud Dancer */
   /* Violet/Pourpre dominante (couleur ville) */
   --purple-950: 28 15 40;      /* #1C0F28 - Ultra deep purple, almost black */
   --purple-900: 45 25 65;      /* #2D1941 - Deep purple */
@@ -58,11 +58,13 @@
   --purple-700: 85 45 125;     /* #552D7D - Royal purple */
   --purple-600: 110 60 160;    /* #6E3CA0 - Violet (SIGNATURE) */
   --purple-500: 130 75 185;    /* #824BB9 - Bright violet */
-  --purple-400: 155 100 210;   /* #9B64D2 - Light violet */
-  --purple-300: 180 130 230;   /* #B482E6 */
-  --purple-200: 210 170 245;   /* #D2AAF5 */
-  --purple-100: 235 215 250;   /* #EBD7FA */
-  --purple-50: 250 245 252;    /* #FAF5FC */
+
+  /* Cloud Dancer (PANTONE 11-4201) - Remplace les violet clair */
+  --cloud-dancer: 243 239 234; /* #F3EFEA - Cloud Dancer principal */
+  --cloud-dancer-warm: 245 241 237; /* #F5F1ED - Plus chaud */
+  --cloud-dancer-cool: 240 237 233; /* #F0EDE9 - Plus frais */
+  --cloud-dancer-soft: 248 245 242; /* #F8F5F2 - Très doux */
+  --cloud-dancer-deep: 235 230 225; /* #EBE6E1 - Plus profond */
 
   /* Neutrals - Brutal minimal */
   --stone-950: 10 10 11;       /* #0A0A0B - True black */
@@ -77,68 +79,68 @@
   --stone-100: 245 245 247;    /* #F5F5F7 - Off-white */
   --stone-50: 252 252 253;     /* #FCFCFD - Pure white */
 
-  /* Light Mode - Brutal Minimal (Zara aesthetic) */
-  --background: rgb(var(--stone-50));
+  /* Light Mode - Premium avec Cloud Dancer */
+  --background: rgb(var(--cloud-dancer-soft));
   --foreground: rgb(var(--stone-950));
-  --card: rgb(var(--stone-100));
+  --card: rgb(var(--cloud-dancer));
   --card-foreground: rgb(var(--stone-950));
-  --popover: rgb(var(--stone-50));
+  --popover: rgb(var(--cloud-dancer-warm));
   --popover-foreground: rgb(var(--stone-950));
   --primary: rgb(var(--purple-600)); /* Violet signature */
-  --primary-foreground: rgb(var(--stone-50));
+  --primary-foreground: rgb(var(--cloud-dancer));
   --secondary: rgb(var(--stone-900));
-  --secondary-foreground: rgb(var(--stone-50));
-  --muted: rgb(var(--stone-200));
+  --secondary-foreground: rgb(var(--cloud-dancer));
+  --muted: rgb(var(--cloud-dancer-deep));
   --muted-foreground: rgb(var(--stone-600));
   --accent: rgb(var(--purple-600));
-  --accent-foreground: rgb(var(--stone-50));
+  --accent-foreground: rgb(var(--cloud-dancer));
   --destructive: rgb(220 38 38);
-  --destructive-foreground: rgb(var(--stone-50));
-  --border: rgb(var(--stone-300));
-  --input: rgb(var(--stone-300));
+  --destructive-foreground: rgb(var(--cloud-dancer));
+  --border: rgb(var(--cloud-dancer-deep));
+  --input: rgb(var(--cloud-dancer-deep));
   --ring: rgb(var(--purple-600));
 
   /* Sidebar */
-  --sidebar: rgb(var(--stone-50));
+  --sidebar: rgb(var(--cloud-dancer-warm));
   --sidebar-foreground: rgb(var(--stone-950));
   --sidebar-primary: rgb(var(--purple-600));
-  --sidebar-primary-foreground: rgb(var(--stone-50));
-  --sidebar-accent: rgb(var(--stone-200));
+  --sidebar-primary-foreground: rgb(var(--cloud-dancer));
+  --sidebar-accent: rgb(var(--cloud-dancer-deep));
   --sidebar-accent-foreground: rgb(var(--stone-950));
-  --sidebar-border: rgb(var(--stone-300));
+  --sidebar-border: rgb(var(--cloud-dancer-deep));
   --sidebar-ring: rgb(var(--purple-600));
 }
 
 [data-theme="dark"],
 .dark {
-  /* Dark Mode - Luxury Minimal (deep purple base) */
+  /* Dark Mode - Luxury Minimal avec Cloud Dancer comme accent */
   --background: rgb(var(--purple-950));
-  --foreground: rgb(var(--stone-100));
+  --foreground: rgb(var(--cloud-dancer));
   --card: rgb(var(--purple-900));
-  --card-foreground: rgb(var(--stone-100));
+  --card-foreground: rgb(var(--cloud-dancer));
   --popover: rgb(var(--purple-900));
-  --popover-foreground: rgb(var(--stone-100));
+  --popover-foreground: rgb(var(--cloud-dancer));
   --primary: rgb(var(--purple-500)); /* Bright violet on dark */
   --primary-foreground: rgb(var(--purple-950));
-  --secondary: rgb(var(--stone-100));
+  --secondary: rgb(var(--cloud-dancer));
   --secondary-foreground: rgb(var(--purple-950));
   --muted: rgb(var(--purple-800));
-  --muted-foreground: rgb(var(--stone-400));
+  --muted-foreground: rgb(var(--cloud-dancer-cool));
   --accent: rgb(var(--purple-500));
   --accent-foreground: rgb(var(--purple-950));
   --destructive: rgb(239 68 68);
-  --destructive-foreground: rgb(var(--stone-100));
+  --destructive-foreground: rgb(var(--cloud-dancer));
   --border: rgb(var(--purple-800) / 0.5);
   --input: rgb(var(--purple-800) / 0.5);
   --ring: rgb(var(--purple-500));
 
   /* Sidebar */
   --sidebar: rgb(var(--purple-900));
-  --sidebar-foreground: rgb(var(--stone-100));
+  --sidebar-foreground: rgb(var(--cloud-dancer));
   --sidebar-primary: rgb(var(--purple-500));
   --sidebar-primary-foreground: rgb(var(--purple-950));
   --sidebar-accent: rgb(var(--purple-800));
-  --sidebar-accent-foreground: rgb(var(--stone-100));
+  --sidebar-accent-foreground: rgb(var(--cloud-dancer));
   --sidebar-border: rgb(var(--purple-800) / 0.5);
   --sidebar-ring: rgb(var(--purple-500));
 }

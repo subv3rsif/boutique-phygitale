@@ -40,7 +40,7 @@ export default function HomePage() {
               </div>
             </motion.div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8 justify-items-center">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
               {newProducts.map((product, index) => (
                 <ProductCardZara key={product.id} product={product} index={index} />
               ))}
@@ -68,7 +68,7 @@ export default function HomePage() {
               </div>
             </motion.div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8 justify-items-center">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
               {bestSellers.map((product, index) => (
                 <ProductCardZara key={product.id} product={product} index={index} />
               ))}
@@ -115,7 +115,7 @@ export default function HomePage() {
               </p>
             </motion.div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8 justify-items-center">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
               {products.map((product, index) => (
                 <ProductCardZara key={product.id} product={product} index={index} />
               ))}

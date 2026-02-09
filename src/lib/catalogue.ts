@@ -57,6 +57,18 @@ export const catalogue: Product[] = [
     tags: ['papeterie', 'collection'],
     stockQuantity: 100,
   },
+  {
+    id: 'carnet-edition-1885',
+    name: 'Carnet Édition 1885',
+    description: 'Carnet de notes premium avec couverture gaufrée et papier 120g. Format A5, 192 pages.',
+    priceCents: 1800, // 18.00€
+    shippingCents: 450, // 4.50€ (Lettre Suivie La Poste)
+    image: 'https://placehold.co/600x800/F3EFEA/6E3CA0?text=Carnet+1885',
+    active: true,
+    weightGrams: 280,
+    tags: ['papeterie', 'collection', 'nouveau', 'best-seller'],
+    stockQuantity: 45,
+  },
 ];
 
 /**

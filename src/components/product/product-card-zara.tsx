@@ -67,9 +67,9 @@ export function ProductCardZara({ product, index = 0 }: ProductCardZaraProps) {
       onHoverEnd={() => setIsHovered(false)}
       className="group relative"
     >
-      <Link href={`/produit/${product.id}`} className="block">
-        {/* Image container - 3:4 ratio with premium glass effect */}
-        <div className="relative aspect-[3/4] overflow-hidden rounded-2xl bg-stone-100 dark:bg-purple-900/30 glass-border shadow-premium group-hover:shadow-premium-purple transition-all duration-500">
+      <Link href={`/produit/${product.id}`} className="block max-w-sm mx-auto w-full">
+        {/* Image container - 4:5 ratio (plus large) with premium glass effect */}
+        <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-stone-100 dark:bg-purple-900/30 glass-border shadow-premium group-hover:shadow-premium-purple transition-all duration-500">
           {/* Skeleton */}
           {!imageLoaded && (
             <div className="absolute inset-0 animate-pulse bg-stone-300 dark:bg-purple-800/30" />
