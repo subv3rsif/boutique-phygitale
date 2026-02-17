@@ -1,8 +1,8 @@
 'use client';
 
 import Image from 'next/image';
+import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { formatCurrency, getProductById } from '@/lib/catalogue';
 import { useCart } from '@/store/cart';
 import { Trash2, Minus, Plus } from 'lucide-react';
@@ -16,112 +16,110 @@ export function CartItem({ id, qty }: CartItemProps) {
   const product = getProductById(id);
   const { updateQty, removeItem } = useCart();
 
-  if (!product) {
-    return null;
-  }
+  if (!product) return null;
 
   const itemTotal = product.priceCents * qty;
 
   const handleDecrement = () => {
-    if (qty > 1) {
-      updateQty(id, qty - 1);
-    }
+    if (qty > 1) updateQty(id, qty - 1);
   };
 
   const handleIncrement = () => {
-    if (qty < 10) {
-      updateQty(id, qty + 1);
-    }
-  };
-
-  const handleQtyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newQty = parseInt(e.target.value, 10);
-    if (!isNaN(newQty) && newQty >= 1 && newQty <= 10) {
-      updateQty(id, newQty);
-    }
+    if (qty < 10) updateQty(id, qty + 1);
   };
 
   return (
-    <div className="flex gap-4">
-      {/* Product Image */}
-      <div className="relative w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden bg-slate-100">
+    <div className="flex gap-4 sm:gap-5">
+      {/* ── Image ── */}
+      <div className="relative w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0 rounded-xl overflow-hidden bg-muted">
+        {/* Skeleton shimmer */}
+        <div className="absolute inset-0 animate-pulse bg-gradient-to-br from-muted to-muted/50" />
         <Image
           src={product.image}
           alt={product.name}
           fill
-          className="object-cover"
+          className="object-cover relative z-10"
           sizes="96px"
+          onLoad={(e) => {
+            const img = e.currentTarget;
+            const skeleton = img.previousElementSibling as HTMLElement;
+            if (skeleton) skeleton.style.display = 'none';
+          }}
         />
       </div>
 
-      {/* Product Details & Controls */}
-      <div className="flex-1 min-w-0 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+      {/* ── Details ── */}
+      <div className="flex-1 min-w-0 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
         <div className="flex-1 min-w-0">
-          {/* Product name and price */}
-          <h3 className="font-semibold text-slate-900 mb-1 line-clamp-2">
+          {/* Name */}
+          <h3 className="font-display text-base sm:text-lg font-normal text-foreground line-clamp-1 mb-0.5">
             {product.name}
           </h3>
-          <p className="text-sm text-slate-600">
+          <p className="text-xs text-muted-foreground font-sans font-light">
             {formatCurrency(product.priceCents)} l'unité
           </p>
 
-          {/* Quantity Controls */}
-          <div className="flex items-center gap-2 mt-4">
-            <div className="flex items-center border border-slate-300 rounded-md">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-9 w-9 rounded-none hover:bg-slate-100"
+          {/* ── Qty + Remove ── */}
+          <div className="flex items-center gap-3 mt-3">
+            {/* Stepper */}
+            <div className="inline-flex items-center rounded-xl border border-border/70 glass-vibrant overflow-hidden">
+              <button
                 onClick={handleDecrement}
                 disabled={qty <= 1}
                 aria-label="Diminuer la quantité"
+                className="h-9 w-9 flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted/60 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-150"
               >
-                <Minus className="h-4 w-4" />
-              </Button>
+                <Minus className="h-3.5 w-3.5" />
+              </button>
 
-              <Input
-                type="number"
-                min="1"
-                max="10"
-                value={qty}
-                onChange={handleQtyChange}
-                className="w-14 h-9 text-center border-0 border-x border-slate-300 rounded-none focus-visible:ring-0 focus-visible:ring-offset-0"
-                aria-label="Quantité"
-              />
+              <motion.span
+                key={qty}
+                initial={{ scale: 1.2, opacity: 0.6 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.2 }}
+                className="w-10 text-center text-sm font-semibold text-foreground font-sans border-x border-border/50"
+                style={{ lineHeight: '2.25rem' }}
+              >
+                {qty}
+              </motion.span>
 
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-9 w-9 rounded-none hover:bg-slate-100"
+              <button
                 onClick={handleIncrement}
                 disabled={qty >= 10}
                 aria-label="Augmenter la quantité"
+                className="h-9 w-9 flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted/60 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-150"
               >
-                <Plus className="h-4 w-4" />
-              </Button>
+                <Plus className="h-3.5 w-3.5" />
+              </button>
             </div>
 
-            {/* Remove button */}
+            {/* Remove */}
             <Button
               variant="ghost"
               size="sm"
-              className="text-red-600 hover:text-red-700 hover:bg-red-50 gap-2"
               onClick={() => removeItem(id)}
               aria-label="Retirer du panier"
+              className="h-9 px-3 text-muted-foreground hover:text-destructive hover:bg-destructive/8 gap-1.5 rounded-xl transition-all duration-200"
             >
-              <Trash2 className="h-4 w-4" />
-              <span className="text-sm">Retirer</span>
+              <Trash2 className="h-3.5 w-3.5" />
+              <span className="text-xs font-medium font-sans">Retirer</span>
             </Button>
           </div>
         </div>
 
-        {/* Item Total - Right aligned on desktop */}
-        <div className="text-left sm:text-right flex-shrink-0">
-          <p className="font-bold text-slate-900 text-lg">
+        {/* ── Total ── */}
+        <div className="text-left sm:text-right shrink-0">
+          <motion.p
+            key={itemTotal}
+            initial={{ opacity: 0.6, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2 }}
+            className="font-display text-xl font-semibold text-foreground"
+          >
             {formatCurrency(itemTotal)}
-          </p>
+          </motion.p>
           {qty > 1 && (
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-xs text-muted-foreground font-sans mt-0.5">
               {qty} × {formatCurrency(product.priceCents)}
             </p>
           )}
