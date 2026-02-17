@@ -3,54 +3,42 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { getAllActiveProducts } from '@/lib/catalogue';
-import { ProductCardZara } from '@/components/product/product-card-zara';
+import { BentoProductGrid } from '@/components/product/bento-product-grid';
 import { ProductCarousel } from '@/components/product/product-carousel';
-import { HeroZara } from '@/components/layout/hero-zara';
+import { HeroCinematic } from '@/components/layout/hero-cinematic';
 import { BrandStory } from '@/components/sections/brand-story';
-import { Badge } from '@/components/ui/badge';
+import { SectionHeading } from '@/components/ui/section-heading';
 import { Button } from '@/components/ui/button';
 import { Sparkles, TrendingUp, ChevronDown } from 'lucide-react';
-import { cn } from '@/lib/utils';
 
 export default function HomePage() {
   const products = getAllActiveProducts();
-  const newProducts = products.filter(p => p.tags?.includes('nouveau'));
-  const bestSellers = products.filter(p => p.tags?.includes('best-seller'));
+  const newProducts = products.filter((p) => p.tags?.includes('nouveau'));
+  const bestSellers = products.filter((p) => p.tags?.includes('best-seller'));
 
-  // State for "Load More" in all products section
   const [showAllProducts, setShowAllProducts] = useState(false);
-  const displayedProducts = showAllProducts ? products : products.slice(0, 3);
+  const displayedProducts = showAllProducts ? products : products.slice(0, 7);
 
   return (
     <>
-      {/* Hero Section - Zara Style */}
-      <HeroZara />
+      {/* Hero Section — Cinematic split layout */}
+      <HeroCinematic />
 
       {/* Brand Story Section */}
       <BrandStory />
 
-      {/* Main Content */}
+      {/* Main Collection */}
       <div className="container max-w-7xl mx-auto py-20 px-4 space-y-32" id="collection">
 
-        {/* Nouveautés Section */}
+        {/* ── Nouveautés ── */}
         {newProducts.length > 0 && (
           <section>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.6 }}
-              className="mb-10"
-            >
-              <div className="space-y-4 text-center">
-                <h2 className="font-display text-5xl md:text-6xl font-light italic text-foreground">
-                  Nouveautés
-                </h2>
-                <p className="text-muted-foreground text-lg font-sans font-light max-w-2xl mx-auto">
-                  Dernières créations de la collection municipale
-                </p>
-              </div>
-            </motion.div>
+            <SectionHeading
+              kicker="Dernières créations"
+              title="Nouveautés"
+              subtitle="Les pièces les plus récentes de la collection municipale"
+              className="mb-12"
+            />
 
             {/* Mobile: Carousel */}
             <div className="block lg:hidden">
@@ -62,34 +50,22 @@ export default function HomePage() {
               />
             </div>
 
-            {/* Desktop: Grid - 3 products max */}
-            <div className="hidden lg:grid grid-cols-3 gap-8 lg:gap-10">
-              {newProducts.slice(0, 3).map((product, index) => (
-                <ProductCardZara key={product.id} product={product} index={index} />
-              ))}
+            {/* Desktop: Bento Grid */}
+            <div className="hidden lg:block">
+              <BentoProductGrid products={newProducts} />
             </div>
           </section>
         )}
 
-        {/* Best Sellers Section */}
+        {/* ── Best Sellers ── */}
         {bestSellers.length > 0 && (
           <section>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.6 }}
-              className="mb-10"
-            >
-              <div className="space-y-4 text-center">
-                <h2 className="font-display text-5xl md:text-6xl font-light italic text-foreground">
-                  Best-sellers
-                </h2>
-                <p className="text-muted-foreground text-lg font-sans font-light max-w-2xl mx-auto">
-                  Les favoris de la communauté
-                </p>
-              </div>
-            </motion.div>
+            <SectionHeading
+              kicker="Favoris de la communauté"
+              title="Best-sellers"
+              titleAccent="de la saison"
+              className="mb-12"
+            />
 
             {/* Mobile: Carousel */}
             <div className="block lg:hidden">
@@ -101,36 +77,35 @@ export default function HomePage() {
               />
             </div>
 
-            {/* Desktop: Grid - 3 products max */}
-            <div className="hidden lg:grid grid-cols-3 gap-8 lg:gap-10">
-              {bestSellers.slice(0, 3).map((product, index) => (
-                <ProductCardZara key={product.id} product={product} index={index} />
-              ))}
+            {/* Desktop: Bento Grid */}
+            <div className="hidden lg:block">
+              <BentoProductGrid products={bestSellers} />
             </div>
           </section>
         )}
 
-        {/* All Products Section */}
+        {/* ── Toute la collection ── */}
         <section>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6 }}
-            className="mb-10"
-          >
-            <div className="space-y-4 text-center">
-              <h2 className="font-display text-5xl md:text-6xl font-light italic text-foreground">
-                Toute la collection
-              </h2>
-              <div className="flex items-center justify-center gap-6 text-muted-foreground text-sm font-sans font-medium">
-                <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-purple">
-                  {products.length} pièce{products.length > 1 ? 's' : ''}
-                </span>
-                <span className="text-xs tracking-wider uppercase px-4 py-2 rounded-full glass-purple">Édition limitée</span>
-              </div>
-            </div>
-          </motion.div>
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
+            <SectionHeading
+              kicker="Édition limitée"
+              title="Toute la"
+              titleAccent="Collection"
+              align="left"
+            />
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3 }}
+              className="shrink-0"
+            >
+              <span className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full glass-purple text-muted-foreground text-sm font-sans font-medium">
+                <span className="inline-block w-2 h-2 rounded-full bg-emerald-400" />
+                {products.length} pièce{products.length > 1 ? 's' : ''} disponible{products.length > 1 ? 's' : ''}
+              </span>
+            </motion.div>
+          </div>
 
           {products.length === 0 ? (
             <motion.div
@@ -145,7 +120,7 @@ export default function HomePage() {
                 Bientôt disponible
               </h3>
               <p className="text-muted-foreground max-w-md mx-auto">
-                Notre collection arrive très prochainement. Revenez bientôt pour découvrir nos créations.
+                Notre collection arrive très prochainement.
               </p>
             </motion.div>
           ) : (
@@ -160,16 +135,11 @@ export default function HomePage() {
                 />
               </div>
 
-              {/* Desktop: Grid with Load More */}
+              {/* Desktop: Bento Grid */}
               <div className="hidden lg:block">
-                <div className="grid grid-cols-3 gap-8 lg:gap-10">
-                  {displayedProducts.map((product, index) => (
-                    <ProductCardZara key={product.id} product={product} index={index} />
-                  ))}
-                </div>
+                <BentoProductGrid products={displayedProducts} />
 
-                {/* Load More Button */}
-                {!showAllProducts && products.length > 3 && (
+                {!showAllProducts && products.length > 7 && (
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -194,37 +164,39 @@ export default function HomePage() {
           )}
         </section>
 
-        {/* Bottom CTA Section - Premium Glass */}
+        {/* ── Bottom CTA ── */}
         <motion.section
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="relative overflow-hidden rounded-3xl glass dark:glass-dark shadow-premium-lg p-12 text-center"
+          className="relative overflow-hidden rounded-3xl gradient-border-animated shadow-vibrant-lg p-12 text-center"
         >
-          {/* Background pattern */}
-          <div className="absolute inset-0 opacity-5">
-            <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiM5OTk5OTkiPjxwYXRoIGQ9Ik0zNiAxOGMwLTMuMzE0LTIuNjg2LTYtNi02cy02IDIuNjg2LTYgNiAyLjY4NiA2IDYgNiA2LTIuNjg2IDYtNnptMTggMGMwLTMuMzE0LTIuNjg2LTYtNi02cy02IDIuNjg2LTYgNiAyLjY4NiA2IDYgNiA2LTIuNjg2IDYtNnpNMCAxOGMwLTMuMzE0LTIuNjg2LTYtNi02cy02IDIuNjg2LTYgNiAyLjY4NiA2IDYgNiA2LTIuNjg2IDYtNnptMzYgMzZjMC0zLjMxNC0yLjY4Ni02LTYtNnMtNiAyLjY4Ni02IDYgMi42ODYgNiA2IDYgNi0yLjY4NiA2LTZ6bTE4IDBjMC0zLjMxNC0yLjY4Ni02LTYtNnMtNiAyLjY4Ni02IDYgMi42ODYgNiA2IDYgNi0yLjY4NiA2LTZ6TTAgNTRjMC0zLjMxNC0yLjY4Ni02LTYtNnMtNiAyLjY4Ni02IDYgMi42ODYgNiA2IDYgNi0yLjY4NiA2LTZ6Ii8+PC9nPjwvZz48L3N2Zz4=')] [background-size:30px_30px]" />
-          </div>
+          <div className="absolute inset-[2px] rounded-[22px] bg-gradient-love-cloud opacity-5 pointer-events-none" />
+          <div className="absolute inset-0 grid-lines opacity-20 pointer-events-none rounded-3xl" />
 
-          <div className="relative z-10 max-w-2xl mx-auto space-y-4">
-            <h3 className="font-display text-3xl font-bold text-foreground">
-              Une question sur nos produits ?
+          <div className="relative z-10 max-w-2xl mx-auto space-y-5">
+            <span className="inline-block text-xs tracking-[0.3em] uppercase text-muted-foreground font-sans font-medium">
+              Support & Contact
+            </span>
+            <h3 className="font-display text-3xl md:text-4xl font-light italic text-foreground">
+              Une question sur <span className="font-semibold not-italic text-gradient-love">nos produits ?</span>
             </h3>
             <p className="text-muted-foreground text-lg">
               Notre équipe est disponible pour vous renseigner sur la collection et les modalités de retrait.
             </p>
             <a
               href="mailto:contact@ville.fr"
-              className="inline-flex items-center gap-2 text-primary hover:underline font-medium text-lg transition-colors"
+              className="inline-flex items-center gap-2 text-primary hover:underline font-medium text-lg transition-colors group"
             >
               contact@ville.fr
-              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="h-5 w-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
             </a>
           </div>
         </motion.section>
+
       </div>
     </>
   );
