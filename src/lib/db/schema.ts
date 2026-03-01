@@ -116,6 +116,65 @@ export const productStock = pgTable('product_stock', {
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
 
+// ============================================================================
+// NextAuth Tables (Auth.js v5 with Drizzle Adapter)
+// ============================================================================
+
+/**
+ * Users table - NextAuth users
+ */
+export const users = pgTable('users', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  name: text('name'),
+  email: text('email').notNull().unique(),
+  emailVerified: timestamp('email_verified', { mode: 'date' }),
+  image: text('image'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});
+
+/**
+ * Accounts table - NextAuth provider accounts (Google, GitHub, etc.)
+ */
+export const accounts = pgTable('accounts', {
+  userId: text('user_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  type: text('type').notNull().$type<'oauth' | 'oidc' | 'email'>(),
+  provider: text('provider').notNull(),
+  providerAccountId: text('provider_account_id').notNull(),
+  refresh_token: text('refresh_token'),
+  access_token: text('access_token'),
+  expires_at: integer('expires_at'),
+  token_type: text('token_type'),
+  scope: text('scope'),
+  id_token: text('id_token'),
+  session_state: text('session_state'),
+}, (table) => ({
+  compoundKey: index('accounts_compound_key').on(table.provider, table.providerAccountId),
+}));
+
+/**
+ * Sessions table - NextAuth sessions
+ */
+export const sessions = pgTable('sessions', {
+  sessionToken: text('session_token').primaryKey(),
+  userId: text('user_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  expires: timestamp('expires', { mode: 'date' }).notNull(),
+});
+
+/**
+ * Verification Tokens table - NextAuth email verification
+ */
+export const verificationTokens = pgTable('verification_tokens', {
+  identifier: text('identifier').notNull(),
+  token: text('token').notNull(),
+  expires: timestamp('expires', { mode: 'date' }).notNull(),
+}, (table) => ({
+  compoundKey: index('verification_tokens_compound_key').on(table.identifier, table.token),
+}));
+
 // Type exports for use in application code
 export type Order = typeof orders.$inferSelect;
 export type NewOrder = typeof orders.$inferInsert;
@@ -137,3 +196,15 @@ export type NewGdprConsent = typeof gdprConsents.$inferInsert;
 
 export type ProductStock = typeof productStock.$inferSelect;
 export type NewProductStock = typeof productStock.$inferInsert;
+
+export type User = typeof users.$inferSelect;
+export type NewUser = typeof users.$inferInsert;
+
+export type Account = typeof accounts.$inferSelect;
+export type NewAccount = typeof accounts.$inferInsert;
+
+export type Session = typeof sessions.$inferSelect;
+export type NewSession = typeof sessions.$inferInsert;
+
+export type VerificationToken = typeof verificationTokens.$inferSelect;
+export type NewVerificationToken = typeof verificationTokens.$inferInsert;

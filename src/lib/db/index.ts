@@ -7,6 +7,12 @@ let _db: ReturnType<typeof drizzle> | null = null;
 
 function getDb() {
   if (!_db) {
+    // Skip DB initialization during build (for static page generation)
+    if (process.env.NEXT_PHASE === 'phase-production-build') {
+      // Return a mock db for build time
+      return {} as ReturnType<typeof drizzle>;
+    }
+
     // Check if DATABASE_URL is set
     if (!process.env.DATABASE_URL) {
       throw new Error(
@@ -38,6 +44,9 @@ export const db = new Proxy({} as ReturnType<typeof drizzle>, {
     return getDb()[prop as keyof ReturnType<typeof drizzle>];
   },
 });
+
+// Export direct DB instance for NextAuth DrizzleAdapter
+export { getDb };
 
 // Export schema for direct access
 export * from './schema';
