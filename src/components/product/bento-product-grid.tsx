@@ -6,11 +6,12 @@ import Image from 'next/image';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { Loader2, ArrowUpRight } from 'lucide-react';
+import { Loader2, ArrowUpRight, Crown } from 'lucide-react';
 import { type Product, formatCurrency } from '@/lib/catalogue';
 import { useCart } from '@/store/cart';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import { PremiumBadge, PremiumBadgeIcon } from '@/components/ui/premium-badge';
 
 // ─── Animated Border Card ─────────────────────────────────────────────────────
 // Technique "conic-gradient spotlight" : le liseret suit le curseur via JS
@@ -104,16 +105,17 @@ function BentoCardHero({ product }: { product: Product }) {
         {/* Gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
-        {/* Tag "Hero piece" */}
-        <div className="absolute top-5 left-5 flex gap-2">
+        {/* Premium Badges */}
+        <div className="absolute top-5 left-5 flex gap-2 z-10">
           {isNew && (
-            <span className="bg-white/10 backdrop-blur-md text-white border border-white/20 px-3 py-1 rounded-full text-xs tracking-widest uppercase font-sans font-semibold">
-              Nouveau
-            </span>
+            <PremiumBadge label="Nouveau" variant="solid" size="sm" />
           )}
-          <span className="bg-primary/80 backdrop-blur-md text-primary-foreground px-3 py-1 rounded-full text-xs tracking-widest uppercase font-sans font-semibold">
-            Pièce phare
-          </span>
+          <PremiumBadgeIcon
+            label="Pièce phare"
+            icon={<Crown className="h-3.5 w-3.5 text-champagne" />}
+            variant="glass"
+            size="sm"
+          />
         </div>
 
         {/* Bottom content */}
@@ -207,11 +209,11 @@ function BentoCardSmall({ product, index }: { product: Product; index: number })
               />
             </motion.div>
 
-            {/* Badges */}
+            {/* Premium Badge */}
             {isNew && (
-              <span className="absolute top-3 left-3 z-10 glass-love text-primary px-3 py-1 rounded-full text-xs tracking-wider uppercase font-sans font-semibold backdrop-blur-md">
-                Nouveau
-              </span>
+              <div className="absolute top-3 left-3 z-10">
+                <PremiumBadge label="Nouveau" variant="glass" size="sm" />
+              </div>
             )}
 
             {/* Hover overlay CTA */}

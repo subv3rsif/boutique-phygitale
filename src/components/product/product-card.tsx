@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { PremiumBadge } from '@/components/ui/premium-badge';
 import { type Product, formatCurrency } from '@/lib/catalogue';
 import { useCart } from '@/store/cart';
 import { ShoppingCart, Loader2, Sparkles, Package } from 'lucide-react';
@@ -115,22 +116,15 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
           className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"
         />
 
-        {/* New Badge - Top Left */}
+        {/* New Badge - Top Left with Premium Champagne Badge */}
         {isNew && (
           <motion.div
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2 }}
-            className="absolute top-3 left-3"
+            className="absolute top-3 left-3 z-10"
           >
-            <Badge className={cn(
-              "bg-primary text-primary-foreground",
-              "dark:magenta-glow-sm",
-              "font-semibold px-3 py-1 gap-1"
-            )}>
-              <Sparkles className="w-3 h-3" />
-              Nouveau
-            </Badge>
+            <PremiumBadge label="Nouveau" variant="solid" size="sm" />
           </motion.div>
         )}
 

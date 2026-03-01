@@ -6,7 +6,9 @@ import { motion } from 'framer-motion';
 import { getAllActiveProducts } from '@/lib/catalogue';
 import { SectionHeading } from '@/components/ui/section-heading';
 import { Button } from '@/components/ui/button';
-import { Sparkles, TrendingUp, ChevronDown } from 'lucide-react';
+import { GoldDivider, GoldDividerText } from '@/components/ui/gold-divider';
+import { ChampagneCTA } from '@/components/ui/champagne-cta';
+import { Sparkles, TrendingUp, ChevronDown, Mail } from 'lucide-react';
 
 // ──────────────────────────────────────────────────────────
 // Dynamic Imports for Heavy Components
@@ -73,6 +75,9 @@ export default function HomePage() {
       {/* Brand Story Section */}
       <BrandStory />
 
+      {/* Champagne divider after hero */}
+      <GoldDivider variant="diamond" spacing="xl" />
+
       {/* Main Collection */}
       <div className="container max-w-7xl mx-auto py-20 px-4 space-y-32" id="collection">
 
@@ -101,6 +106,11 @@ export default function HomePage() {
               <BentoProductGrid products={newProducts} />
             </div>
           </section>
+        )}
+
+        {/* Divider between sections */}
+        {newProducts.length > 0 && bestSellers.length > 0 && (
+          <GoldDividerText text="Best-sellers" spacing="lg" />
         )}
 
         {/* ── Best Sellers ── */}
@@ -210,36 +220,44 @@ export default function HomePage() {
           )}
         </section>
 
-        {/* ── Bottom CTA ── */}
+        {/* Divider before bottom CTA */}
+        <GoldDivider variant="diamond" spacing="xl" />
+
+        {/* ── Bottom CTA — Premium Contact Section ── */}
         <motion.section
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="relative overflow-hidden rounded-3xl gradient-border-animated shadow-vibrant-lg p-12 text-center"
+          className="relative overflow-hidden rounded-3xl champagne-border-animated shadow-champagne-lg p-12 text-center"
         >
-          <div className="absolute inset-[2px] rounded-[22px] bg-gradient-love-cloud opacity-5 pointer-events-none" />
+          {/* Background orb */}
+          <div className="absolute -top-20 -right-20 h-96 w-96 rounded-full bg-gradient-champagne opacity-5 blur-3xl" />
+          <div className="absolute inset-[2px] rounded-[22px] bg-gradient-cloud-champagne opacity-30 pointer-events-none" />
           <div className="absolute inset-0 grid-lines opacity-20 pointer-events-none rounded-3xl" />
 
-          <div className="relative z-10 max-w-2xl mx-auto space-y-5">
-            <span className="inline-block text-xs tracking-[0.3em] uppercase text-muted-foreground font-sans font-medium">
+          <div className="relative z-10 max-w-2xl mx-auto space-y-6">
+            <span className="inline-block text-xs tracking-[0.3em] uppercase text-champagne-dark font-sans font-semibold">
               Support & Contact
             </span>
             <h3 className="font-display text-3xl md:text-4xl font-light italic text-foreground">
-              Une question sur <span className="font-semibold not-italic text-gradient-love">nos produits ?</span>
+              Une question sur <span className="font-semibold not-italic text-gradient-love-champagne">nos produits ?</span>
             </h3>
-            <p className="text-muted-foreground text-lg">
+            <p className="text-slate text-lg">
               Notre équipe est disponible pour vous renseigner sur la collection et les modalités de retrait.
             </p>
-            <a
-              href="mailto:contact@ville.fr"
-              className="inline-flex items-center gap-2 text-primary hover:underline font-medium text-lg transition-colors group"
-            >
-              contact@ville.fr
-              <svg className="h-5 w-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </a>
+
+            {/* Champagne CTA */}
+            <div className="pt-4">
+              <ChampagneCTA
+                size="lg"
+                icon={<Mail className="h-5 w-5" />}
+                iconPosition="left"
+                onClick={() => window.location.href = 'mailto:contact@ville.fr'}
+              >
+                contact@ville.fr
+              </ChampagneCTA>
+            </div>
           </div>
         </motion.section>
 
