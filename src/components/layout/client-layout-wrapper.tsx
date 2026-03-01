@@ -8,15 +8,11 @@ import { WebVitalsTracker } from '@/components/analytics/web-vitals-tracker';
  *
  * This component lazy-loads heavy client components
  * to reduce initial bundle size and tracks Web Vitals
+ *
+ * Note: FloatingCart removed in favor of unified navigation:
+ * - Desktop: Header with cart button
+ * - Mobile: BottomNav pill with cart
  */
-
-// FloatingCart with animations
-const FloatingCart = dynamic(
-  () => import('@/components/layout/floating-cart').then(m => ({ default: m.FloatingCart })),
-  {
-    ssr: false, // Cart is client-only
-  }
-);
 
 // BottomNav with Framer Motion
 const BottomNavWrapper = dynamic(
@@ -30,7 +26,6 @@ export function ClientLayoutWrapper() {
   return (
     <>
       <WebVitalsTracker />
-      <FloatingCart />
       <BottomNavWrapper />
     </>
   );

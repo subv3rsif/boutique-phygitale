@@ -59,6 +59,8 @@ export function BottomNav({
   return (
     <nav
       className={cn(
+        // Mobile only - hidden on desktop (md:hidden)
+        'md:hidden',
         // Fixed positioning with iOS safe area support
         'fixed bottom-4 left-0 right-0 z-50',
         // Safe area padding for iOS devices
