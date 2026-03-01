@@ -5,7 +5,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ThemeScript } from "./theme-script";
 import { Header } from "@/components/layout/header";
-import { FloatingCart } from "@/components/layout/floating-cart";
+import { ClientLayoutWrapper } from "@/components/layout/client-layout-wrapper";
 import { Toaster } from "@/components/ui/sonner";
 
 // Display: Elegant serif for titles (très mode/luxe)
@@ -92,9 +92,8 @@ export default function RootLayout({
       <body className={`${cormorant.variable} ${workSans.variable} ${jetbrains.variable} font-sans antialiased`}>
         <ThemeProvider>
           <Header />
-          <main className="min-h-[calc(100vh-4rem)]">{children}</main>
-          <FloatingCart />
-          <footer className="border-t py-8 mt-12">
+          <main className="min-h-[calc(100vh-4rem)] pb-24">{children}</main>
+          <footer className="border-t py-8 mt-12 mb-20">
             <div className="container text-center text-sm text-muted-foreground">
               <div className="flex justify-center gap-4 mb-4">
                 <a href="/mentions-legales" className="hover:underline focus-magenta rounded px-2 py-1">
@@ -110,6 +109,7 @@ export default function RootLayout({
               <p>© 2026 Boutique 1885 - Édition municipale</p>
             </div>
           </footer>
+          <ClientLayoutWrapper />
           <Toaster />
         </ThemeProvider>
       </body>

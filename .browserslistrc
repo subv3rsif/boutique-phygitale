@@ -1,0 +1,25 @@
+# Browserslist Configuration - Aggressive Modern
+# Boutique Phygitale 1885
+#
+# Target: Modern browsers ONLY (90%+ coverage)
+# Benefit: Smaller polyfills (110KB → 30KB)
+
+# Last 2 versions only (not all with >0.5% share)
+last 2 Chrome versions
+last 2 Firefox versions
+last 2 Safari versions
+last 2 Edge versions
+
+# iOS Safari (important for mobile)
+last 2 iOS versions
+
+# Android Chrome
+last 2 ChromeAndroid versions
+
+# Exclude everything older
+not dead
+not IE 11
+not op_mini all
+
+# Don't use market share threshold (causes too many old versions)
+# Removed: > 0.5%

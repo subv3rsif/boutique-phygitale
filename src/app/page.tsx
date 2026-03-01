@@ -1,15 +1,61 @@
 'use client';
 
 import { useState } from 'react';
+import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
 import { getAllActiveProducts } from '@/lib/catalogue';
-import { BentoProductGrid } from '@/components/product/bento-product-grid';
-import { ProductCarousel } from '@/components/product/product-carousel';
-import { HeroCinematic } from '@/components/layout/hero-cinematic';
-import { BrandStory } from '@/components/sections/brand-story';
 import { SectionHeading } from '@/components/ui/section-heading';
 import { Button } from '@/components/ui/button';
 import { Sparkles, TrendingUp, ChevronDown } from 'lucide-react';
+
+// ──────────────────────────────────────────────────────────
+// Dynamic Imports for Heavy Components
+// ──────────────────────────────────────────────────────────
+
+// Hero with animations (client-only, above the fold)
+const HeroCinematic = dynamic(
+  () => import('@/components/layout/hero-cinematic').then(m => ({ default: m.HeroCinematic })),
+  {
+    ssr: false, // Animations are client-only
+    loading: () => (
+      <div className="h-screen bg-gradient-to-br from-primary/10 to-background animate-pulse" />
+    ),
+  }
+);
+
+// Brand Story section
+const BrandStory = dynamic(
+  () => import('@/components/sections/brand-story').then(m => ({ default: m.BrandStory })),
+  {
+    loading: () => (
+      <div className="h-96 bg-muted/30 animate-pulse rounded-3xl" />
+    ),
+  }
+);
+
+// Bento Product Grid (heavy with animated borders)
+const BentoProductGrid = dynamic(
+  () => import('@/components/product/bento-product-grid').then(m => ({ default: m.BentoProductGrid })),
+  {
+    loading: () => (
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 min-h-[600px]">
+        {[...Array(6)].map((_, i) => (
+          <div key={i} className="h-64 bg-muted/30 animate-pulse rounded-xl" />
+        ))}
+      </div>
+    ),
+  }
+);
+
+// Product Carousel (heavy with Framer Motion)
+const ProductCarousel = dynamic(
+  () => import('@/components/product/product-carousel').then(m => ({ default: m.ProductCarousel })),
+  {
+    loading: () => (
+      <div className="h-96 bg-muted/30 animate-pulse rounded-xl" />
+    ),
+  }
+);
 
 export default function HomePage() {
   const products = getAllActiveProducts();
