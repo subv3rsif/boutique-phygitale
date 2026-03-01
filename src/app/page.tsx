@@ -76,10 +76,10 @@ export default function HomePage() {
       <BrandStory />
 
       {/* Champagne divider after hero */}
-      <GoldDivider variant="diamond" spacing="xl" />
+      <GoldDivider variant="diamond" spacing="lg" />
 
       {/* Main Collection */}
-      <div className="container max-w-7xl mx-auto py-20 px-4 space-y-32" id="collection">
+      <div className="container max-w-7xl mx-auto py-16 px-4 space-y-24" id="collection">
 
         {/* ── Nouveautés ── */}
         {newProducts.length > 0 && (
@@ -110,7 +110,7 @@ export default function HomePage() {
 
         {/* Divider between sections */}
         {newProducts.length > 0 && bestSellers.length > 0 && (
-          <GoldDividerText text="Best-sellers" spacing="lg" />
+          <GoldDividerText text="Best-sellers" spacing="md" />
         )}
 
         {/* ── Best Sellers ── */}
@@ -221,7 +221,7 @@ export default function HomePage() {
         </section>
 
         {/* Divider before bottom CTA */}
-        <GoldDivider variant="diamond" spacing="xl" />
+        <GoldDivider variant="diamond" spacing="lg" />
 
         {/* ── Bottom CTA — Premium Contact Section ── */}
         <motion.section

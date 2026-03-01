@@ -82,8 +82,8 @@ function BentoCardHero({ product }: { product: Product }) {
   };
 
   return (
-    <AnimatedBorderCard className="col-span-2 row-span-2">
-      <Link href={`/produit/${product.id}`} className="group/hero relative block h-full min-h-[480px] bg-muted">
+    <AnimatedBorderCard className="h-full">
+      <Link href={`/produit/${product.id}`} className="group/hero relative block h-full min-h-[600px] bg-muted">
         {/* Background image */}
         {!imageLoaded && (
           <div className="absolute inset-0 animate-pulse bg-stone-200 dark:bg-purple-900/50" />
@@ -183,9 +183,10 @@ function BentoCardSmall({ product, index }: { product: Product; index: number })
       transition={{ duration: 0.5, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
+      className="h-full"
     >
-      <AnimatedBorderCard>
-        <Link href={`/produit/${product.id}`} className="group/small relative block h-full">
+      <AnimatedBorderCard className="h-full">
+        <Link href={`/produit/${product.id}`} className="group/small relative flex flex-col h-full">
           {/* Image zone - 3:4 */}
           <div className="relative aspect-[3/4] bg-muted overflow-hidden">
             {!imageLoaded && (
@@ -235,8 +236,8 @@ function BentoCardSmall({ product, index }: { product: Product; index: number })
           </div>
 
           {/* Info */}
-          <div className="p-4 space-y-1 bg-card">
-            <h3 className="font-display text-base font-normal text-foreground truncate group-hover/small:text-primary transition-colors duration-300">
+          <div className="p-4 space-y-1 bg-card flex-shrink-0">
+            <h3 className="font-display text-base font-normal text-foreground line-clamp-2 group-hover/small:text-primary transition-colors duration-300">
               {product.name}
             </h3>
             <p className="font-sans text-sm font-semibold text-foreground">
@@ -260,35 +261,29 @@ export function BentoProductGrid({ products }: BentoProductGridProps) {
   const [heroProduct, ...restProducts] = products;
   if (!heroProduct) return null;
 
-  // Bento layout: hero (2×2) + up to 4 small cards on right
+  // Bento layout: hero (2×2) + small cards
   const smallProducts = restProducts.slice(0, 4);
 
   return (
-    <div className="grid grid-cols-3 grid-rows-2 gap-4 lg:gap-5 auto-rows-[300px]">
-      {/* Hero card — spans 2 cols × 2 rows */}
-      <BentoCardHero product={heroProduct} />
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-5">
+      {/* Row 1: Hero (2×2) + 2 small cards on right */}
+      <div className="md:col-span-2 md:row-span-2">
+        <BentoCardHero product={heroProduct} />
+      </div>
 
-      {/* Small cards — fill the right column, 2 rows × 2 */}
+      {/* Small cards — fill the right column */}
       {smallProducts.slice(0, 2).map((p, i) => (
-        <BentoCardSmall key={p.id} product={p} index={i} />
+        <div key={p.id} className="md:col-span-1">
+          <BentoCardSmall product={p} index={i} />
+        </div>
       ))}
 
-      {/* If 4+ products: second row of small cards */}
-      {smallProducts.length > 2 && (
-        <>
-          {/* Extra row — spans full 3 cols with 3 equal cards */}
-          <motion.div
-            className="col-span-3 grid grid-cols-3 gap-4 lg:gap-5"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.4 }}
-          >
-            {smallProducts.slice(2, 5).map((p, i) => (
-              <BentoCardSmall key={p.id} product={p} index={i + 2} />
-            ))}
-          </motion.div>
-        </>
-      )}
+      {/* Row 2: 3 equal cards if 4+ products */}
+      {smallProducts.slice(2, 5).map((p, i) => (
+        <div key={p.id} className="md:col-span-1">
+          <BentoCardSmall product={p} index={i + 2} />
+        </div>
+      ))}
     </div>
   );
 }
