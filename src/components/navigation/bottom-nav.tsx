@@ -24,7 +24,7 @@ import { NAV_ITEMS, shouldShowBottomNav } from './nav-items';
 
 const NAV_HEIGHT = 'h-16'; // 64px
 const DOCK_MAX_WIDTH = 'max-w-[560px]';
-const CART_BUTTON_BG = 'bg-fuchsia-600'; // Magenta accent
+const CART_BUTTON_BG = 'bg-gradient-to-br from-primary to-primary/80'; // Love Symbol gradient
 const ICON_STROKE_WIDTH = 1.5;
 
 // ────────────────────────────────────────────────────────────────

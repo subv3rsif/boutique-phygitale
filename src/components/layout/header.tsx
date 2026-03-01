@@ -10,6 +10,7 @@ import { useCart } from '@/store/cart';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { DrawerMenu } from './drawer-menu';
+import { FloatingMenuButton } from '@/components/navigation/floating-menu-button';
 import { cn } from '@/lib/utils';
 
 export function Header() {
@@ -48,38 +49,56 @@ export function Header() {
             isScrolled ? "h-16" : "h-24 md:h-20"
           )}
         >
-          {/* Hamburger Menu - Left */}
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setIsMenuOpen(true)}
-            className={cn(
-              "focus-magenta rounded-xl hover:bg-primary/10 transition-all duration-300 shimmer",
-              isScrolled ? "h-10 w-10" : "h-12 w-12 md:h-12 md:w-12"
-            )}
-            aria-label="Ouvrir le menu"
-          >
-            <Menu className={cn(
-              "transition-all duration-300",
-              isScrolled ? "h-5 w-5" : "h-6 w-6 md:h-5 md:w-5"
-            )} />
-          </Button>
+          {/* Left: Hamburger + Logo (Desktop only) */}
+          <div className="hidden md:flex items-center gap-4">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setIsMenuOpen(true)}
+              className={cn(
+                "focus-magenta rounded-xl hover:bg-primary/10 transition-all duration-300 shimmer",
+                isScrolled ? "h-10 w-10" : "h-12 w-12"
+              )}
+              aria-label="Ouvrir le menu"
+            >
+              <Menu className={cn(
+                "transition-all duration-300",
+                isScrolled ? "h-5 w-5" : "h-5 w-5"
+              )} />
+            </Button>
 
-          {/* Logo/Brand - Center on mobile, left on desktop */}
+            {/* Logo - Desktop only (aligned left) */}
+            <Link
+              href="/"
+              className="focus-magenta rounded-2xl px-4 py-2 hover:bg-primary/5 transition-all duration-300 group"
+            >
+              <span className={cn(
+                "font-display font-bold text-foreground transition-all duration-500 inline-block",
+                "group-hover:text-gradient-love",
+                isScrolled ? "text-xl" : "text-2xl"
+              )}>
+                Boutique 1885
+              </span>
+            </Link>
+          </div>
+
+          {/* Center: Logo Badge Mobile (centered, small) */}
           <Link
             href="/"
-            className={cn(
-              "focus-magenta rounded-2xl px-6 py-3 hover:bg-primary/5 transition-all duration-300 group",
-              "absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0"
-            )}
+            className="md:hidden absolute left-1/2 -translate-x-1/2 focus-magenta group"
           >
-            <span className={cn(
-              "font-display font-bold text-foreground transition-all duration-500 inline-block",
-              "group-hover:text-gradient-love",
-              isScrolled ? "text-xl" : "text-2xl md:text-2xl"
+            <div className={cn(
+              "rounded-full glass-love flex items-center justify-center transition-all duration-300",
+              "group-hover:scale-105",
+              isScrolled ? "h-10 w-10" : "h-12 w-12"
             )}>
-              Boutique 1885
-            </span>
+              <span className={cn(
+                "font-display font-bold text-primary transition-all duration-300",
+                isScrolled ? "text-sm" : "text-base"
+              )}>
+                18
+              </span>
+            </div>
           </Link>
 
           {/* Desktop Actions - Right (hidden on mobile) */}
@@ -222,6 +241,9 @@ export function Header() {
         theme={theme}
         onToggleTheme={toggleTheme}
       />
+
+      {/* Floating Menu Button - Mobile Only */}
+      <FloatingMenuButton onClick={() => setIsMenuOpen(true)} />
     </>
   );
 }

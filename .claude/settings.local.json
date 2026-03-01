@@ -1,0 +1,35 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx tsc:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nAdd cinematic hero, bento grid, and animated UI components\n\n- HeroCinematic: split layout with word reveal, marquee strip, floating orbs and parallax scroll\n- BentoProductGrid: asymmetric bento layout \\(hero 2×2 + small cards\\) with animated spotlight border that follows cursor\n- SectionHeading: reusable animated title with word reveal and gradient accent\n- globals.css: add @property conic-border, glass variants, shadow utilities and word-up keyframe\n- page.tsx: wire up new components, keep carousel on mobile\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git push:*)",
+      "Bash(git commit:*)",
+      "Bash(npm i:*)",
+      "Bash(git -C /Users/germainlefranc/Documents/PWA/sostn status)",
+      "Bash(git -C /Users/germainlefranc/Documents/PWA/sostn log --oneline -3)",
+      "Bash(git -C /Users/germainlefranc/Documents/PWA/sostn add app/layout.tsx package.json package-lock.json)",
+      "Bash(git -C /Users/germainlefranc/Documents/PWA/sostn commit -m \"$\\(cat <<''EOF''\nAdd Vercel Analytics and Speed Insights\n\n- Install @vercel/analytics and @vercel/speed-insights\n- Integrate <Analytics /> and <SpeedInsights /> in root layout\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git -C /Users/germainlefranc/Documents/PWA/sostn push origin main)",
+      "Bash(git -C /Users/germainlefranc/Documents/PWA/sostn add components/layout/ScrollProgressBar.tsx app/[locale]/layout.tsx app/[locale]/not-found.tsx)",
+      "Bash(git -C /Users/germainlefranc/Documents/PWA/sostn commit -m \"$\\(cat <<''EOF''\nAdd scroll progress bar and premium 404 page\n\n- ScrollProgressBar: fixed 2px gradient bar \\(turquoise→orange\\) with spring physics, z-index above navbar\n- [locale]/not-found.tsx: interactive dot grid \\(canvas + mouse tracking\\), glitch 404 number \\(CSS clip-path\\), ambient glow blobs, FR/EN CTAs\n- [locale]/layout.tsx: integrate ScrollProgressBar\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git -C /Users/germainlefranc/Documents/PWA/sostn remote:*)",
+      "Bash(git -C /Users/germainlefranc/Documents/PWA/sostn add hooks/useCountUp.ts components/Hero.tsx)",
+      "Bash(git -C /Users/germainlefranc/Documents/PWA/sostn commit -m \"$\\(cat <<''EOF''\nAdd count-up animation on Hero stats\n\n- hooks/useCountUp.ts: custom hook with requestAnimationFrame + expo-out easing, triggers once on viewport entry\n- Hero.tsx: StatCard component uses useInView \\(Framer Motion\\) to start count-up when scrolled into view, staggered entry \\(delay: index * 0.08s\\)\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git -C /Users/germainlefranc/Documents/PWA/sostn add app/[locale]/layout.tsx app/globals.css app/[locale]/not-found.tsx)",
+      "Bash(git -C /Users/germainlefranc/Documents/PWA/sostn commit -m \"$\\(cat <<''EOF''\nReplace Inter/Space Grotesk with Syne/DM Sans\n\n- layout.tsx: swap Google Fonts URL → Syne \\(400–800\\) + DM Sans \\(300–700 + italic\\)\n- globals.css: update --font-display \\(Syne\\) and --font-body \\(DM Sans\\), recalibrate letter-spacing for Syne''s natural condensation, bump h1 to weight 800 / h2 to 700\n- not-found.tsx: update hardcoded fontFamily inline styles\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(npm run build:*)",
+      "Bash(ls:*)",
+      "Bash(test:*)",
+      "Bash(npm install:*)",
+      "Bash(./scripts/performance-check.sh:*)",
+      "Bash(npx browserslist:*)",
+      "Bash(lsof:*)",
+      "Bash(xargs kill:*)",
+      "Bash(curl:*)",
+      "Bash(npx lighthouse:*)",
+      "Bash(python3:*)"
+    ]
+  }
+}

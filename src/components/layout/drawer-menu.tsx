@@ -81,20 +81,24 @@ export function DrawerMenu({ isOpen, onClose, theme, onToggleTheme }: DrawerMenu
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Fullscreen Overlay Background */}
+          {/* Fullscreen Overlay Background - Love Symbol Premium */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 bg-purple-950/95 dark:bg-purple-950/98 backdrop-blur-xl z-50"
+            className="fixed inset-0 bg-[#503B64]/90 backdrop-blur-2xl z-50"
             onClick={onClose}
           >
-            {/* Subtle gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-transparent to-purple-600/10" />
+            {/* Subtle gradient Love Symbol × Cloud Dancer */}
+            <div className="absolute inset-0 bg-gradient-to-br from-[#F3EFEA]/5 via-transparent to-[#503B64]/20" />
 
-            {/* Decorative grid */}
-            <div className="absolute inset-0 grid-lines opacity-5" />
+            {/* Subtle grain texture (premium feel) */}
+            <div className="absolute inset-0 opacity-[0.015]"
+              style={{
+                backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")',
+              }}
+            />
           </motion.div>
 
           {/* Fullscreen Menu Content */}
