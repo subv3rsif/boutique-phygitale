@@ -13,6 +13,9 @@ import { cn } from "@/lib/utils"
  * - Premium glass design (Love Symbol × Cloud Dancer)
  */
 
+// Force dynamic rendering (auth() requires runtime)
+export const dynamic = 'force-dynamic'
+
 export default async function ConnexionPage() {
   // Check if user is already logged in
   const session = await auth()

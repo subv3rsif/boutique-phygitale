@@ -13,18 +13,28 @@ import { accounts, sessions, users, verificationTokens } from "@/lib/db/schema"
  * - Custom callbacks for user ID in session
  */
 
+// Check if we can initialize the database adapter
+// During build, DATABASE_URL might not be available
+const canInitializeDb = Boolean(process.env.DATABASE_URL)
+
+// Create adapter only if DATABASE_URL is available
+const adapter = canInitializeDb
+  ? DrizzleAdapter(getDb(), {
+      usersTable: users,
+      accountsTable: accounts,
+      sessionsTable: sessions,
+      verificationTokensTable: verificationTokens,
+    })
+  : undefined
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  adapter: DrizzleAdapter(getDb(), {
-    usersTable: users,
-    accountsTable: accounts,
-    sessionsTable: sessions,
-    verificationTokensTable: verificationTokens,
-  }),
+  // Only use adapter if available (runtime), not during build
+  ...(adapter && { adapter }),
 
   providers: [
     Google({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      clientId: process.env.GOOGLE_CLIENT_ID || "dummy_client_id",
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "dummy_secret",
       authorization: {
         params: {
           prompt: "consent",
@@ -38,7 +48,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   callbacks: {
     session({ session, user }) {
       // Add user ID to session for easy access
-      if (session.user) {
+      if (session.user && user) {
         session.user.id = user.id
       }
       return session
@@ -46,14 +56,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   },
 
   pages: {
-    signIn: '/login',
+    signIn: '/connexion',
     signOut: '/logout',
     error: '/auth/error',
   },
 
   // Security
   session: {
-    strategy: "database",
+    strategy: adapter ? "database" : "jwt", // Fallback to JWT if no DB
     maxAge: 30 * 24 * 60 * 60, // 30 days
     updateAge: 24 * 60 * 60, // 24 hours
   },

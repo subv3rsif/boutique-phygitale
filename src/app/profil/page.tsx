@@ -15,6 +15,9 @@ import { Mail, Calendar, LogOut } from "lucide-react"
  * - Premium glass design
  */
 
+// Force dynamic rendering (auth() requires runtime)
+export const dynamic = 'force-dynamic'
+
 export default async function ProfilPage() {
   const session = await auth()
 

@@ -7,12 +7,6 @@ let _db: ReturnType<typeof drizzle> | null = null;
 
 function getDb() {
   if (!_db) {
-    // Skip DB initialization during build (for static page generation)
-    if (process.env.NEXT_PHASE === 'phase-production-build') {
-      // Return a mock db for build time
-      return {} as ReturnType<typeof drizzle>;
-    }
-
     // Check if DATABASE_URL is set
     if (!process.env.DATABASE_URL) {
       throw new Error(
