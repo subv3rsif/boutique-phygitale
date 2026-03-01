@@ -1,5 +1,6 @@
 import NextAuth from "next-auth"
 import Google from "next-auth/providers/google"
+import Resend from "next-auth/providers/resend"
 import { DrizzleAdapter } from "@auth/drizzle-adapter"
 import { getDb } from "@/lib/db"
 import { accounts, sessions, users, verificationTokens } from "@/lib/db/schema"
@@ -42,6 +43,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           response_type: "code",
         },
       },
+    }),
+
+    Resend({
+      apiKey: process.env.RESEND_API_KEY || "dummy_key",
+      from: process.env.EMAIL_FROM || "noreply@example.com",
     }),
   ],
 
