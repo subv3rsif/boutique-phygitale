@@ -175,19 +175,21 @@ export function Header() {
             </Link>
 
             {/* Profile Button */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className={cn(
-                "h-11 w-11 rounded-xl",
-                "hover:bg-primary/10 hover:scale-105",
-                "transition-all duration-300",
-                "focus-magenta"
-              )}
-              aria-label="Profil"
-            >
-              <User className="h-5 w-5 text-muted-foreground hover:text-foreground transition-colors" />
-            </Button>
+            <Link href="/profil">
+              <Button
+                variant="ghost"
+                size="icon"
+                className={cn(
+                  "h-11 w-11 rounded-xl",
+                  "hover:bg-primary/10 hover:scale-105",
+                  "transition-all duration-300",
+                  "focus-magenta"
+                )}
+                aria-label="Profil"
+              >
+                <User className="h-5 w-5 text-muted-foreground hover:text-foreground transition-colors" />
+              </Button>
+            </Link>
           </div>
 
           {/* Mobile: Spacer for visual balance */}
