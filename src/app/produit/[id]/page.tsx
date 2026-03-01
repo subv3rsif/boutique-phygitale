@@ -10,6 +10,8 @@ import { getProductById, formatCurrency } from '@/lib/catalogue';
 import { useCart } from '@/store/cart';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { PremiumBadge } from '@/components/ui/premium-badge';
+import { GoldDivider } from '@/components/ui/gold-divider';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 
@@ -108,7 +110,7 @@ export default function ProductPage({ params }: PageProps) {
 
       {/* Product Content */}
       <div className="container py-8 md:py-12 px-4">
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 max-w-7xl mx-auto">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 max-w-6xl mx-auto">
 
           {/* Left Column - Image Gallery */}
           <motion.div
@@ -118,7 +120,7 @@ export default function ProductPage({ params }: PageProps) {
             className="space-y-4"
           >
             {/* Main Image */}
-            <div className="relative aspect-[4/5] rounded-xl overflow-hidden bg-muted">
+            <div className="relative aspect-square rounded-2xl overflow-hidden bg-muted shadow-premium-lg">
               <Image
                 src={product.image}
                 alt={product.name}
@@ -128,13 +130,10 @@ export default function ProductPage({ params }: PageProps) {
                 priority
               />
 
-              {/* Badges */}
-              <div className="absolute top-4 left-4 flex flex-col gap-2">
+              {/* Premium Badges */}
+              <div className="absolute top-4 left-4 flex flex-col gap-2 z-10">
                 {isNew && (
-                  <Badge className="bg-primary text-primary-foreground dark:magenta-glow-sm font-semibold gap-1">
-                    <Sparkles className="w-3 h-3" />
-                    Nouveau
-                  </Badge>
+                  <PremiumBadge label="Nouveau" variant="solid" size="md" />
                 )}
                 {isLowStock && (
                   <Badge className="bg-destructive text-destructive-foreground font-medium">
@@ -144,35 +143,35 @@ export default function ProductPage({ params }: PageProps) {
               </div>
             </div>
 
-            {/* Trust Indicators */}
+            {/* Trust Indicators with Champagne Gold */}
             <div className="grid grid-cols-3 gap-4 pt-4">
               <div className="text-center space-y-2">
-                <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary">
-                  <Check className="h-5 w-5" />
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-champagne-light border border-champagne/30">
+                  <Check className="h-5 w-5 text-champagne" />
                 </div>
-                <p className="text-xs text-muted-foreground">Qualité premium</p>
+                <p className="text-xs text-slate">Qualité premium</p>
               </div>
               <div className="text-center space-y-2">
-                <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary">
-                  <Sparkles className="h-5 w-5" />
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-champagne-light border border-champagne/30">
+                  <Sparkles className="h-5 w-5 text-champagne" />
                 </div>
-                <p className="text-xs text-muted-foreground">Édition limitée</p>
+                <p className="text-xs text-slate">Édition limitée</p>
               </div>
               <div className="text-center space-y-2">
-                <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary">
-                  <Package className="h-5 w-5" />
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-champagne-light border border-champagne/30">
+                  <Package className="h-5 w-5 text-champagne" />
                 </div>
-                <p className="text-xs text-muted-foreground">Livraison soignée</p>
+                <p className="text-xs text-slate">Livraison soignée</p>
               </div>
             </div>
           </motion.div>
 
-          {/* Right Column - Product Info */}
+          {/* Right Column - Product Info (Sticky) */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] as const, delay: 0.1 }}
-            className="space-y-8"
+            className="lg:sticky lg:top-24 lg:self-start space-y-8"
           >
             {/* Header */}
             <div className="space-y-4">
@@ -297,8 +296,11 @@ export default function ProductPage({ params }: PageProps) {
               </Button>
             </motion.div>
 
+            {/* Gold Divider before details */}
+            <GoldDivider variant="circle" spacing="md" />
+
             {/* Accordions */}
-            <div className="space-y-2 pt-4">
+            <div className="space-y-2">
               {accordionItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = activeAccordion === item.id;
@@ -306,20 +308,28 @@ export default function ProductPage({ params }: PageProps) {
                 return (
                   <div
                     key={item.id}
-                    className="border border-border rounded-lg overflow-hidden transition-colors hover:border-primary/50"
+                    className={cn(
+                      "border rounded-lg overflow-hidden transition-all duration-300",
+                      isActive
+                        ? "border-champagne/50 bg-champagne-lighter/30 shadow-champagne-sm"
+                        : "border-border hover:border-champagne/30"
+                    )}
                   >
                     <button
                       onClick={() => setActiveAccordion(isActive ? null : item.id)}
-                      className="w-full flex items-center justify-between p-4 text-left focus-magenta"
+                      className="w-full flex items-center justify-between p-4 text-left focus:outline-none focus:ring-2 focus:ring-champagne/30"
                     >
                       <div className="flex items-center gap-3">
-                        <Icon className="h-5 w-5 text-primary" />
+                        <Icon className={cn(
+                          "h-5 w-5 transition-colors",
+                          isActive ? "text-champagne" : "text-primary"
+                        )} />
                         <span className="font-medium text-foreground">{item.title}</span>
                       </div>
                       <ChevronDown
                         className={cn(
-                          "h-5 w-5 text-muted-foreground transition-transform",
-                          isActive && "rotate-180"
+                          "h-5 w-5 transition-all duration-300",
+                          isActive ? "rotate-180 text-champagne" : "text-muted-foreground"
                         )}
                       />
                     </button>
@@ -335,8 +345,8 @@ export default function ProductPage({ params }: PageProps) {
                         >
                           <div className="px-4 pb-4 pl-12 space-y-2">
                             {item.content.map((line, index) => (
-                              <div key={index} className="flex items-start gap-2 text-sm text-muted-foreground">
-                                <Check className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+                              <div key={index} className="flex items-start gap-2 text-sm text-slate">
+                                <Check className="h-4 w-4 text-champagne mt-0.5 flex-shrink-0" />
                                 <span>{line}</span>
                               </div>
                             ))}
