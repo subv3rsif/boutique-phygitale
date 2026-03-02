@@ -21,25 +21,30 @@ interface PageProps {
 
 const accordionItems = [
   {
-    id: 'delivery',
+    id: 'shipping',
     icon: Truck,
-    title: 'Livraison à domicile',
+    title: 'Livraison',
     content: [
-      'Livraison par La Poste en Lettre Suivie',
-      'Délai : 2-3 jours ouvrés après expédition',
-      'Suivi en ligne disponible',
-      'Frais calculés selon le produit',
-    ],
-  },
-  {
-    id: 'pickup',
-    icon: MapPin,
-    title: 'Retrait gratuit à La Fabrik',
-    content: [
-      'Adresse : La Fabrik, [Adresse complète]',
-      'Horaires : Du lundi au vendredi, 9h-17h',
-      'QR code envoyé par email',
-      'Retrait sous 30 jours',
+      {
+        subtitle: 'Livraison à domicile',
+        icon: Truck,
+        items: [
+          'Livraison par La Poste en Lettre Suivie',
+          'Délai : 2-3 jours ouvrés après expédition',
+          'Suivi en ligne disponible',
+          'Frais calculés selon le produit',
+        ],
+      },
+      {
+        subtitle: 'Retrait gratuit à La Fabrik',
+        icon: MapPin,
+        items: [
+          'Adresse : La Fabrik, [Adresse complète]',
+          'Horaires : Du lundi au vendredi, 9h-17h',
+          'QR code envoyé par email',
+          'Retrait sous 30 jours',
+        ],
+      },
     ],
   },
   {
@@ -61,7 +66,7 @@ export default function ProductPage({ params }: PageProps) {
 
   const [quantity, setQuantity] = useState(1);
   const [isAdding, setIsAdding] = useState(false);
-  const [activeAccordion, setActiveAccordion] = useState<string | null>('delivery');
+  const [activeAccordion, setActiveAccordion] = useState<string | null>('shipping');
   const addItem = useCart((state) => state.addItem);
 
   if (!product) {
@@ -343,13 +348,43 @@ export default function ProductPage({ params }: PageProps) {
                           transition={{ duration: 0.2 }}
                           className="overflow-hidden"
                         >
-                          <div className="px-4 pb-4 pl-12 space-y-2">
-                            {item.content.map((line, index) => (
-                              <div key={index} className="flex items-start gap-2 text-sm text-slate">
-                                <Check className="h-4 w-4 text-champagne mt-0.5 flex-shrink-0" />
-                                <span>{line}</span>
+                          <div className="px-4 pb-4 space-y-4">
+                            {/* If content has subsections (shipping mode) */}
+                            {Array.isArray(item.content) && typeof item.content[0] === 'object' && 'subtitle' in item.content[0] ? (
+                              item.content.map((section: any, sectionIndex: number) => {
+                                const SectionIcon = section.icon;
+                                return (
+                                  <div key={sectionIndex} className="space-y-2">
+                                    {/* Subtitle with icon */}
+                                    <div className="flex items-center gap-2 pl-8">
+                                      <SectionIcon className="h-4 w-4 text-champagne" />
+                                      <h4 className="font-semibold text-foreground text-sm">
+                                        {section.subtitle}
+                                      </h4>
+                                    </div>
+                                    {/* Items */}
+                                    <div className="pl-14 space-y-2">
+                                      {section.items.map((line: string, lineIndex: number) => (
+                                        <div key={lineIndex} className="flex items-start gap-2 text-sm text-foreground">
+                                          <Check className="h-4 w-4 text-champagne mt-0.5 flex-shrink-0" />
+                                          <span>{line}</span>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                );
+                              })
+                            ) : (
+                              /* Simple list (details mode) */
+                              <div className="pl-8 space-y-2">
+                                {(item.content as string[]).map((line, index) => (
+                                  <div key={index} className="flex items-start gap-2 text-sm text-foreground">
+                                    <Check className="h-4 w-4 text-champagne mt-0.5 flex-shrink-0" />
+                                    <span>{line}</span>
+                                  </div>
+                                ))}
                               </div>
-                            ))}
+                            )}
                           </div>
                         </motion.div>
                       )}
