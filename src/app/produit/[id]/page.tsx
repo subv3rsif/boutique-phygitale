@@ -109,8 +109,8 @@ export default function ProductPage({ params }: PageProps) {
       </div>
 
       {/* Product Content */}
-      <div className="container py-8 md:py-12 px-4">
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 max-w-6xl mx-auto">
+      <div className="w-full py-8 md:py-12">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           {/* Left Column - Image Gallery */}
           <motion.div
