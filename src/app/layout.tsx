@@ -93,8 +93,8 @@ export default function RootLayout({
         <ThemeProvider>
           <Header />
           <main className="min-h-[calc(100vh-4rem)] pb-24">{children}</main>
-          <footer className="border-t py-8 mt-12 mb-20">
-            <div className="container text-center text-sm text-muted-foreground">
+          <footer className="w-full border-t py-8 mt-12 mb-20">
+            <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm text-muted-foreground">
               <div className="flex justify-center gap-4 mb-4">
                 <a href="/mentions-legales" className="hover:underline focus-magenta rounded px-2 py-1">
                   Mentions légales

@@ -45,7 +45,7 @@ export function Header() {
       >
         <div
           className={cn(
-            "container flex items-center justify-between px-4 md:px-6 transition-all duration-500",
+            "w-full max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8 transition-all duration-500",
             isScrolled ? "h-16" : "h-24 md:h-20"
           )}
         >
