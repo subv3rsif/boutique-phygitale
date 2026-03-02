@@ -1,0 +1,85 @@
+# ── Vercel Ignore ──
+# Exclude files from Vercel deployment to reduce output size
+
+# Development
+.env.local
+.env.development
+.env*.local
+
+# Testing
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+__tests__/
+coverage/
+.jest/
+
+# Documentation - Exclude ALL .md files except README
+*.md
+!README.md
+
+# Specific documentation files at root
+AUTH_PROVIDERS_GUIDE.md
+BOTTOM_NAV_GUIDE.md
+CHAMPAGNE_GOLD_GUIDE.md
+COMPONENT_SUMMARY.md
+CRON_SETUP.md
+DEPLOYMENT.md
+DESIGN_IMPROVEMENTS_PROPOSAL.md
+DESIGN_SYSTEM.md
+GOOGLE_AUTH_SETUP_GUIDE.md
+LAYOUT_FIXES_SUMMARY.md
+LIGHTHOUSE_RESULTS.md
+MAGIC_LINK_SETUP.md
+NAVIGATION_CHANGES.md
+NAVIGATION_OPTIMIZATION_PROPOSAL.md
+NOTICE.md
+PERFORMANCE_AUDIT_REPORT.md
+PERFORMANCE_INDEX.md
+PERFORMANCE_QUICKSTART.md
+PERFORMANCE_README.md
+PERFORMANCE_SUMMARY.md
+PREMIUM_INTEGRATION_SUMMARY.md
+
+# Documentation folders
+docs/
+
+# IDE / Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs/
+
+# Cache
+.cache/
+.turbo/
+.next/cache/
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+.travis.yml
+
+# Misc
+tmp/
+temp/
+*.tmp
+.temp/
+exports/
+data/
+scripts/
