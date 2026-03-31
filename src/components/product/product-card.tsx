@@ -71,7 +71,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
         "group relative flex flex-col h-full overflow-hidden rounded-lg",
         "bg-card border border-border",
         "transition-all duration-300",
-        "hover:border-primary/50 hover:card-shadow-lg focus-within:ring-2 focus-within:ring-primary"
+        "hover:border-terra/50 focus-within:ring-2 focus-within:ring-terra"
       )}
       role="article"
       aria-label={`Produit: ${product.name}`}
@@ -128,6 +128,13 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
           </motion.div>
         )}
 
+        {/* Atelier · Alfortville Location Overlay */}
+        <div className="absolute bottom-3 right-3">
+          <span className="text-ivoire text-[9px] tracking-[0.15em] uppercase bg-encre/60 backdrop-blur-sm px-2 py-1 rounded">
+            Atelier · Alfortville
+          </span>
+        </div>
+
         {/* Low Stock Badge - Top Right */}
         {isLowStock && (
           <div className="absolute top-3 right-3">
@@ -154,7 +161,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
       {/* Product Details Section */}
       <Link href={`/produit/${product.id}`} className="flex-1 p-5 space-y-4 block group-hover:bg-card/80 transition-colors">
         {/* Product Name */}
-        <h3 className="font-display text-xl font-bold text-foreground line-clamp-2 leading-tight group-hover:text-primary transition-colors">
+        <h3 className="font-display text-xl font-bold text-foreground line-clamp-2 leading-tight group-hover:text-terra transition-colors">
           {product.name}
         </h3>
 
@@ -194,11 +201,10 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
             disabled={isAdding || isOutOfStock}
             className={cn(
               "w-full relative overflow-hidden",
-              "bg-primary text-primary-foreground hover:bg-primary/90",
-              "dark:magenta-glow-sm hover:dark:magenta-glow",
+              "bg-encre text-ivoire hover:bg-encre-2",
               "font-semibold transition-all duration-300",
               "disabled:opacity-50 disabled:cursor-not-allowed",
-              "focus-magenta"
+              "focus-terra"
             )}
             size="lg"
             aria-label={isOutOfStock ? 'Produit en rupture de stock' : `Ajouter ${product.name} au panier`}
