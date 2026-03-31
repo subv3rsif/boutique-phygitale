@@ -12,7 +12,7 @@ import { Toaster } from "@/components/ui/sonner";
 const josefin = Josefin_Sans({
   subsets: ['latin'],
   variable: '--font-display',
-  weight: ['300', '400', '700'],
+  weight: ['300', '400', '600', '700'],
   display: 'swap',
 });
 
@@ -20,7 +20,7 @@ const josefin = Josefin_Sans({
 const dmSans = DM_Sans({
   subsets: ['latin'],
   variable: '--font-sans',
-  weight: ['300', '400', '500'],
+  weight: ['300', '400', '500', '600'],
   display: 'swap',
 });
 
