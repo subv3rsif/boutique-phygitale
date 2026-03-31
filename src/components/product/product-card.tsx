@@ -130,7 +130,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
 
         {/* Atelier · Alfortville Location Overlay */}
         <div className="absolute bottom-3 right-3">
-          <span className="text-ivoire text-[9px] tracking-[0.15em] uppercase bg-encre/60 backdrop-blur-sm px-2 py-1 rounded">
+          <span className="text-ivoire text-[9px] tracking-[0.15em] uppercase bg-encre/70 backdrop-blur-sm px-2 py-1 rounded">
             Atelier · Alfortville
           </span>
         </div>
@@ -161,7 +161,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
       {/* Product Details Section */}
       <Link href={`/produit/${product.id}`} className="flex-1 p-5 space-y-4 block group-hover:bg-card/80 transition-colors">
         {/* Product Name */}
-        <h3 className="font-display text-xl font-bold text-foreground line-clamp-2 leading-tight group-hover:text-terra transition-colors">
+        <h3 className="font-display text-xl font-bold text-foreground line-clamp-2 leading-tight group-hover:text-encre transition-colors">
           {product.name}
         </h3>
 
