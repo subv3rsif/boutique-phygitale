@@ -1,6 +1,5 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-@import "../styles/brand-1885-tokens.css";
 
 /* ── Accessibility: prefers-reduced-motion ───────────────────── */
 @media (prefers-reduced-motion: reduce) {
@@ -137,49 +136,14 @@
     text-rendering: optimizeLegibility;
   }
 
-  /* Vibrant Animations */
-  @keyframes grain {
-    0%, 100% { transform: translate(0, 0); }
-    10% { transform: translate(-5%, -10%); }
-    20% { transform: translate(-15%, 5%); }
-    30% { transform: translate(7%, -25%); }
-    40% { transform: translate(-5%, 25%); }
-    50% { transform: translate(-15%, 10%); }
-    60% { transform: translate(15%, 0%); }
-    70% { transform: translate(0%, 15%); }
-    80% { transform: translate(3%, 35%); }
-    90% { transform: translate(-10%, 10%); }
-  }
-
+  /* Essential Animations */
   @keyframes shimmer {
     0% { background-position: -200% center; }
     100% { background-position: 200% center; }
   }
 
-  @keyframes glow-pulse {
-    0%, 100% { opacity: 1; filter: brightness(1); }
-    50% { opacity: 0.8; filter: brightness(1.2); }
-  }
-
-  @keyframes gradient-shift {
-    0%, 100% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-  }
-
-  .animate-grain {
-    animation: grain 8s steps(10) infinite;
-  }
-
   .animate-shimmer {
     animation: shimmer 3s linear infinite;
-  }
-
-  .animate-glow {
-    animation: glow-pulse 2s ease-in-out infinite;
-  }
-
-  .animate-gradient {
-    animation: gradient-shift 8s ease infinite;
   }
 }
 
