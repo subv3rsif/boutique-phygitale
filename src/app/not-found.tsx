@@ -117,7 +117,7 @@ export default function NotFound() {
                   className={cn(
                     'gap-2 transition-smooth',
                     'hover:bg-primary hover:text-primary-foreground hover:border-primary',
-                    'focus-magenta'
+                    'focus-terra'
                   )}
                 >
                   <Icon className="h-4 w-4" />
@@ -160,7 +160,7 @@ export default function NotFound() {
             </h2>
             <Link
               href="/"
-              className="text-sm text-primary hover:underline focus-magenta rounded px-2 py-1"
+              className="text-sm text-primary hover:underline focus-terra rounded px-2 py-1"
             >
               Voir tout
             </Link>
@@ -173,8 +173,8 @@ export default function NotFound() {
                 href={`/produit/${product.id}`}
                 className={cn(
                   'group block bg-card border border-border rounded-lg overflow-hidden',
-                  'hover:border-primary transition-smooth focus-magenta',
-                  'card-shadow hover:card-shadow-lg'
+                  'hover:border-primary transition-smooth focus-terra',
+                  'shadow-md hover:shadow-lg'
                 )}
               >
                 <div className="aspect-square bg-muted relative">

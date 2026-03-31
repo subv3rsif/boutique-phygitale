@@ -105,7 +105,7 @@ export default function ProductPage({ params }: PageProps) {
       <div className="border-b border-border">
         <div className="container py-4 px-4">
           <Link href="/">
-            <Button variant="ghost" size="sm" className="gap-2 focus-magenta">
+            <Button variant="ghost" size="sm" className="gap-2 focus-terra">
               <ChevronLeft className="h-4 w-4" />
               <span>Retour à la boutique</span>
             </Button>

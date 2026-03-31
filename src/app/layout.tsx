@@ -95,13 +95,13 @@ export default function RootLayout({
           <footer className="w-full border-t py-8 mt-12 mb-20">
             <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm text-muted-foreground">
               <div className="flex justify-center gap-4 mb-4">
-                <a href="/mentions-legales" className="hover:underline focus-magenta rounded px-2 py-1">
+                <a href="/mentions-legales" className="hover:underline focus-terra rounded px-2 py-1">
                   Mentions légales
                 </a>
-                <a href="/politique-confidentialite" className="hover:underline focus-magenta rounded px-2 py-1">
+                <a href="/politique-confidentialite" className="hover:underline focus-terra rounded px-2 py-1">
                   Politique de confidentialité
                 </a>
-                <a href="/cgv" className="hover:underline focus-magenta rounded px-2 py-1">
+                <a href="/cgv" className="hover:underline focus-terra rounded px-2 py-1">
                   CGV
                 </a>
               </div>
