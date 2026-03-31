@@ -201,6 +201,26 @@
     background-clip: text;
   }
 
+  .text-gradient-terra-violet {
+    background: linear-gradient(135deg, rgb(var(--terra)), rgb(var(--violet)));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Background gradients */
+  .gradient-1885 {
+    background: linear-gradient(135deg, rgb(var(--encre)), rgb(var(--terra)));
+  }
+
+  .gradient-terra-violet {
+    background: linear-gradient(135deg, rgb(var(--terra)), rgb(var(--violet)));
+  }
+
+  .gradient-ivoire {
+    background: linear-gradient(135deg, rgb(var(--ivoire)), rgb(var(--ivoire-2)));
+  }
+
   /* Focus states */
   .focus-terra {
     @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(var(--terra))] focus-visible:ring-offset-2;
@@ -215,12 +235,51 @@
     box-shadow: 0 8px 24px rgba(197, 99, 57, 0.2);
   }
 
+  /* Shadows violet */
+  .shadow-violet {
+    box-shadow: 0 4px 14px rgba(92, 62, 123, 0.15);
+  }
+
+  .shadow-violet-lg {
+    box-shadow: 0 8px 24px rgba(92, 62, 123, 0.2);
+  }
+
+  /* Shadows encre */
+  .shadow-encre {
+    box-shadow: 0 4px 14px rgba(26, 22, 19, 0.15);
+  }
+
+  .shadow-encre-lg {
+    box-shadow: 0 8px 24px rgba(26, 22, 19, 0.2);
+  }
+
   /* Glass effect ivoire */
   .glass-1885 {
     background: rgba(242, 237, 228, 0.8);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgb(var(--ivoire-2));
+  }
+
+  .glass-encre {
+    background: rgba(26, 22, 19, 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(26, 22, 19, 0.1);
+  }
+
+  .glass-terra {
+    background: rgba(197, 99, 57, 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(197, 99, 57, 0.2);
+  }
+
+  .glass-violet {
+    background: rgba(92, 62, 123, 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(92, 62, 123, 0.2);
   }
 
   /* Background utilities */

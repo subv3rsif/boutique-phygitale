@@ -31,7 +31,8 @@
       "Bash(npx lighthouse:*)",
       "Bash(python3:*)",
       "Bash(du:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(git rm:*)"
     ]
   }
 }
