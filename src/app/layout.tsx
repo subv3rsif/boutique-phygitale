@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 // Luxury Minimal Fonts - Zara/COS inspired
-import { Cormorant_Garamond, Work_Sans, JetBrains_Mono } from "next/font/google";
+import { Josefin_Sans, DM_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ThemeScript } from "./theme-script";
@@ -8,20 +8,19 @@ import { Header } from "@/components/layout/header";
 import { ClientLayoutWrapper } from "@/components/layout/client-layout-wrapper";
 import { Toaster } from "@/components/ui/sonner";
 
-// Display: Elegant serif for titles (très mode/luxe)
-const cormorant = Cormorant_Garamond({
+// Display: 1885 geometric sans for refined titles
+const josefin = Josefin_Sans({
   subsets: ['latin'],
   variable: '--font-display',
-  weight: ['300', '400', '500', '600', '700'],
+  weight: ['300', '400', '700'],
   display: 'swap',
-  style: ['normal', 'italic'],
 });
 
 // Sans: Modern geometric for UI (clean, architectural)
-const workSans = Work_Sans({
+const dmSans = DM_Sans({
   subsets: ['latin'],
   variable: '--font-sans',
-  weight: ['300', '400', '500', '600'],
+  weight: ['300', '400', '500'],
   display: 'swap',
 });
 
@@ -89,7 +88,7 @@ export default function RootLayout({
       <head>
         <ThemeScript />
       </head>
-      <body className={`${cormorant.variable} ${workSans.variable} ${jetbrains.variable} font-sans antialiased`}>
+      <body className={`${josefin.variable} ${dmSans.variable} ${jetbrains.variable} font-sans antialiased`}>
         <ThemeProvider>
           <Header />
           <main className="min-h-[calc(100vh-4rem)] pb-24">{children}</main>
