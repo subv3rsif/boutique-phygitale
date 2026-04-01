@@ -63,7 +63,7 @@ export function EditionsLimitees() {
               initial={{ opacity: 0, y: 30 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: index * 0.1 }}
-              className="bg-ivoire/10 backdrop-blur border border-ivoire/20 hover:border-ivoire/40 rounded-lg overflow-hidden transition-all duration-300"
+              className="bg-ivoire/10 backdrop-blur border border-ivoire/20 hover:border-ivoire/40 rounded-lg overflow-hidden transition-all duration-300 focus-within:ring-2 focus-within:ring-terra focus-within:ring-offset-2"
             >
               {/* Image */}
               <div className="relative aspect-[3/4]">
@@ -78,7 +78,10 @@ export function EditionsLimitees() {
                 {/* Edition badge top-right */}
                 {product.editionNumber && product.editionTotal && (
                   <div className="absolute top-3 right-3">
-                    <span className="bg-ivoire text-violet text-xs px-3 py-1 rounded font-display font-bold">
+                    <span
+                      className="bg-ivoire text-violet text-xs px-3 py-1 rounded font-display font-bold"
+                      aria-label={`Édition limitée numéro ${product.editionNumber} sur ${product.editionTotal}`}
+                    >
                       N° {product.editionNumber}/{product.editionTotal}
                     </span>
                   </div>
@@ -96,11 +99,11 @@ export function EditionsLimitees() {
                     {(product.priceCents / 100).toFixed(2)} €
                   </span>
 
-                  <Link href={`/produit/${product.id}`}>
-                    <Button className="bg-terra hover:bg-terra/90 text-ivoire">
+                  <Button className="bg-terra hover:bg-terra/90 text-ivoire" asChild>
+                    <Link href={`/produit/${product.id}`}>
                       Découvrir
-                    </Button>
-                  </Link>
+                    </Link>
+                  </Button>
                 </div>
               </div>
             </motion.article>
@@ -108,11 +111,15 @@ export function EditionsLimitees() {
         </div>
 
         {/* Mobile: horizontal scroll */}
-        <div className="md:hidden flex overflow-x-auto snap-x snap-mandatory gap-6 pb-6 mb-12 scrollbar-hide">
+        <div
+          className="md:hidden flex overflow-x-auto snap-x snap-mandatory gap-6 pb-6 mb-12 scrollbar-hide"
+          role="region"
+          aria-label="Liste des éditions limitées"
+        >
           {editions.map((product, index) => (
             <article
               key={product.id}
-              className="flex-shrink-0 w-[280px] snap-center bg-ivoire/10 backdrop-blur border border-ivoire/20 rounded-lg overflow-hidden"
+              className="flex-shrink-0 w-[280px] snap-center bg-ivoire/10 backdrop-blur border border-ivoire/20 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-terra focus-within:ring-offset-2"
             >
               <div className="relative aspect-[3/4]">
                 <Image
@@ -125,7 +132,10 @@ export function EditionsLimitees() {
 
                 {product.editionNumber && product.editionTotal && (
                   <div className="absolute top-3 right-3">
-                    <span className="bg-ivoire text-violet text-xs px-3 py-1 rounded font-display font-bold">
+                    <span
+                      className="bg-ivoire text-violet text-xs px-3 py-1 rounded font-display font-bold"
+                      aria-label={`Édition limitée numéro ${product.editionNumber} sur ${product.editionTotal}`}
+                    >
                       N° {product.editionNumber}/{product.editionTotal}
                     </span>
                   </div>
@@ -142,11 +152,11 @@ export function EditionsLimitees() {
                     {(product.priceCents / 100).toFixed(2)} €
                   </span>
 
-                  <Link href={`/produit/${product.id}`}>
-                    <Button className="bg-terra hover:bg-terra/90 text-ivoire text-sm">
+                  <Button className="bg-terra hover:bg-terra/90 text-ivoire text-sm" asChild>
+                    <Link href={`/produit/${product.id}`}>
                       Découvrir
-                    </Button>
-                  </Link>
+                    </Link>
+                  </Button>
                 </div>
               </div>
             </article>

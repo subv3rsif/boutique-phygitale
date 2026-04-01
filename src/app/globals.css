@@ -348,4 +348,13 @@
   .border-terra {
     border-color: rgb(var(--terra));
   }
+
+  /* ── Scrollbar hiding utility ────────────────────────────────── */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
 }
