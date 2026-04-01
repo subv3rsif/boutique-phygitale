@@ -15,6 +15,8 @@ export type Product = {
   weightGrams?: number; // Optional for future shipping calculations
   tags?: string[];
   stockQuantity?: number; // Optional stock tracking
+  editionNumber?: number; // Edition limitée: numéro unique (ex: 7)
+  editionTotal?: number; // Edition limitée: total édition (ex: 50)
 };
 
 /**
@@ -36,14 +38,16 @@ export const catalogue: Product[] = [
   {
     id: 'tote-bag-heritage',
     name: 'Tote Bag Héritage 1885',
-    description: 'Sac en coton bio premium avec sérigraphie vintage. Dimensions généreuses : 40x45cm. Anses renforcées.',
+    description: 'Sac en coton bio premium avec sérigraphie vintage. Dimensions généreuses : 40x45cm. Anses renforcées. Édition limitée numérotée.',
     priceCents: 1800, // 18.00€
     shippingCents: 450,
     image: 'https://placehold.co/600x750/F3EFEA/503B64?text=Tote+Heritage&font=playfair-display',
     active: true,
     weightGrams: 140,
-    tags: ['textile', 'eco-friendly', 'best-seller'],
+    tags: ['textile', 'eco-friendly', 'best-seller', 'edition-limitee'],
     stockQuantity: 35,
+    editionNumber: 12,
+    editionTotal: 50,
   },
   {
     id: 'stickers-vibrant-pack',
@@ -60,14 +64,16 @@ export const catalogue: Product[] = [
   {
     id: 'carnet-edition-1885',
     name: 'Carnet Édition 1885',
-    description: 'Carnet de notes premium avec couverture gaufrée Love Symbol. Papier 120g, format A5, 192 pages numérotées.',
+    description: 'Carnet de notes premium avec couverture gaufrée Love Symbol. Papier 120g, format A5, 192 pages numérotées. Édition limitée numérotée.',
     priceCents: 2200, // 22.00€
     shippingCents: 450,
     image: 'https://placehold.co/600x750/503B64/F3EFEA?text=Carnet+1885&font=playfair-display',
     active: true,
     weightGrams: 320,
-    tags: ['papeterie', 'collection', 'nouveau', 'best-seller'],
+    tags: ['papeterie', 'collection', 'nouveau', 'best-seller', 'edition-limitee'],
     stockQuantity: 50,
+    editionNumber: 27,
+    editionTotal: 100,
   },
   {
     id: 'pin-love-symbol',
@@ -84,14 +90,16 @@ export const catalogue: Product[] = [
   {
     id: 'affiche-heritage',
     name: 'Affiche Héritage 1885',
-    description: 'Affiche d\'art exclusive sur papier mat 250g. Format A3 (29,7 x 42 cm). Design vintage revisité.',
+    description: 'Affiche d\'art exclusive sur papier mat 250g. Format A3 (29,7 x 42 cm). Design vintage revisité. Édition limitée numérotée.',
     priceCents: 2500, // 25.00€
     shippingCents: 450,
     image: 'https://placehold.co/600x750/F3EFEA/503B64?text=Affiche+1885&font=playfair-display',
     active: true,
     weightGrams: 180,
-    tags: ['decoration', 'collection'],
+    tags: ['decoration', 'collection', 'edition-limitee'],
     stockQuantity: 25,
+    editionNumber: 8,
+    editionTotal: 30,
   },
   {
     id: 'sweat-love-edition',
