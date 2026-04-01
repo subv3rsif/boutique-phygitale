@@ -62,15 +62,16 @@ export function Atelier() {
               </div>
 
               {/* CTA */}
-              <Link href="/atelier">
-                <Button
-                  variant="outline"
-                  className="border-ivoire text-ivoire hover:bg-ivoire/10"
-                >
+              <Button
+                variant="outline"
+                className="border-ivoire text-ivoire hover:bg-ivoire/10"
+                asChild
+              >
+                <Link href="/atelier">
                   Découvrir l'Atelier
                   <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             </div>
           </motion.div>
         </div>
