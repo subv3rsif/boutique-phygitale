@@ -52,13 +52,13 @@ export default function PayFipMockPage() {
 
     try {
       // Build mock notification XML
-      const notificationXML = buildMockNotificationXML(
+      const notificationXML = buildMockNotificationXML({
         idop,
-        resultTrans,
-        details.refdet,
-        details.montant,
-        details.mel
-      );
+        resultrans: resultTrans,
+        refdet: details.refdet,
+        montant: details.montant,
+        mel: details.mel,
+      });
 
       console.log('Sending mock notification:', notificationXML);
 
