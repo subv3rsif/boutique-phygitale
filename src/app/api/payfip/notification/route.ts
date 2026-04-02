@@ -3,7 +3,7 @@ import { parseNotificationXML } from '@/lib/payfip/soap-parser';
 import { validateIdop, consumeIdop, getPayfipOperationByIdop } from '@/lib/payfip/idop-manager';
 import { updateOrderWithPayFipResult, getOrderById } from '@/lib/db/helpers';
 import { db, emailQueue, pickupTokens } from '@/lib/db';
-import { generatePickupToken, hashToken } from '@/lib/qr/token-generator';
+import { generatePickupToken, generateTokenExpiration, hashToken } from '@/lib/qr/token-generator';
 
 /**
  * POST /api/payfip/notification
@@ -80,7 +80,8 @@ export async function POST(request: NextRequest) {
 
       // Generate pickup token if pickup mode
       if (order.fulfillmentMode === 'pickup') {
-        const { token, tokenHash, expiresAt } = await generatePickupToken();
+        const { token, tokenHash } = generatePickupToken();
+        const expiresAt = generateTokenExpiration(30); // 30 days
 
         // Store token
         await db.insert(pickupTokens).values({
