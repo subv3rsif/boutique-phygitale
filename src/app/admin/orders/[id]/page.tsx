@@ -185,13 +185,31 @@ export default async function OrderDetailPage({
           </CardHeader>
           <CardContent className="space-y-3">
             <div>
-              <p className="text-sm text-muted-foreground">Session Stripe</p>
-              <p className="font-mono text-xs break-all">{order.stripeSessionId}</p>
+              <p className="text-sm text-muted-foreground">REFDET (Facture)</p>
+              <p className="font-mono text-xs break-all">{order.refdet}</p>
             </div>
-            {order.stripePaymentIntentId && (
+            {order.idop && (
               <div>
-                <p className="text-sm text-muted-foreground">Payment Intent</p>
-                <p className="font-mono text-xs break-all">{order.stripePaymentIntentId}</p>
+                <p className="text-sm text-muted-foreground">idOp PayFiP</p>
+                <p className="font-mono text-xs break-all">{order.idop}</p>
+              </div>
+            )}
+            {order.payfipNumAuto && (
+              <div>
+                <p className="text-sm text-muted-foreground">N° Autorisation</p>
+                <p className="font-mono text-xs break-all">{order.payfipNumAuto}</p>
+              </div>
+            )}
+            {order.payfipResultTrans && (
+              <div>
+                <p className="text-sm text-muted-foreground">Résultat Transaction</p>
+                <p className="font-mono text-xs">
+                  {order.payfipResultTrans === 'P' && '✓ Paiement CB confirmé'}
+                  {order.payfipResultTrans === 'V' && '✓ Prélèvement SEPA validé'}
+                  {order.payfipResultTrans === 'A' && '⊘ Annulé par l\'usager'}
+                  {order.payfipResultTrans === 'R' && '✗ CB refusé'}
+                  {order.payfipResultTrans === 'Z' && '✗ Prélèvement rejeté'}
+                </p>
               </div>
             )}
             {order.paidAt && (
