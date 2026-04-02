@@ -8,6 +8,15 @@ import { PayFipIdopError } from './errors';
  * Returns validation result with operation data if valid
  */
 export async function validateIdop(idop: string): Promise<IdopValidationResult> {
+  // Input validation
+  if (!idop || typeof idop !== 'string' || idop.trim().length === 0) {
+    return {
+      valid: false,
+      error: 'P1',
+      message: 'idOp incorrect',
+    };
+  }
+
   const [operation] = await db
     .select()
     .from(payfipOperations)
@@ -62,6 +71,11 @@ export async function storeIdop(
   orderId: string,
   refdet: string
 ): Promise<void> {
+  // Input validation
+  if (!idop || !orderId || !refdet) {
+    throw new Error('idop, orderId, and refdet are required');
+  }
+
   const expiresAt = new Date(Date.now() + 15 * 60 * 1000); // +15 minutes
 
   await db.insert(payfipOperations).values({
@@ -85,7 +99,12 @@ export async function consumeIdop(
   heureTrans: string,
   rawNotification: string
 ): Promise<void> {
-  await db
+  // Input validation
+  if (!idop || !['P', 'V', 'A', 'R', 'Z'].includes(resultTrans)) {
+    throw new Error('Invalid parameters');
+  }
+
+  const result = await db
     .update(payfipOperations)
     .set({
       consumedAt: new Date(),
@@ -96,7 +115,15 @@ export async function consumeIdop(
       notificationReceivedAt: new Date(),
       rawNotification,
     })
-    .where(eq(payfipOperations.idop, idop));
+    .where(and(
+      eq(payfipOperations.idop, idop),
+      isNull(payfipOperations.consumedAt)  // Only update if not already consumed
+    ));
+
+  // Verify update succeeded
+  if (result.rowCount === 0) {
+    throw new PayFipIdopError('P3', "L'idOp a déjà été utilisé");
+  }
 
   console.log(`Consumed idop ${idop} with result ${resultTrans}`);
 }
@@ -111,7 +138,7 @@ export async function getPayfipOperationByIdop(idop: string) {
     .where(eq(payfipOperations.idop, idop))
     .limit(1);
 
-  return operation || null;
+  return operation ?? null;
 }
 
 /**
@@ -124,7 +151,7 @@ export async function getPayfipOperationByOrderId(orderId: string) {
     .where(eq(payfipOperations.orderId, orderId))
     .limit(1);
 
-  return operation || null;
+  return operation ?? null;
 }
 
 /**
