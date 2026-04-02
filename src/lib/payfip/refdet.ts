@@ -20,7 +20,7 @@ export async function generateREFDET(): Promise<string> {
     RETURNING current_number
   `);
 
-  const row = result.rows[0];
+  const row = result[0];
   if (!row || typeof row.current_number !== 'number') {
     throw new Error('Failed to generate REFDET: invalid database response');
   }
@@ -46,11 +46,11 @@ export async function getCurrentSequenceNumber(year: number): Promise<number> {
     SELECT current_number FROM invoice_sequences WHERE year = ${year}
   `);
 
-  if (result.rows.length === 0) {
+  if (result.length === 0) {
     return 0;
   }
 
-  const row = result.rows[0] as { current_number: number };
+  const row = result[0] as { current_number: number };
   return row.current_number;
 }
 
