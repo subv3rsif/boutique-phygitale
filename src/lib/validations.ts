@@ -23,10 +23,11 @@ export const checkoutInputSchema = z.object({
     message: 'Invalid fulfillment mode',
   }),
   pickupLocationId: z.string().optional(),
+  customerEmail: z.string().email('Invalid email address'), // Required for PayFiP
+  customerPhone: z.string().optional(), // Optional but recommended for pickup
   gdprConsent: z.boolean().refine((val) => val === true, {
     message: 'You must accept the privacy policy',
   }),
-  customerPhone: z.string().optional(), // Optional but recommended for pickup
 });
 
 export type CheckoutInput = z.infer<typeof checkoutInputSchema>;
