@@ -9,10 +9,10 @@ import { eq } from 'drizzle-orm';
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { idop: string } }
+  { params }: { params: Promise<{ idop: string }> }
 ) {
   try {
-    const { idop } = params;
+    const { idop } = await params;
 
     if (!idop) {
       return NextResponse.json(
