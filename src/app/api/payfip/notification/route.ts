@@ -80,12 +80,12 @@ export async function POST(request: NextRequest) {
 
       // Generate pickup token if pickup mode
       if (order.fulfillmentMode === 'pickup') {
-        const { token, hash, expiresAt } = await generatePickupToken();
+        const { token, tokenHash, expiresAt } = await generatePickupToken();
 
         // Store token
         await db.insert(pickupTokens).values({
           orderId: order.id,
-          tokenHash: hash,
+          tokenHash,
           expiresAt,
           usedAt: null,
           usedBy: null,
