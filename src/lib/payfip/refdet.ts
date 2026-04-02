@@ -64,7 +64,7 @@ export function parseREFDET(refdet: string): { year: number; number: number } | 
   }
 
   return {
-    year: parseInt(match[1], 10),
-    number: parseInt(match[2], 10),
+    year: parseInt(match[1]!, 10),
+    number: parseInt(match[2]!, 10),
   };
 }
