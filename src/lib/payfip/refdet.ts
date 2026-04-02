@@ -20,7 +20,10 @@ export async function generateREFDET(): Promise<string> {
     RETURNING current_number
   `);
 
-  const row = result.rows[0] as { current_number: number };
+  const row = result.rows[0];
+  if (!row || typeof row.current_number !== 'number') {
+    throw new Error('Failed to generate REFDET: invalid database response');
+  }
   const number = row.current_number;
 
   // Format: "2026-042" (3 digits zero-padded)
@@ -34,6 +37,11 @@ export async function generateREFDET(): Promise<string> {
  * Get current sequence number for a year (for debugging/admin)
  */
 export async function getCurrentSequenceNumber(year: number): Promise<number> {
+  // Validate year is reasonable
+  if (!Number.isInteger(year) || year < 1900 || year > 2100) {
+    throw new Error(`Invalid year: ${year}`);
+  }
+
   const result = await db.execute(sql`
     SELECT current_number FROM invoice_sequences WHERE year = ${year}
   `);
@@ -50,7 +58,7 @@ export async function getCurrentSequenceNumber(year: number): Promise<number> {
  * Parse REFDET to extract year and number (for validation)
  */
 export function parseREFDET(refdet: string): { year: number; number: number } | null {
-  const match = refdet.match(/^(\d{4})-(\d{3,})$/);
+  const match = refdet.match(/^(\d{4})-(\d{3})$/);  // Exactly 3 digits, not 3+
   if (!match) {
     return null;
   }
