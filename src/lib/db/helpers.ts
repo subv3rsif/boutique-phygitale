@@ -127,6 +127,38 @@ export async function updateOrderStatus(
 }
 
 /**
+ * Update order with PayFiP payment result
+ */
+export async function updateOrderWithPayFipResult(
+  orderId: string,
+  result: {
+    status: Order['status'];
+    idop: string;
+    payfipResultTrans: string;
+    payfipNumAuto?: string;
+    payfipDateTrans?: string;
+    payfipHeureTrans?: string;
+    paidAt?: Date;
+  }
+) {
+  const [updated] = await db
+    .update(orders)
+    .set({
+      status: result.status,
+      idop: result.idop,
+      payfipResultTrans: result.payfipResultTrans,
+      payfipNumAuto: result.payfipNumAuto,
+      payfipDateTrans: result.payfipDateTrans,
+      payfipHeureTrans: result.payfipHeureTrans,
+      paidAt: result.paidAt,
+    })
+    .where(eq(orders.id, orderId))
+    .returning();
+
+  return updated;
+}
+
+/**
  * Get all orders with optional filters
  */
 export async function getOrders(filters?: {
