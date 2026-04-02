@@ -3,7 +3,7 @@ import { checkoutInputSchema } from '@/lib/validations';
 import { calculateCartTotals } from '@/lib/catalogue';
 import { checkRateLimit, checkoutLimiter, createRateLimitResponse } from '@/lib/rate-limit';
 import { getClientIP, getUserAgent } from '@/lib/utils';
-import { payfipService } from '@/lib/payfip/client';
+import { getPayFipService } from '@/lib/payfip/client';
 import { generateREFDET } from '@/lib/payfip/refdet';
 import { storeIdop } from '@/lib/payfip/idop-manager';
 import { PayFipSOAPError, getUserFriendlyErrorMessage } from '@/lib/payfip/errors';
@@ -113,7 +113,7 @@ export async function POST(request: NextRequest) {
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
     const useMock = process.env.PAYFIP_USE_MOCK === 'true';
 
-    const payfipResponse = await payfipService.creerPaiementSecurise({
+    const payfipResponse = await getPayFipService().creerPaiementSecurise({
       NUMCLI: process.env.PAYFIP_NUMCLI || 'MOCK00',
       EXER: process.env.PAYFIP_EXER || new Date().getFullYear().toString(),
       REFDET: refdet,

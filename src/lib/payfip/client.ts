@@ -42,7 +42,14 @@ export function createPayFipService(): PayFipService {
 }
 
 /**
- * Singleton PayFiP service instance
- * Import this to use PayFiP in your application
+ * Lazy-loaded singleton PayFiP service instance
+ * Call this function to get the PayFiP service (avoids initialization during build)
  */
-export const payfipService = createPayFipService();
+let _payfipService: PayFipService | null = null;
+
+export function getPayFipService(): PayFipService {
+  if (!_payfipService) {
+    _payfipService = createPayFipService();
+  }
+  return _payfipService;
+}
