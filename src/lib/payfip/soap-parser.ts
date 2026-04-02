@@ -57,7 +57,7 @@ export function parseNotificationXML(xmlBody: string): PayFipNotification {
   // Extract values from XML
   const extractValue = (tag: string): string => {
     const match = xmlBody.match(new RegExp(`<${tag}>(.*?)</${tag}>`));
-    return match ? match[1] : '';
+    return match ? match[1]! : '';
   };
 
   const notification: PayFipNotification = {
