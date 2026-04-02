@@ -13,7 +13,7 @@ type CheckoutButtonProps = {
 
 export function CheckoutButton({ disabled }: CheckoutButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
-  const { items, fulfillmentMode, gdprConsent, customerPhone } = useCart();
+  const { items, fulfillmentMode, gdprConsent, customerEmail, customerPhone } = useCart();
 
   const handleCheckout = async () => {
     if (!gdprConsent) {
@@ -22,6 +22,10 @@ export function CheckoutButton({ disabled }: CheckoutButtonProps) {
     }
     if (items.length === 0) {
       toast.error('Votre panier est vide');
+      return;
+    }
+    if (!customerEmail || !customerEmail.includes('@')) {
+      toast.error('Veuillez saisir une adresse email valide');
       return;
     }
 
@@ -36,6 +40,7 @@ export function CheckoutButton({ disabled }: CheckoutButtonProps) {
           fulfillmentMode,
           pickupLocationId: fulfillmentMode === 'pickup' ? 'la-fabrik' : undefined,
           gdprConsent,
+          customerEmail,
           customerPhone: customerPhone || undefined,
         }),
       });
@@ -43,7 +48,9 @@ export function CheckoutButton({ disabled }: CheckoutButtonProps) {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Une erreur est survenue');
+        // Handle PayFiP-specific errors with friendly messages
+        const errorMessage = data.error || 'Une erreur est survenue lors du paiement';
+        throw new Error(errorMessage);
       }
 
       if (data.url) {
@@ -52,12 +59,13 @@ export function CheckoutButton({ disabled }: CheckoutButtonProps) {
         throw new Error('URL de paiement manquante');
       }
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Erreur lors du paiement');
+      const errorMessage = error instanceof Error ? error.message : 'Erreur lors du paiement';
+      toast.error(errorMessage);
       setIsLoading(false);
     }
   };
 
-  const isDisabled = disabled || isLoading || items.length === 0 || !gdprConsent;
+  const isDisabled = disabled || isLoading || items.length === 0 || !gdprConsent || !customerEmail;
 
   return (
     <motion.button
@@ -89,7 +97,7 @@ export function CheckoutButton({ disabled }: CheckoutButtonProps) {
             className="absolute inset-0 flex items-center justify-center gap-2"
           >
             <Loader2 className="h-5 w-5 animate-spin" />
-            <span>Redirection vers Stripe…</span>
+            <span>Redirection vers le paiement sécurisé…</span>
           </motion.span>
         ) : (
           <motion.span

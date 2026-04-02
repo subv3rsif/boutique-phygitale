@@ -17,6 +17,7 @@ type CartStore = {
   items: CartItem[];
   fulfillmentMode: FulfillmentMode;
   gdprConsent: boolean;
+  customerEmail: string;
   customerPhone: string;
 
   // Actions
@@ -25,6 +26,7 @@ type CartStore = {
   updateQty: (id: string, qty: number) => void;
   setFulfillmentMode: (mode: FulfillmentMode) => void;
   setGdprConsent: (consent: boolean) => void;
+  setCustomerEmail: (email: string) => void;
   setCustomerPhone: (phone: string) => void;
   clear: () => void;
 
@@ -39,6 +41,7 @@ export const useCart = create<CartStore>()(
       items: [],
       fulfillmentMode: 'delivery',
       gdprConsent: false,
+      customerEmail: '',
       customerPhone: '',
 
       addItem: (id: string, qty: number) =>
@@ -78,6 +81,9 @@ export const useCart = create<CartStore>()(
       setGdprConsent: (consent: boolean) =>
         set({ gdprConsent: consent }),
 
+      setCustomerEmail: (email: string) =>
+        set({ customerEmail: email }),
+
       setCustomerPhone: (phone: string) =>
         set({ customerPhone: phone }),
 
@@ -86,6 +92,7 @@ export const useCart = create<CartStore>()(
           items: [],
           fulfillmentMode: 'delivery',
           gdprConsent: false,
+          customerEmail: '',
           customerPhone: '',
         }),
 
@@ -99,6 +106,7 @@ export const useCart = create<CartStore>()(
         // Only persist these fields
         items: state.items,
         fulfillmentMode: state.fulfillmentMode,
+        customerEmail: state.customerEmail,
         customerPhone: state.customerPhone,
         // Don't persist gdprConsent (must be re-accepted each session)
       }),
