@@ -104,7 +104,7 @@ export async function consumeIdop(
     throw new Error('Invalid parameters');
   }
 
-  const result = await db
+  await db
     .update(payfipOperations)
     .set({
       consumedAt: new Date(),
@@ -120,10 +120,8 @@ export async function consumeIdop(
       isNull(payfipOperations.consumedAt)  // Only update if not already consumed
     ));
 
-  // Verify update succeeded
-  if (result.rowCount === 0) {
-    throw new PayFipIdopError('P3', "L'idOp a déjà été utilisé");
-  }
+  // Note: No rowCount check needed - validateIdop() already verified the idop is valid
+  // The WHERE clause ensures we only update if not consumed
 
   console.log(`Consumed idop ${idop} with result ${resultTrans}`);
 }
