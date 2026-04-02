@@ -57,13 +57,38 @@ export async function getOrderById(orderId: string) {
 }
 
 /**
- * Get order by Stripe session ID
+ * Get order by idop (PayFiP operation ID)
  */
-export async function getOrderByStripeSessionId(sessionId: string) {
+export async function getOrderByIdop(idop: string) {
   const [order] = await db
     .select()
     .from(orders)
-    .where(eq(orders.stripeSessionId, sessionId))
+    .where(eq(orders.idop, idop))
+    .limit(1);
+
+  if (!order) {
+    return null;
+  }
+
+  const items = await db
+    .select()
+    .from(orderItems)
+    .where(eq(orderItems.orderId, order.id));
+
+  return {
+    ...order,
+    items,
+  };
+}
+
+/**
+ * Get order by refdet (invoice reference)
+ */
+export async function getOrderByRefdet(refdet: string) {
+  const [order] = await db
+    .select()
+    .from(orders)
+    .where(eq(orders.refdet, refdet))
     .limit(1);
 
   if (!order) {

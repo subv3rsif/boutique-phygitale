@@ -11,8 +11,15 @@ export const orders = pgTable('orders', {
   pickupLocationId: varchar('pickup_location_id', { length: 50 }),
   customerEmail: varchar('customer_email', { length: 255 }).notNull(),
   customerPhone: varchar('customer_phone', { length: 20 }),
-  stripeSessionId: varchar('stripe_session_id', { length: 255 }).notNull().unique(),
-  stripePaymentIntentId: varchar('stripe_payment_intent_id', { length: 255 }),
+
+  // PayFiP fields (replace Stripe fields)
+  refdet: varchar('refdet', { length: 30 }).notNull().unique(),
+  idop: varchar('idop', { length: 255 }),
+  payfipResultTrans: varchar('payfip_result_trans', { length: 1 }),
+  payfipNumAuto: varchar('payfip_num_auto', { length: 16 }),
+  payfipDateTrans: varchar('payfip_date_trans', { length: 8 }),
+  payfipHeureTrans: varchar('payfip_heure_trans', { length: 4 }),
+
   itemsTotalCents: integer('items_total_cents').notNull(),
   shippingTotalCents: integer('shipping_total_cents').notNull(),
   grandTotalCents: integer('grand_total_cents').notNull(),
@@ -23,7 +30,8 @@ export const orders = pgTable('orders', {
   trackingNumber: varchar('tracking_number', { length: 255 }),
   trackingUrl: text('tracking_url'),
 }, (table) => ({
-  sessionIdx: index('idx_session').on(table.stripeSessionId),
+  refdetIdx: index('idx_refdet').on(table.refdet),
+  idopIdx: index('idx_idop_order').on(table.idop),
   emailIdx: index('idx_email').on(table.customerEmail),
   statusIdx: index('idx_status').on(table.status),
 }));
@@ -64,15 +72,36 @@ export const pickupTokens = pgTable('pickup_tokens', {
 }));
 
 /**
- * Stripe Events table - Prevents duplicate processing of webhook events (idempotence)
+ * Invoice Sequences - Sequential REFDET generation
  */
-export const stripeEvents = pgTable('stripe_events', {
+export const invoiceSequences = pgTable('invoice_sequences', {
+  year: integer('year').primaryKey(),
+  currentNumber: integer('current_number').notNull().default(0),
+  lastUpdated: timestamp('last_updated').defaultNow(),
+});
+
+/**
+ * PayFiP Operations - Tracks idop lifecycle and payment results
+ */
+export const payfipOperations = pgTable('payfip_operations', {
   id: uuid('id').primaryKey().defaultRandom(),
-  eventId: varchar('event_id', { length: 255 }).notNull().unique(),
-  eventType: varchar('event_type', { length: 100 }).notNull(),
-  processedAt: timestamp('processed_at').defaultNow().notNull(),
+  idop: varchar('idop', { length: 255 }).notNull().unique(),
+  orderId: uuid('order_id').notNull().references(() => orders.id, { onDelete: 'cascade' }),
+  refdet: varchar('refdet', { length: 30 }).notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  expiresAt: timestamp('expires_at').notNull(),
+  consumedAt: timestamp('consumed_at'),
+  resultTrans: varchar('result_trans', { length: 1 }).$type<'P' | 'V' | 'A' | 'R' | 'Z'>(),
+  numAuto: varchar('num_auto', { length: 16 }),
+  dateTrans: varchar('date_trans', { length: 8 }),
+  heureTrans: varchar('heure_trans', { length: 4 }),
+  notificationReceivedAt: timestamp('notification_received_at'),
+  rawNotification: text('raw_notification'),
 }, (table) => ({
-  eventIdx: index('idx_event_id').on(table.eventId),
+  idopIdx: index('idx_idop').on(table.idop),
+  orderIdx: index('idx_order_payfip').on(table.orderId),
+  refdetIdx: index('idx_refdet_payfip').on(table.refdet),
+  expiresIdx: index('idx_expires').on(table.expiresAt),
 }));
 
 /**
@@ -185,8 +214,11 @@ export type NewOrderItem = typeof orderItems.$inferInsert;
 export type PickupToken = typeof pickupTokens.$inferSelect;
 export type NewPickupToken = typeof pickupTokens.$inferInsert;
 
-export type StripeEvent = typeof stripeEvents.$inferSelect;
-export type NewStripeEvent = typeof stripeEvents.$inferInsert;
+export type InvoiceSequence = typeof invoiceSequences.$inferSelect;
+export type NewInvoiceSequence = typeof invoiceSequences.$inferInsert;
+
+export type PayfipOperation = typeof payfipOperations.$inferSelect;
+export type NewPayfipOperation = typeof payfipOperations.$inferInsert;
 
 export type EmailQueue = typeof emailQueue.$inferSelect;
 export type NewEmailQueue = typeof emailQueue.$inferInsert;
