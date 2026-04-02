@@ -150,6 +150,13 @@ L'architecture PayFiP suit un modèle en 3 phases distinctes :
 - Cron cleanup des idop expirés
 - Annulation automatique des orders pendants
 
+**5. Activation sélective des modes de paiement**
+- PayFiP propose nativement 2 modes : Carte Bancaire + Prélèvement SEPA
+- **Problème UX :** Le prélèvement nécessite authentification FranceConnect/impots.gouv.fr (friction utilisateur)
+- **Solution :** Activer uniquement le mode CB lors de la phase d'activation
+- Résultat : Seul le bouton "Payer par carte bancaire" apparaît sur la page PayFiP
+- **Recommandation :** Pour une boutique municipale grand public, désactiver le prélèvement (voir section 8.5)
+
 ---
 
 ## 3. Composants et Responsabilités
@@ -957,16 +964,44 @@ NEXT_PUBLIC_APP_URL=https://boutique-staging.vercel.app
 
 **Étapes :**
 
-1. **Paiement activation (SAISIE=X)**
-   - Carte test Visa : `5017674000000002`
-   - Carte test Mastercard : `5017670000001800`
-   - Carte test CB/Visa : `4978860713891312`
-   - Montant libre
-   - 3D Secure simulé
+1. **Paiement activation CB uniquement (SAISIE=X)** ⚠️ IMPORTANT
+
+   **Contexte UX :** PayFiP propose nativement deux modes de paiement :
+   - **Carte Bancaire** : Flow standard, immédiat
+   - **Prélèvement SEPA** : Nécessite authentification FranceConnect/impots.gouv.fr
+
+   **Problème :** L'authentification FranceConnect pour le prélèvement crée une friction UX catastrophique pour une boutique municipale grand public (connexion impots.gouv.fr obligatoire).
+
+   **Solution recommandée :** Activer UNIQUEMENT le mode Carte Bancaire.
+
+   **Comment faire :**
+   - PayFiP nécessite un paiement d'activation séparé pour chaque mode (CB et prélèvement)
+   - En n'effectuant que le paiement d'activation CB, seul le bouton "Payer par carte bancaire" apparaîtra sur la page PayFiP
+   - Le bouton "Payer par prélèvement" sera automatiquement masqué
+
+   **Paiement d'activation CB :**
+   - Mode : SAISIE="X" (activation)
+   - Cartes test acceptées :
+     * Visa : `5017674000000002`
+     * Mastercard : `5017670000001800`
+     * CB/Visa : `4978860713891312`
+     * Expiration : postérieure au mois actuel
+     * Cryptogramme : libre
+   - Montant : libre (sera remboursé)
+   - 3D Secure : simulé
+
+   **À NE PAS FAIRE :**
+   - ❌ Ne pas effectuer de paiement d'activation pour le prélèvement
+   - ❌ Cela désactivera définitivement le mode prélèvement pour vos utilisateurs
+
+   **À confirmer :**
+   - Valider cette stratégie avec votre correspondant moyens de paiement DDFiP Val-de-Marne
+   - Documenter le choix (masquage prélèvement pour UX optimale)
 
 2. **Attente J+1**
-   - Activation effective jour ouvré suivant
-   - Confirmation CL1C
+   - Activation CB effective le jour ouvré suivant
+   - Confirmation CL1C que mode CB activé
+   - Vérification que prélèvement reste inactif
 
 3. **Basculement production (SAISIE=W)**
    ```bash
@@ -976,9 +1011,10 @@ NEXT_PUBLIC_APP_URL=https://boutique-staging.vercel.app
 
 4. **Premier paiement réel**
    - Test interne (petit montant)
+   - **Vérifier :** Un seul bouton "Payer par carte bancaire" visible
    - Validation workflow complet
 
-**Livrable :** PayFiP actif en production.
+**Livrable :** PayFiP actif en production (mode CB uniquement, UX optimisée).
 
 ### 8.6 Phase 5 : Go Live
 
@@ -1123,7 +1159,104 @@ UPSTASH_REDIS_REST_TOKEN=...
 | `P3` | idOp déjà utilisé | 200 OK (idempotence) |
 | `P4` | idOp expiré | 410 Gone, annuler order |
 
-### 9.4 Contacts et Support
+### 9.4 Modes de Paiement PayFiP - Activation Sélective
+
+#### Contexte
+
+PayFiP propose nativement **deux modes de paiement** sur la page de paiement :
+
+1. **Payer par carte bancaire** (CB, Visa, Mastercard)
+2. **Payer par prélèvement** (SEPA)
+
+#### Problème UX : Prélèvement SEPA
+
+Le mode prélèvement nécessite que l'utilisateur **s'authentifie via FranceConnect / impots.gouv.fr** pour valider son compte bancaire et autoriser le prélèvement.
+
+**Flow prélèvement :**
+```
+User clique "Payer par prélèvement"
+  ↓
+Redirect vers FranceConnect
+  ↓
+Authentification impots.gouv.fr (identifiant fiscal + mot de passe)
+  ↓
+Autorisation prélèvement SEPA
+  ↓
+Retour PayFiP → validation
+```
+
+**Impact UX :**
+- ❌ Friction énorme pour une boutique municipale grand public
+- ❌ Nécessite compte impots.gouv.fr (pas tous les citoyens l'ont activé)
+- ❌ Parcours long et complexe (5-7 étapes supplémentaires)
+- ❌ Taux d'abandon élevé prévisible
+
+**Résultat :** Expérience catastrophique pour des achats simples (goodies municipaux).
+
+#### Solution : Activation Sélective du Mode CB Uniquement
+
+**Bonne nouvelle :** Vous ne pouvez pas désactiver le prélèvement côté API (pas de paramètre dans `creerPaiementSecuriseRequest`), **MAIS** vous pouvez ne pas activer le mode prélèvement lors de la phase d'activation.
+
+**Principe :**
+
+Le guide DGFiP précise :
+
+> "Un paiement d'activation est nécessaire pour la CB et pour le prélèvement."
+
+Les deux modes **s'activent séparément** :
+
+| Mode | Activation | Résultat sur page PayFiP |
+|------|-----------|--------------------------|
+| CB activée | Paiement test avec carte CB (SAISIE="X") | ✅ Bouton "Payer par carte bancaire" visible |
+| Prélèvement activé | Paiement test avec prélèvement (SAISIE="X") | ✅ Bouton "Payer par prélèvement" visible |
+| CB activée + Prélèvement NON activé | Paiement test CB uniquement | ✅ Seul bouton CB visible, prélèvement masqué |
+
+**Recommandation pour boutique municipale :**
+
+✅ **Activer uniquement le mode CB** lors de la phase d'activation (section 8.5).
+
+**Procédure :**
+
+1. Lors de la phase d'activation (SAISIE="X") :
+   - ✅ Effectuer le paiement d'activation avec une **carte test CB**
+   - ❌ **NE PAS** effectuer le paiement d'activation prélèvement
+
+2. Résultat après J+1 (activation effective) :
+   - ✅ Le bouton "Payer par carte bancaire" apparaît sur la page PayFiP
+   - ✅ Le bouton "Payer par prélèvement" **n'apparaît pas** (mode inactif)
+
+3. Utilisateurs voient uniquement :
+   ```
+   ┌─────────────────────────────────────┐
+   │  Récapitulatif de votre paiement    │
+   │  Montant : 14,50 €                  │
+   │                                     │
+   │  ┌─────────────────────────────┐   │
+   │  │ Payer par carte bancaire     │   │ ← Seul bouton visible
+   │  └─────────────────────────────┘   │
+   └─────────────────────────────────────┘
+   ```
+
+**À confirmer :**
+
+Cette stratégie est basée sur le comportement documenté de PayFiP. Il est recommandé de **confirmer avec votre correspondant moyens de paiement à la DR/DDFiP du Val-de-Marne** au moment de la mise en production que :
+
+1. Le mode prélèvement restera bien masqué si non activé
+2. Cette configuration est appropriée pour une boutique municipale grand public
+3. Aucune obligation réglementaire d'activer le prélèvement
+
+**Avantages activation CB uniquement :**
+
+- ✅ **UX optimale** : Parcours de paiement simple et rapide (comme Stripe)
+- ✅ **Taux de conversion** : Pas de friction FranceConnect
+- ✅ **Moins de support** : Un seul flow à documenter/expliquer
+- ✅ **Adaptation progressive** : Possibilité d'activer le prélèvement plus tard si besoin réel
+
+**Note API :**
+
+L'objet `creerPaiementSecuriseRequest` n'a pas de paramètre pour masquer le prélèvement. C'est uniquement l'**absence d'activation du mode prélèvement** qui le masque automatiquement côté interface PayFiP.
+
+### 9.5 Contacts et Support
 
 **Support DGFiP :**
 - Bureau CL1C (correspondant moyens de paiement)
