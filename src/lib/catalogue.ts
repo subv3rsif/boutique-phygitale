@@ -17,6 +17,7 @@ export type Product = {
   stockQuantity?: number; // Optional stock tracking
   editionNumber?: number; // Edition limitée: numéro unique (ex: 7)
   editionTotal?: number; // Edition limitée: total édition (ex: 50)
+  payfipProductCode?: string; // PayFiP product code (default "11" for general merchandise)
 };
 
 /**
@@ -34,6 +35,7 @@ export const catalogue: Product[] = [
     weightGrams: 380,
     tags: ['vaisselle', 'collection', 'nouveau'],
     stockQuantity: 45,
+    payfipProductCode: '11',
   },
   {
     id: 'tote-bag-heritage',
@@ -48,6 +50,7 @@ export const catalogue: Product[] = [
     stockQuantity: 35,
     editionNumber: 12,
     editionTotal: 50,
+    payfipProductCode: '11',
   },
   {
     id: 'stickers-vibrant-pack',
@@ -60,6 +63,7 @@ export const catalogue: Product[] = [
     weightGrams: 25,
     tags: ['papeterie', 'nouveau'],
     stockQuantity: 120,
+    payfipProductCode: '11',
   },
   {
     id: 'carnet-edition-1885',
@@ -74,6 +78,7 @@ export const catalogue: Product[] = [
     stockQuantity: 50,
     editionNumber: 27,
     editionTotal: 100,
+    payfipProductCode: '11',
   },
   {
     id: 'pin-love-symbol',
@@ -86,6 +91,7 @@ export const catalogue: Product[] = [
     weightGrams: 15,
     tags: ['accessoires', 'nouveau', 'best-seller'],
     stockQuantity: 80,
+    payfipProductCode: '11',
   },
   {
     id: 'affiche-heritage',
@@ -100,6 +106,7 @@ export const catalogue: Product[] = [
     stockQuantity: 25,
     editionNumber: 8,
     editionTotal: 30,
+    payfipProductCode: '11',
   },
   {
     id: 'sweat-love-edition',
@@ -112,6 +119,7 @@ export const catalogue: Product[] = [
     weightGrams: 420,
     tags: ['textile', 'collection', 'nouveau'],
     stockQuantity: 30,
+    payfipProductCode: '11',
   },
   {
     id: 'gourde-inox-1885',
@@ -124,6 +132,7 @@ export const catalogue: Product[] = [
     weightGrams: 280,
     tags: ['vaisselle', 'eco-friendly', 'best-seller'],
     stockQuantity: 40,
+    payfipProductCode: '11',
   },
   {
     id: 'badges-collection',
@@ -136,6 +145,7 @@ export const catalogue: Product[] = [
     weightGrams: 40,
     tags: ['accessoires', 'collection'],
     stockQuantity: 60,
+    payfipProductCode: '11',
   },
   {
     id: 'trousse-heritage',
@@ -148,6 +158,7 @@ export const catalogue: Product[] = [
     weightGrams: 90,
     tags: ['accessoires', 'nouveau'],
     stockQuantity: 35,
+    payfipProductCode: '11',
   },
 ];
 
