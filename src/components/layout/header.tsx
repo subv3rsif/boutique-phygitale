@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import Image from 'next/image';
 import { Menu, ShoppingBag, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '@/store/cart';
@@ -55,36 +56,27 @@ export function Header() {
 
           {/* Center: Logo */}
           <Link href="/" className="absolute left-1/2 -translate-x-1/2 focus-terra">
-            {/* Desktop: Full logo */}
-            <div className="hidden md:block text-center">
-              <div className="flex items-center gap-3 justify-center mb-1">
-                <span className={cn(
-                  "font-display font-bold text-encre transition-all",
-                  isScrolled ? "text-3xl" : "text-5xl"
-                )}>
-                  18
-                </span>
-                <div className={cn(
-                  "h-px bg-ivoire-2 transition-all",
-                  isScrolled ? "w-8" : "w-12"
-                )} />
-                <span className={cn(
-                  "font-display font-bold text-encre transition-all",
-                  isScrolled ? "text-3xl" : "text-5xl"
-                )}>
-                  85
-                </span>
-              </div>
-              {!isScrolled && (
-                <p className="text-[10px] tracking-[0.3em] uppercase text-pierre">
-                  Manufacture Alfortvillaise
-                </p>
-              )}
+            {/* Desktop: Full logo SVG */}
+            <div className="hidden md:block">
+              <Image
+                src="/logo.svg"
+                alt="1885 Manufacture Alfortvillaise"
+                width={isScrolled ? 60 : 80}
+                height={isScrolled ? 95 : 126}
+                className="transition-all duration-300"
+                priority
+              />
             </div>
 
-            {/* Mobile: Compact logo */}
-            <div className="md:hidden font-display font-bold text-3xl text-encre">
-              1885
+            {/* Mobile: Compact logo SVG */}
+            <div className="md:hidden">
+              <Image
+                src="/logo.svg"
+                alt="1885"
+                width={50}
+                height={79}
+                priority
+              />
             </div>
           </Link>
 
