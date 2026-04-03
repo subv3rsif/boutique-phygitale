@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 
@@ -14,58 +15,26 @@ export function Hero1885() {
 
   return (
     <section className="relative h-screen min-h-[600px] bg-encre flex items-center justify-center overflow-hidden">
-      {/* Logotype animation container */}
-      <div className="relative flex items-center justify-center gap-8 md:gap-12">
-        {/* "18" from top */}
-        <motion.div
-          initial={{ y: -200, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{
-            duration: 1.2,
-            ease: [0.16, 1, 0.3, 1],
-          }}
-          className="font-display font-bold text-ivoire"
-          style={{ fontSize: 'clamp(80px, 15vw, 180px)' }}
-        >
-          18
-        </motion.div>
-
-        {/* Horizontal line */}
-        <motion.div
-          initial={{ scaleX: 0 }}
-          animate={{ scaleX: 1 }}
-          transition={{
-            duration: 1.2,
-            ease: [0.16, 1, 0.3, 1],
-            delay: 0.3,
-          }}
-          className="h-px w-16 md:w-24 bg-ivoire-2"
-        />
-
-        {/* "85" from bottom */}
-        <motion.div
-          initial={{ y: 200, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{
-            duration: 1.2,
-            ease: [0.16, 1, 0.3, 1],
-          }}
-          className="font-display font-bold text-ivoire"
-          style={{ fontSize: 'clamp(80px, 15vw, 180px)' }}
-        >
-          85
-        </motion.div>
-      </div>
-
-      {/* Subtitle fade-in */}
-      <motion.p
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8, delay: 1.4 }}
-        className="absolute bottom-32 font-sans text-sm text-ivoire/70 uppercase tracking-[0.35em]"
+      {/* Logo complet avec animation */}
+      <motion.div
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{
+          duration: 1.4,
+          ease: [0.16, 1, 0.3, 1],
+        }}
+        className="relative flex items-center justify-center"
       >
-        Manufacture Alfortvillaise
-      </motion.p>
+        <Image
+          src="/logo.svg"
+          alt="1885 Manufacture Alfortvillaise"
+          width={280}
+          height={443}
+          priority
+          className="w-auto h-[clamp(300px,50vh,500px)] invert"
+          style={{ filter: 'invert(1)' }}
+        />
+      </motion.div>
 
       {/* Chevron bounce */}
       {animationComplete && (

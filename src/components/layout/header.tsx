@@ -54,27 +54,27 @@ export function Header() {
             <Menu className="h-6 w-6" />
           </Button>
 
-          {/* Center: Logo */}
+          {/* Center: Logo simplifié */}
           <Link href="/" className="absolute left-1/2 -translate-x-1/2 focus-terra">
-            {/* Desktop: Full logo SVG */}
+            {/* Desktop: Logo simplifié */}
             <div className="hidden md:block">
               <Image
-                src="/logo.svg"
-                alt="1885 Manufacture Alfortvillaise"
-                width={isScrolled ? 60 : 80}
-                height={isScrolled ? 95 : 126}
+                src="/logo-simple.svg"
+                alt="1885"
+                width={isScrolled ? 50 : 65}
+                height={isScrolled ? 79 : 103}
                 className="transition-all duration-300"
                 priority
               />
             </div>
 
-            {/* Mobile: Compact logo SVG */}
+            {/* Mobile: Logo simplifié compact */}
             <div className="md:hidden">
               <Image
-                src="/logo.svg"
+                src="/logo-simple.svg"
                 alt="1885"
-                width={50}
-                height={79}
+                width={45}
+                height={71}
                 priority
               />
             </div>
