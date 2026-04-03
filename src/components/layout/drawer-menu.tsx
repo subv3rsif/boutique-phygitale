@@ -2,6 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
@@ -55,19 +56,15 @@ export function DrawerMenu({ isOpen, onClose }: DrawerMenuProps) {
             <div className="h-full p-8 md:p-12 flex flex-col">
 
               {/* Logo grand format */}
-              <div className="mb-16">
-                <div className="flex items-center gap-4 mb-3">
-                  <span className="font-display font-bold text-7xl md:text-8xl text-ivoire">
-                    18
-                  </span>
-                  <div className="h-px flex-1 bg-ivoire-2" />
-                  <span className="font-display font-bold text-7xl md:text-8xl text-ivoire">
-                    85
-                  </span>
-                </div>
-                <p className="text-xs tracking-[0.35em] uppercase text-pierre text-center">
-                  Manufacture Alfortvillaise
-                </p>
+              <div className="mb-16 flex items-center justify-center">
+                <Image
+                  src="/logo.svg"
+                  alt="1885 Manufacture Alfortvillaise"
+                  width={180}
+                  height={285}
+                  className="w-auto h-48 md:h-64"
+                  style={{ filter: 'invert(1)' }}
+                />
               </div>
 
               {/* Navigation principale */}
