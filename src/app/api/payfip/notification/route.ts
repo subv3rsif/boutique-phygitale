@@ -4,6 +4,8 @@ import { validateIdop, consumeIdop, getPayfipOperationByIdop } from '@/lib/payfi
 import { updateOrderWithPayFipResult, getOrderById } from '@/lib/db/helpers';
 import { db, emailQueue, pickupTokens } from '@/lib/db';
 import { generatePickupToken, generateTokenExpiration, hashToken } from '@/lib/qr/token-generator';
+import { decrementStock } from '@/lib/stock';
+import { getProductBySlug } from '@/lib/products';
 
 /**
  * POST /api/payfip/notification
@@ -77,6 +79,22 @@ export async function POST(request: NextRequest) {
     // 9. Queue confirmation email
     if (status === 'paid') {
       console.log(`✅ Payment successful for order ${order.id} (${resultrans})`);
+
+      // Decrement stock for each item
+      for (const item of order.items) {
+        try {
+          const product = await getProductBySlug(item.product_id);
+          if (product) {
+            await decrementStock(product.id, item.qty, order.id);
+            console.log(`[PAYFIP] Stock decremented: ${product.slug} -${item.qty}`);
+          } else {
+            console.warn(`[PAYFIP] Product not found for stock decrement: ${item.product_id}`);
+          }
+        } catch (stockError) {
+          console.error(`[PAYFIP] Stock decrement error for ${item.product_id}:`, stockError);
+          // Continue processing other items
+        }
+      }
 
       // Generate pickup token if pickup mode
       if (order.fulfillmentMode === 'pickup') {
