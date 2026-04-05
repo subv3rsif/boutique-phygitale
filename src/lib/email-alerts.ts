@@ -4,7 +4,17 @@ import StockAlertEmail from '@/emails/stock-alert';
 import OutOfStockEmail from '@/emails/out-of-stock';
 import type { Product } from '@/types/product';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+/**
+ * Get Resend client (lazy initialization to avoid build errors)
+ */
+function getResendClient(): Resend | null {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    console.warn('[EMAIL] RESEND_API_KEY not configured - emails disabled');
+    return null;
+  }
+  return new Resend(apiKey);
+}
 
 /**
  * Get admin email recipients
@@ -25,6 +35,11 @@ function getAppUrl(): string {
  * Send low stock alert to admins
  */
 export async function sendLowStockAlert(product: Product): Promise<void> {
+  const resend = getResendClient();
+  if (!resend) {
+    return; // Resend not configured, skip silently
+  }
+
   const adminEmails = getAdminEmails();
 
   if (adminEmails.length === 0) {
@@ -59,6 +74,11 @@ export async function sendLowStockAlert(product: Product): Promise<void> {
  * Send out of stock alert to admins
  */
 export async function sendOutOfStockAlert(product: Product): Promise<void> {
+  const resend = getResendClient();
+  if (!resend) {
+    return; // Resend not configured, skip silently
+  }
+
   const adminEmails = getAdminEmails();
 
   if (adminEmails.length === 0) {
