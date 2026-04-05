@@ -1,7 +1,11 @@
 /**
- * Product Catalogue
- * This is a static file-based catalogue for the MVP.
- * Can be migrated to database later if needed.
+ * @deprecated This file is deprecated. Products are now managed via database.
+ * Use getActiveProducts() from @/lib/products instead.
+ * This file will be removed after migration is complete.
+ *
+ * Product Catalogue (Legacy)
+ * This is a static file-based catalogue kept for reference during migration.
+ * Can be fully removed once all references are migrated to @/lib/products.
  */
 
 export type Product = {

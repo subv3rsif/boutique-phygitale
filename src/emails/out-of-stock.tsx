@@ -19,7 +19,7 @@ interface OutOfStockEmailProps {
 }
 
 export default function OutOfStockEmail({
-  productName,
+  productName: name,
   productId,
   adminUrl,
 }: OutOfStockEmailProps) {
@@ -28,7 +28,7 @@ export default function OutOfStockEmail({
   return (
     <Html>
       <Head />
-      <Preview>Rupture de stock : {productName}</Preview>
+      <Preview>Rupture de stock : {name}</Preview>
       <Body style={main}>
         <Container style={container}>
           <Heading style={h1}>🚨 Rupture de Stock</Heading>
@@ -38,8 +38,8 @@ export default function OutOfStockEmail({
           </Text>
 
           <Section style={productSection}>
-            <Text style={productName}>
-              <strong>{productName}</strong>
+            <Text style={productNameStyle}>
+              <strong>{name}</strong>
             </Text>
             <Text style={stockInfo}>
               Stock actuel : <strong style={critical}>0 unités</strong>
@@ -128,7 +128,7 @@ const productSection = {
   margin: '24px 0',
 };
 
-const productName = {
+const productNameStyle = {
   color: '#333',
   fontSize: '18px',
   margin: '0 0 12px',

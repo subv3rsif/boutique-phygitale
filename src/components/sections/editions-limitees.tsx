@@ -5,17 +5,16 @@ import { useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
-import { getAllActiveProducts } from '@/lib/catalogue';
+import type { Product } from '@/types/product';
 import { Button } from '@/components/ui/button';
 
-export function EditionsLimitees() {
+interface EditionsLimiteesProps {
+  editions: Product[];
+}
+
+export function EditionsLimitees({ editions }: EditionsLimiteesProps) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
-
-  // Filter products with edition-limitee tag
-  const editions = getAllActiveProducts()
-    .filter((p) => p.tags?.includes('edition-limitee'))
-    .slice(0, 3);
 
   if (editions.length === 0) return null;
 
@@ -68,7 +67,7 @@ export function EditionsLimitees() {
               {/* Image */}
               <div className="relative aspect-[3/4]">
                 <Image
-                  src={product.image}
+                  src={product.images?.find((img) => img.isPrimary)?.url || product.images?.[0]?.url || 'https://via.placeholder.com/400x500'}
                   alt={product.name}
                   fill
                   className="object-cover"
@@ -123,7 +122,7 @@ export function EditionsLimitees() {
             >
               <div className="relative aspect-[3/4]">
                 <Image
-                  src={product.image}
+                  src={product.images?.find((img) => img.isPrimary)?.url || product.images?.[0]?.url || 'https://via.placeholder.com/400x500'}
                   alt={product.name}
                   fill
                   className="object-cover"

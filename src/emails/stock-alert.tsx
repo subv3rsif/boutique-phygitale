@@ -21,7 +21,7 @@ interface StockAlertEmailProps {
 }
 
 export default function StockAlertEmail({
-  productName,
+  productName: name,
   productId,
   currentStock,
   threshold,
@@ -32,7 +32,7 @@ export default function StockAlertEmail({
   return (
     <Html>
       <Head />
-      <Preview>Stock faible : {productName}</Preview>
+      <Preview>Stock faible : {name}</Preview>
       <Body style={main}>
         <Container style={container}>
           <Heading style={h1}>⚠️ Alerte Stock Faible</Heading>
@@ -42,8 +42,8 @@ export default function StockAlertEmail({
           </Text>
 
           <Section style={productSection}>
-            <Text style={productName}>
-              <strong>{productName}</strong>
+            <Text style={productNameStyle}>
+              <strong>{name}</strong>
             </Text>
             <Text style={stockInfo}>
               Stock actuel : <strong style={warning}>{currentStock} unités</strong>
@@ -117,7 +117,7 @@ const productSection = {
   margin: '24px 0',
 };
 
-const productName = {
+const productNameStyle = {
   color: '#333',
   fontSize: '18px',
   margin: '0 0 12px',

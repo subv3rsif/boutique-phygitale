@@ -5,17 +5,18 @@ import { useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
-import { getAllActiveProducts } from '@/lib/catalogue';
+import type { Product } from '@/types/product';
 import { useCart } from '@/store/cart';
 import { toast } from 'sonner';
 
-export function GrilleCollection() {
+interface GrilleCollectionProps {
+  products: Product[];
+}
+
+export function GrilleCollection({ products }: GrilleCollectionProps) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
   const addItem = useCart((state) => state.addItem);
-
-  // Get max 6 products
-  const products = getAllActiveProducts().slice(0, 6);
 
   const handleAddToCart = (productId: string, productName: string) => {
     addItem(productId, 1);
@@ -62,7 +63,7 @@ export function GrilleCollection() {
                   className="relative w-full h-full"
                 >
                   <Image
-                    src={product.image}
+                    src={product.images?.find((img) => img.isPrimary)?.url || product.images?.[0]?.url || 'https://via.placeholder.com/400x500'}
                     alt={product.name}
                     fill
                     className="object-cover"

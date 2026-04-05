@@ -83,15 +83,15 @@ export async function POST(request: NextRequest) {
       // Decrement stock for each item
       for (const item of order.items) {
         try {
-          const product = await getProductBySlug(item.product_id);
+          const product = await getProductBySlug(item.productId);
           if (product) {
             await decrementStock(product.id, item.qty, order.id);
             console.log(`[PAYFIP] Stock decremented: ${product.slug} -${item.qty}`);
           } else {
-            console.warn(`[PAYFIP] Product not found for stock decrement: ${item.product_id}`);
+            console.warn(`[PAYFIP] Product not found for stock decrement: ${item.productId}`);
           }
         } catch (stockError) {
-          console.error(`[PAYFIP] Stock decrement error for ${item.product_id}:`, stockError);
+          console.error(`[PAYFIP] Stock decrement error for ${item.productId}:`, stockError);
           // Continue processing other items
         }
       }

@@ -5,20 +5,27 @@ import { useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useCart } from '@/store/cart';
-import { getAllActiveProducts } from '@/lib/catalogue';
+import type { Product } from '@/types/product';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 import { toast } from 'sonner';
 
-export function ProduitHero() {
+interface ProduitHeroProps {
+  featuredProduct?: Product | null;
+}
+
+export function ProduitHero({ featuredProduct }: ProduitHeroProps) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
   const addItem = useCart((state) => state.addItem);
 
-  // Get first product as featured
-  const featuredProduct = getAllActiveProducts()[0];
-
   if (!featuredProduct) return null;
+
+  // Get primary image or first image
+  const primaryImage = featuredProduct.images?.find((img) => img.isPrimary)?.url ||
+    featuredProduct.images?.[0]?.url;
+
+  if (!primaryImage) return null;
 
   const handleAddToCart = () => {
     addItem(featuredProduct.id, 1);
@@ -85,7 +92,7 @@ export function ProduitHero() {
             className="relative h-[500px] md:h-full min-h-[500px]"
           >
             <Image
-              src={featuredProduct.image}
+              src={primaryImage}
               alt={featuredProduct.name}
               fill
               priority
