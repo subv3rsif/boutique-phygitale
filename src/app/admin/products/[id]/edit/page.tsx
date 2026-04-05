@@ -2,6 +2,7 @@
 import { notFound } from 'next/navigation';
 import { getProductById } from '@/lib/products';
 import { ProductForm } from '@/components/admin/product-form';
+import { ImageUpload } from '@/components/admin/image-upload';
 
 export const metadata = {
   title: 'Modifier Produit - Admin',
@@ -9,7 +10,7 @@ export const metadata = {
 
 /**
  * Edit Product Page (Server Component)
- * Fetches product and renders edit form
+ * Fetches product and renders image upload + edit form
  */
 export default async function EditProductPage({
   params,
@@ -37,6 +38,22 @@ export default async function EditProductPage({
         <p className="text-pierre mt-2">
           Modifiez les informations de <strong>{product.name}</strong>.
         </p>
+      </div>
+
+      {/* Image Upload Gallery */}
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <h2 className="text-xl font-semibold text-encre mb-4">
+          Images du Produit
+        </h2>
+        <ImageUpload
+          product={product}
+          onUpdate={() => {
+            // Force page reload to refresh images
+            if (typeof window !== 'undefined') {
+              window.location.reload();
+            }
+          }}
+        />
       </div>
 
       {/* Product Form */}
