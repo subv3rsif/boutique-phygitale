@@ -3,6 +3,7 @@ import { db, products, stockMovements } from '@/lib/db';
 import { eq, desc } from 'drizzle-orm';
 import type { StockMovement, StockAdjustment } from '@/types/product';
 import { getProductById } from '@/lib/products';
+import { sendLowStockAlert, sendOutOfStockAlert } from '@/lib/email-alerts';
 
 /**
  * Decrement stock (for sales)
@@ -39,7 +40,11 @@ export async function decrementStock(
   // Check stock alert
   if (newStock <= product.stockAlertThreshold && newStock > 0) {
     console.log(`[STOCK] Low stock alert: ${product.slug} (${newStock} left)`);
-    // TODO: Send email alert (Task 17)
+    // Send email alert asynchronously (don't await to avoid blocking)
+    const updatedProduct = { ...product, stockQuantity: newStock };
+    sendLowStockAlert(updatedProduct).catch(err =>
+      console.error('[STOCK] Email alert failed:', err)
+    );
   }
 
   // Auto-disable if out of stock
@@ -50,7 +55,11 @@ export async function decrementStock(
       .where(eq(products.id, productId));
 
     console.log(`[STOCK] Out of stock: ${product.slug} - product disabled`);
-    // TODO: Send email alert (Task 17)
+    // Send email alert asynchronously (don't await to avoid blocking)
+    const updatedProduct = { ...product, stockQuantity: newStock, active: false };
+    sendOutOfStockAlert(updatedProduct).catch(err =>
+      console.error('[STOCK] Email alert failed:', err)
+    );
   }
 }
 
