@@ -48,7 +48,7 @@ export type UpdateProductInput = z.infer<typeof updateProductSchema>;
  */
 export const stockAdjustmentSchema = z.object({
   type: z.enum(['add', 'remove', 'set'], {
-    errorMap: () => ({ message: 'Type doit être "add", "remove" ou "set"' }),
+    message: 'Type doit être "add", "remove" ou "set"',
   }),
   quantity: z.number().int().min(0, 'Quantité >= 0'),
   note: z.string().optional(),

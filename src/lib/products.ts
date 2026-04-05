@@ -101,6 +101,10 @@ export async function createProduct(input: CreateProductInput): Promise<Product>
     })
     .returning();
 
+  if (!product) {
+    throw new Error('Failed to create product');
+  }
+
   console.log(`[PRODUCT] Created: ${product.slug}`);
 
   return product;
@@ -207,6 +211,10 @@ export async function addProductImages(
     .where(eq(products.id, productId))
     .returning();
 
+  if (!updated) {
+    throw new Error('Product not found');
+  }
+
   return updated;
 }
 
@@ -225,7 +233,7 @@ export async function removeProductImage(
   const images = (product.images || []).filter((img) => img.path !== imagePath);
 
   // If removed image was primary, make first remaining image primary
-  if (images.length > 0 && !images.some((img) => img.isPrimary)) {
+  if (images.length > 0 && !images.some((img) => img.isPrimary) && images[0]) {
     images[0].isPrimary = true;
   }
 
@@ -234,6 +242,10 @@ export async function removeProductImage(
     .set({ images })
     .where(eq(products.id, productId))
     .returning();
+
+  if (!updated) {
+    throw new Error('Product not found');
+  }
 
   return updated;
 }
