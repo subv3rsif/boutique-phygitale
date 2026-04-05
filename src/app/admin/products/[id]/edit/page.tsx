@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { getProductById } from '@/lib/products';
 import { ProductForm } from '@/components/admin/product-form';
 import { ImageUpload } from '@/components/admin/image-upload';
+import { StockAdjuster } from '@/components/admin/stock-adjuster';
 
 export const metadata = {
   title: 'Modifier Produit - Admin',
@@ -55,6 +56,17 @@ export default async function EditProductPage({
           }}
         />
       </div>
+
+      {/* Stock Adjuster */}
+      <StockAdjuster
+        product={product}
+        onUpdate={() => {
+          // Force page reload to refresh stock
+          if (typeof window !== 'undefined') {
+            window.location.reload();
+          }
+        }}
+      />
 
       {/* Product Form */}
       <ProductForm mode="edit" product={product} />
