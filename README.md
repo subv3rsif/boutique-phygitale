@@ -156,6 +156,7 @@ src/
 │   ├── admin/                    # Interface admin
 │   │   ├── dashboard/
 │   │   ├── orders/
+│   │   ├── products/             # Gestion catalogue
 │   │   └── pickup/
 │   └── api/                      # API Routes
 │       ├── checkout/             # Création session Stripe
@@ -234,9 +235,67 @@ La queue traite les emails en arrière-plan avec backoff exponentiel en cas d'é
 
 ## 🎨 Catalogue Produits
 
-Le catalogue est défini dans `src/lib/catalogue.ts` avec 3 produits de démonstration.
+### Gestion via Interface Admin
 
-Pour ajouter/modifier des produits, éditer ce fichier (migration vers DB possible plus tard).
+Le catalogue de produits est désormais géré via l'interface admin à `/admin/products` (nécessite authentification admin).
+
+**Fonctionnalités :**
+- Créer, modifier, supprimer des produits
+- Galerie multi-images (jusqu'à 5 images par produit)
+- Gestion du stock avec alertes automatiques
+- Historique des mouvements de stock
+- Décrémentation automatique du stock lors des ventes
+
+**Format d'image recommandé :** 600×750px (ratio 4:5)
+
+### Variables d'Environnement
+
+Requises pour le catalogue produits :
+
+```bash
+NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGc...
+ADMIN_EMAILS=admin@example.com,webmaster@example.com
+```
+
+### Schéma Base de Données
+
+Les produits sont stockés dans PostgreSQL avec :
+- Table `products` : Catalogue produits avec images JSONB
+- Table `stock_movements` : Historique des mouvements de stock
+
+Exécuter les migrations :
+```bash
+npm run db:push
+```
+
+### Configuration Supabase Storage
+
+1. **Créer un bucket "products"** dans Supabase Storage
+2. **Rendre le bucket public** pour permettre l'affichage des images
+3. **Configurer les permissions** :
+   - Lecture publique (pour affichage frontend)
+   - Écriture restreinte (via service role key pour upload admin)
+
+### Alertes Stock
+
+Emails automatiques envoyés aux ADMIN_EMAILS lorsque :
+- Le stock atteint le seuil d'alerte (avertissement stock faible)
+- Le stock atteint zéro (rupture de stock, produit auto-désactivé)
+- Produit réactivé lorsque du stock est ajouté
+
+### Migration depuis catalogue.ts
+
+Les produits précédemment dans `src/lib/catalogue.ts` doivent être migrés vers la base de données via l'interface admin.
+
+**Étapes de migration :**
+1. Se connecter à `/admin/products`
+2. Créer manuellement chaque produit depuis le formulaire
+3. Uploader les images depuis `/public/images/products/`
+4. Vérifier que tous les produits sont visibles sur la homepage
+5. Une fois la migration confirmée, `catalogue.ts` peut être supprimé en toute sécurité
+
+**Note :** Le fichier `catalogue.ts` est conservé temporairement pour référence. Ne pas le supprimer avant d'avoir vérifié que tous les produits sont correctement migrés dans la base de données.
 
 ## 📊 Admin
 
@@ -251,6 +310,8 @@ Routes protégées par middleware + Supabase Auth.
 - Marquer comme expédié (+ tracking)
 - Scanner QR pour validation retraits
 - Renvoyer emails de confirmation
+- **Gestion du catalogue produits** (créer/modifier/supprimer)
+- **Gestion du stock** avec historique et alertes automatiques
 
 ## 🚀 Déploiement Vercel
 
@@ -267,16 +328,38 @@ Routes protégées par middleware + Supabase Auth.
 
 ## 📋 Checklist Pré-Lancement
 
+### Infrastructure
 - [ ] Variables d'environnement configurées (production)
 - [ ] Webhook Stripe configuré et testé
+- [ ] Supabase Storage bucket "products" créé et public
+- [ ] Migrations base de données appliquées (tables products, stock_movements)
+- [ ] Admin emails configurés (ADMIN_EMAILS)
+
+### Produits & Catalogue
+- [ ] Tous les produits migrés vers la base de données
+- [ ] Images produits uploadées (format 600×750px recommandé)
+- [ ] Stocks initiaux configurés
+- [ ] Seuils d'alerte stock définis
+- [ ] Catalogue.ts supprimé (après validation migration)
+
+### Paiement & Emails
 - [ ] Emails testés (inbox + spam)
 - [ ] Stripe en mode live (clés production)
-- [ ] Mentions légales, CGV, politique de confidentialité complétées
-- [ ] Admin emails configurés
+- [ ] Alertes stock testées (email envoyé aux admins)
 - [ ] QR codes testés avec scanner réel
 - [ ] Tests E2E passés (delivery + pickup)
+
+### Légal & Sécurité
+- [ ] Mentions légales, CGV, politique de confidentialité complétées
 - [ ] Rate limiting vérifié
+- [ ] Webhook Stripe signature validée
+
+### UX & Testing
+- [ ] Homepage affiche produits depuis database
 - [ ] Responsive mobile testé
+- [ ] Admin peut créer/modifier produits
+- [ ] Stock se décrémente automatiquement lors des ventes
+- [ ] Email d'alerte reçu quand stock faible/épuisé
 
 ## 🤝 Support
 
