@@ -11,7 +11,7 @@ import { deleteProductImages } from '@/lib/supabase-storage';
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Check auth
@@ -25,8 +25,11 @@ export async function GET(
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
+    // Await params
+    const { id } = await params;
+
     // Get product
-    const product = await getProductById(params.id);
+    const product = await getProductById(id);
 
     if (!product) {
       return NextResponse.json({ error: 'Product not found' }, { status: 404 });
@@ -48,7 +51,7 @@ export async function GET(
  */
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Check auth
@@ -61,6 +64,9 @@ export async function PUT(
     if (!allowedEmails.includes(session.user.email)) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
+
+    // Await params
+    const { id } = await params;
 
     // Parse body
     const body = await request.json();
@@ -75,7 +81,7 @@ export async function PUT(
     }
 
     // Update product
-    const product = await updateProduct(params.id, validation.data);
+    const product = await updateProduct(id, validation.data);
 
     return NextResponse.json({ product });
   } catch (error: any) {
@@ -105,7 +111,7 @@ export async function PUT(
  */
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Check auth
@@ -119,8 +125,11 @@ export async function DELETE(
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
+    // Await params
+    const { id } = await params;
+
     // Get product to get slug
-    const product = await getProductById(params.id);
+    const product = await getProductById(id);
     if (!product) {
       return NextResponse.json({ error: 'Product not found' }, { status: 404 });
     }
@@ -134,7 +143,7 @@ export async function DELETE(
     }
 
     // Delete product
-    await deleteProduct(params.id);
+    await deleteProduct(id);
 
     return NextResponse.json({ success: true });
   } catch (error: any) {

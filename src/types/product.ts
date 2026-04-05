@@ -30,7 +30,7 @@ export type Product = {
   stockAlertThreshold: number; // Threshold for low stock alerts
   weightGrams: number | null; // Product weight in grams (optional)
   tags: string[] | null; // Array of tags for filtering/categorization
-  payfipProductCode: string; // PayFIP product code for administrative tracking
+  payfipProductCode: string | null; // PayFIP product code for administrative tracking
   editionNumber: number | null; // Edition number if part of limited series
   editionTotal: number | null; // Total editions if part of limited series
   active: boolean; // Whether product is active/available for sale

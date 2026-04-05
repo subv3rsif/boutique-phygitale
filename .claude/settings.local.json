@@ -41,7 +41,9 @@
       "Bash(git show:*)",
       "Bash(npm run lint:*)",
       "Bash(npx drizzle-kit:*)",
-      "Bash(npm uninstall:*)"
+      "Bash(npm uninstall:*)",
+      "Bash(echo:*)",
+      "Bash(npx shadcn@latest add:*)"
     ]
   }
 }

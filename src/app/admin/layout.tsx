@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { LayoutDashboard, Package, QrCode, LogOut } from 'lucide-react';
+import { LayoutDashboard, Package, QrCode, LogOut, ShoppingBag } from 'lucide-react';
 
 export default async function AdminLayout({
   children,
@@ -31,6 +31,11 @@ export default async function AdminLayout({
       name: 'Dashboard',
       href: '/admin/dashboard',
       icon: LayoutDashboard,
+    },
+    {
+      name: 'Produits',
+      href: '/admin/products',
+      icon: ShoppingBag,
     },
     {
       name: 'Commandes',

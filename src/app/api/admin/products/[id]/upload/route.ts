@@ -11,7 +11,7 @@ import { imageUploadSchema } from '@/lib/validations/product';
  */
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Check auth
@@ -25,8 +25,11 @@ export async function POST(
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
+    // Await params
+    const { id } = await params;
+
     // Get product
-    const product = await getProductById(params.id);
+    const product = await getProductById(id);
     if (!product) {
       return NextResponse.json({ error: 'Product not found' }, { status: 404 });
     }
@@ -80,7 +83,7 @@ export async function POST(
     });
 
     // Add image to product
-    const updatedProduct = await addProductImages(params.id, [
+    const updatedProduct = await addProductImages(id, [
       {
         url,
         path,

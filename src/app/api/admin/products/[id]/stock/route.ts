@@ -11,7 +11,7 @@ import { stockAdjustmentSchema } from '@/lib/validations/product';
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Check auth
@@ -25,8 +25,11 @@ export async function GET(
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
+    // Await params
+    const { id } = await params;
+
     // Get movements
-    const movements = await getStockMovements(params.id);
+    const movements = await getStockMovements(id);
 
     return NextResponse.json({ movements });
   } catch (error) {
@@ -44,7 +47,7 @@ export async function GET(
  */
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Check auth
@@ -58,8 +61,11 @@ export async function POST(
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
+    // Await params
+    const { id } = await params;
+
     // Check product exists
-    const product = await getProductById(params.id);
+    const product = await getProductById(id);
     if (!product) {
       return NextResponse.json({ error: 'Product not found' }, { status: 404 });
     }
@@ -77,10 +83,10 @@ export async function POST(
     }
 
     // Adjust stock
-    await adjustStock(params.id, validation.data, session.user.email);
+    await adjustStock(id, validation.data, session.user.email);
 
     // Get updated product
-    const updatedProduct = await getProductById(params.id);
+    const updatedProduct = await getProductById(id);
 
     return NextResponse.json({ product: updatedProduct });
   } catch (error: any) {
