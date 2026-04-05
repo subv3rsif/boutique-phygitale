@@ -240,3 +240,6 @@ export type NewSession = typeof sessions.$inferInsert;
 
 export type VerificationToken = typeof verificationTokens.$inferSelect;
 export type NewVerificationToken = typeof verificationTokens.$inferInsert;
+
+// Re-export products schema
+export * from './schema-products';

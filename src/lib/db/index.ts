@@ -1,6 +1,7 @@
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 import * as schema from './schema';
+import { products, stockMovements } from './schema-products';
 
 // Lazy database client to avoid build-time errors
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -44,3 +45,6 @@ export { getDb };
 
 // Export schema for direct access
 export * from './schema';
+
+// Export product tables for convenience
+export { products, stockMovements };
