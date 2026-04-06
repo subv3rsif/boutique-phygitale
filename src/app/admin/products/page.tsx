@@ -6,6 +6,10 @@ export const metadata = {
   title: 'Catalogue Produits - Admin',
 };
 
+// Force dynamic rendering (no pre-render at build time)
+// This prevents build errors when DATABASE_URL is not available during build
+export const dynamic = 'force-dynamic';
+
 /**
  * Admin Products List Page (Server Component)
  * Fetches all products and passes to client component
