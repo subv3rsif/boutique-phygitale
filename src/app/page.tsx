@@ -7,6 +7,9 @@ import { LesArtisans } from '@/components/sections/les-artisans';
 import { Atelier } from '@/components/sections/atelier';
 import { getActiveProducts } from '@/lib/products';
 
+// Force dynamic rendering (database required)
+export const dynamic = 'force-dynamic';
+
 export default async function HomePage() {
   // Fetch products from database instead of static catalogue
   const allProducts = await getActiveProducts();

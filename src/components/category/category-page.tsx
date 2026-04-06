@@ -4,7 +4,7 @@ import { CategoryHeader } from './category-header';
 import { CategoryEmpty } from './category-empty';
 import { BentoProductGrid } from '@/components/product/bento-product-grid';
 import type { CategoryConfig } from '@/lib/categories';
-import type { Product } from '@/lib/catalogue';
+import type { Product } from '@/types/product';
 
 type CategoryPageProps = {
   config: CategoryConfig;

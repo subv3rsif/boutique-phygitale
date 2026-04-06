@@ -3,6 +3,9 @@ import { getCategoryConfig } from '@/lib/categories';
 import { CategoryPage } from '@/components/category/category-page';
 import type { Metadata } from 'next';
 
+// Force dynamic rendering (database required)
+export const dynamic = 'force-dynamic';
+
 const config = getCategoryConfig('collection')!;
 
 export const metadata: Metadata = {

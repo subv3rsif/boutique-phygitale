@@ -7,11 +7,25 @@ import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { Loader2, ArrowUpRight, Crown } from 'lucide-react';
-import { type Product, formatCurrency } from '@/lib/catalogue';
+import type { Product } from '@/types/product';
+import { formatCurrency } from '@/lib/catalogue';
 import { useCart } from '@/store/cart';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { PremiumBadge, PremiumBadgeIcon } from '@/components/ui/premium-badge';
+
+/**
+ * Get primary image from product images array
+ * Falls back to first image if no primary is set, or placeholder if no images
+ */
+function getPrimaryImage(product: Product): string {
+  if (!product.images || product.images.length === 0) {
+    return 'https://placehold.co/600x750/503B64/F3EFEA?text=No+Image&font=playfair-display';
+  }
+
+  const primary = product.images.find((img) => img.isPrimary);
+  return primary?.url || product.images[0]?.url || 'https://placehold.co/600x750/503B64/F3EFEA?text=No+Image&font=playfair-display';
+}
 
 // ─── Animated Border Card ─────────────────────────────────────────────────────
 // Technique "conic-gradient spotlight" : le liseret suit le curseur via JS
@@ -89,7 +103,7 @@ function BentoCardHero({ product }: { product: Product }) {
           <div className="absolute inset-0 animate-pulse bg-stone-200 dark:bg-purple-900/50" />
         )}
         <Image
-          src={product.image}
+          src={getPrimaryImage(product)}
           alt={product.name}
           fill
           priority
@@ -198,7 +212,7 @@ function BentoCardSmall({ product, index }: { product: Product; index: number })
               className="absolute inset-0"
             >
               <Image
-                src={product.image}
+                src={getPrimaryImage(product)}
                 alt={product.name}
                 fill
                 className={cn(

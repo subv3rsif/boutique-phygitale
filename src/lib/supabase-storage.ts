@@ -1,17 +1,25 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-if (!supabaseUrl || !supabaseServiceKey) {
-  throw new Error('Missing Supabase credentials');
+let supabaseAdmin: ReturnType<typeof createClient> | null = null;
+
+function getSupabaseAdmin() {
+  if (!supabaseUrl || !supabaseServiceKey) {
+    throw new Error('Missing Supabase credentials');
+  }
+
+  if (!supabaseAdmin) {
+    supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
+      auth: {
+        persistSession: false,
+      },
+    });
+  }
+
+  return supabaseAdmin;
 }
-
-const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
-  auth: {
-    persistSession: false,
-  },
-});
 
 const BUCKET_NAME = 'products';
 
@@ -27,9 +35,10 @@ export async function uploadProductImage(
   fileName: string,
   productSlug: string
 ): Promise<{ url: string; path: string }> {
+  const client = getSupabaseAdmin();
   const path = `${productSlug}/${fileName}`;
 
-  const { data, error } = await supabaseAdmin.storage
+  const { data, error } = await client.storage
     .from(BUCKET_NAME)
     .upload(path, file, {
       contentType: 'image/jpeg',
@@ -42,7 +51,7 @@ export async function uploadProductImage(
     throw new Error(`Upload failed: ${error.message}`);
   }
 
-  const { data: publicUrlData } = supabaseAdmin.storage
+  const { data: publicUrlData } = client.storage
     .from(BUCKET_NAME)
     .getPublicUrl(path);
 
@@ -57,7 +66,8 @@ export async function uploadProductImage(
  * @param path Storage path (e.g., "product-slug/image.jpg")
  */
 export async function deleteProductImage(path: string): Promise<void> {
-  const { error } = await supabaseAdmin.storage
+  const client = getSupabaseAdmin();
+  const { error } = await client.storage
     .from(BUCKET_NAME)
     .remove([path]);
 
@@ -72,7 +82,8 @@ export async function deleteProductImage(path: string): Promise<void> {
  * @param productSlug Product slug (folder name)
  */
 export async function deleteProductImages(productSlug: string): Promise<void> {
-  const { data: files, error: listError } = await supabaseAdmin.storage
+  const client = getSupabaseAdmin();
+  const { data: files, error: listError } = await client.storage
     .from(BUCKET_NAME)
     .list(productSlug);
 
@@ -85,7 +96,7 @@ export async function deleteProductImages(productSlug: string): Promise<void> {
 
   const filePaths = files.map((file) => `${productSlug}/${file.name}`);
 
-  const { error: deleteError } = await supabaseAdmin.storage
+  const { error: deleteError } = await client.storage
     .from(BUCKET_NAME)
     .remove(filePaths);
 
