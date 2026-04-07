@@ -1,6 +1,6 @@
 // src/app/api/admin/products/[id]/stock/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/lib/auth/config';
+import { isAdmin } from '@/lib/auth/admin-check';
 import { getProductById } from '@/lib/products';
 import { adjustStock, getStockMovements } from '@/lib/stock';
 import { stockAdjustmentSchema } from '@/lib/validations/product';
@@ -14,15 +14,9 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Check auth
-    const session = await auth();
-    if (!session?.user?.email) {
+    // Check admin access
+    if (!(await isAdmin())) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const allowedEmails = process.env.ADMIN_EMAILS?.split(',') || [];
-    if (!allowedEmails.includes(session.user.email)) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
     // Await params
@@ -50,15 +44,9 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Check auth
-    const session = await auth();
-    if (!session?.user?.email) {
+    // Check admin access
+    if (!(await isAdmin())) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const allowedEmails = process.env.ADMIN_EMAILS?.split(',') || [];
-    if (!allowedEmails.includes(session.user.email)) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
     // Await params
@@ -83,7 +71,7 @@ export async function POST(
     }
 
     // Adjust stock
-    await adjustStock(id, validation.data, session.user.email);
+    await adjustStock(id, validation.data, 'dev-admin');
 
     // Get updated product
     const updatedProduct = await getProductById(id);

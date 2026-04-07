@@ -67,7 +67,7 @@ export function ImageUpload({ product }: ImageUploadProps) {
 
       // Create FormData
       const formData = new FormData();
-      formData.append('image', file);
+      formData.append('file', file);
 
       // Upload to API
       const response = await fetch(`/api/admin/products/${product.id}/upload`, {
