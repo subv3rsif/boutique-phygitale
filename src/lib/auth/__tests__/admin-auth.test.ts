@@ -110,6 +110,7 @@ vi.mock('next/headers', () => ({
 describe('requireAdminAuth', () => {
   beforeEach(() => {
     process.env.AUTH_SECRET = 'test-secret-key'
+    process.env.ADMIN_EMAIL = 'admin@test.com'
   })
 
   it('throw si cookie absent', async () => {
@@ -148,13 +149,26 @@ describe('requireAdminAuth', () => {
     await expect(requireAdminAuthImpl()).rejects.toThrow('Unauthorized: Session expired')
   })
 
-  it('ne throw pas si token valide', async () => {
+  it('throw si ADMIN_EMAIL manquant', async () => {
+    delete process.env.ADMIN_EMAIL
+
     const validToken = createAdminTokenImpl()
     const mockCookies = {
       get: vi.fn().mockReturnValue({ value: validToken })
     }
     vi.mocked(cookies).mockResolvedValue(mockCookies as any)
 
-    await expect(requireAdminAuthImpl()).resolves.toBeUndefined()
+    await expect(requireAdminAuthImpl()).rejects.toThrow('ADMIN_EMAIL not configured')
+  })
+
+  it('retourne email admin si token valide', async () => {
+    const validToken = createAdminTokenImpl()
+    const mockCookies = {
+      get: vi.fn().mockReturnValue({ value: validToken })
+    }
+    vi.mocked(cookies).mockResolvedValue(mockCookies as any)
+
+    const result = await requireAdminAuthImpl()
+    expect(result).toBe('admin@test.com')
   })
 })

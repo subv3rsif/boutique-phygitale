@@ -127,9 +127,10 @@ export function verifyAdminToken(token: string): { valid: boolean; expired: bool
  * Require admin authentication (middleware)
  * Throws error if not authenticated - use in API routes and layouts
  *
- * @throws Error if no valid admin token
+ * @returns Admin email for logging purposes
+ * @throws Error if no valid admin token or ADMIN_EMAIL not configured
  */
-export async function requireAdminAuth(): Promise<void> {
+export async function requireAdminAuth(): Promise<string> {
   const cookieStore = await cookies()
   const adminToken = cookieStore.get('admin-token')?.value
 
@@ -146,4 +147,12 @@ export async function requireAdminAuth(): Promise<void> {
   if (!valid) {
     throw new Error('Unauthorized: Invalid token')
   }
+
+  // Return admin email for logging purposes
+  const adminEmail = process.env.ADMIN_EMAIL
+  if (!adminEmail) {
+    throw new Error('ADMIN_EMAIL not configured')
+  }
+
+  return adminEmail
 }
