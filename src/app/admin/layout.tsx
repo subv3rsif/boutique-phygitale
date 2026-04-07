@@ -1,8 +1,8 @@
 import Link from 'next/link';
-import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { LayoutDashboard, Package, QrCode, LogOut, ShoppingBag } from 'lucide-react';
+import { requireAdminAuth } from '@/lib/auth/admin-auth';
 
 export default async function AdminLayout({
   children,
@@ -10,21 +10,18 @@ export default async function AdminLayout({
   children: React.ReactNode;
 }) {
   // Check if user is authenticated
-  const cookieStore = await cookies();
-  const session = cookieStore.get('admin-session');
-
-  if (!session) {
-    redirect('/connexion');
-  }
-
-  // Parse session to get user email
-  let userEmail = '';
   try {
-    const sessionData = JSON.parse(session.value);
-    userEmail = sessionData.email;
-  } catch {
-    redirect('/connexion');
+    await requireAdminAuth();
+  } catch (error) {
+    const message = error instanceof Error ? error.message : '';
+    if (message.includes('Session expired')) {
+      redirect('/admin/login?error=session_expired');
+    }
+    redirect('/admin/login');
   }
+
+  // Get user email from environment
+  const userEmail = process.env.ADMIN_EMAIL || 'Admin';
 
   const navigation = [
     {
@@ -86,17 +83,17 @@ export default async function AdminLayout({
               <p className="text-xs text-muted-foreground">Administrateur</p>
             </div>
 
-            <Button
-              asChild
-              variant="outline"
-              className="w-full"
-              size="sm"
-            >
-              <Link href="/deconnexion">
+            <form action="/api/admin/auth/logout" method="POST">
+              <Button
+                type="submit"
+                variant="outline"
+                className="w-full"
+                size="sm"
+              >
                 <LogOut className="mr-2 h-4 w-4" />
                 Déconnexion
-              </Link>
-            </Button>
+              </Button>
+            </form>
           </div>
         </div>
       </div>

@@ -91,6 +91,10 @@ export function verifyAdminToken(token: string): { valid: boolean; expired: bool
 
     const [timestampStr, random, signature] = parts
 
+    if (!timestampStr || !random || !signature) {
+      return { valid: false, expired: false }
+    }
+
     // Verify signature
     const payload = `${timestampStr}.${random}`
     const expectedSig = createHmac('sha256', SECRET)
