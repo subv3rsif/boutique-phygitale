@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
+import { requireAdminAuth } from '@/lib/auth/admin-auth';
 import { db } from '@/lib/db';
 import { orders, emailQueue } from '@/lib/db/schema';
 import { eq, desc } from 'drizzle-orm';
@@ -13,18 +13,14 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id: orderId } = await params;
-
     // Check authentication
-    const cookieStore = await cookies();
-    const session = cookieStore.get('admin-session');
-
-    if (!session) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+    try {
+      await requireAdminAuth();
+    } catch {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const { id: orderId } = await params;
 
     // Find order
     const [order] = await db

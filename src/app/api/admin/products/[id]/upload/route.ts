@@ -1,6 +1,6 @@
 // src/app/api/admin/products/[id]/upload/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { isAdmin } from '@/lib/auth/admin-check';
+import { requireAdminAuth } from '@/lib/auth/admin-auth';
 import { getProductById, addProductImages } from '@/lib/products';
 import { uploadProductImage } from '@/lib/supabase-storage';
 import { imageUploadSchema } from '@/lib/validations/product';
@@ -15,7 +15,9 @@ export async function POST(
 ) {
   try {
     // Check admin access
-    if (!(await isAdmin())) {
+    try {
+      await requireAdminAuth();
+    } catch {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 

@@ -1,6 +1,6 @@
 // src/app/api/admin/products/[id]/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/lib/auth/config';
+import { requireAdminAuth } from '@/lib/auth/admin-auth';
 import { getProductById, updateProduct, deleteProduct } from '@/lib/products';
 import { updateProductSchema } from '@/lib/validations/product';
 import { deleteProductImages } from '@/lib/supabase-storage';
@@ -15,14 +15,10 @@ export async function GET(
 ) {
   try {
     // Check auth
-    const session = await auth();
-    if (!session?.user?.email) {
+    try {
+      await requireAdminAuth();
+    } catch {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const allowedEmails = process.env.ADMIN_EMAILS?.split(',') || [];
-    if (!allowedEmails.includes(session.user.email)) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
     // Await params
@@ -55,14 +51,10 @@ export async function PUT(
 ) {
   try {
     // Check auth
-    const session = await auth();
-    if (!session?.user?.email) {
+    try {
+      await requireAdminAuth();
+    } catch {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const allowedEmails = process.env.ADMIN_EMAILS?.split(',') || [];
-    if (!allowedEmails.includes(session.user.email)) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
     // Await params
@@ -115,14 +107,10 @@ export async function DELETE(
 ) {
   try {
     // Check auth
-    const session = await auth();
-    if (!session?.user?.email) {
+    try {
+      await requireAdminAuth();
+    } catch {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const allowedEmails = process.env.ADMIN_EMAILS?.split(',') || [];
-    if (!allowedEmails.includes(session.user.email)) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
     // Await params

@@ -1,6 +1,6 @@
 // src/app/api/admin/products/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/lib/auth/config';
+import { requireAdminAuth } from '@/lib/auth/admin-auth';
 import { getAllProducts, createProduct } from '@/lib/products';
 import { productSchema } from '@/lib/validations/product';
 
@@ -11,14 +11,10 @@ import { productSchema } from '@/lib/validations/product';
 export async function GET(request: NextRequest) {
   try {
     // Check auth
-    const session = await auth();
-    if (!session?.user?.email) {
+    try {
+      await requireAdminAuth();
+    } catch {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const allowedEmails = process.env.ADMIN_EMAILS?.split(',') || [];
-    if (!allowedEmails.includes(session.user.email)) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
     // Get products
@@ -41,14 +37,10 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     // Check auth
-    const session = await auth();
-    if (!session?.user?.email) {
+    try {
+      await requireAdminAuth();
+    } catch {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const allowedEmails = process.env.ADMIN_EMAILS?.split(',') || [];
-    if (!allowedEmails.includes(session.user.email)) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
     // Parse body

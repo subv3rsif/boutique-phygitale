@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
+import { requireAdminAuth } from '@/lib/auth/admin-auth';
 import { db } from '@/lib/db';
 import { orders, pickupTokens } from '@/lib/db/schema';
 import { eq, and } from 'drizzle-orm';
@@ -13,23 +13,11 @@ import { hashToken } from '@/lib/qr/token-generator';
 export async function POST(request: NextRequest) {
   try {
     // Check authentication
-    const cookieStore = await cookies();
-    const session = cookieStore.get('admin-session');
-
-    if (!session) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
-    }
-
-    // Get staff email from session
-    let staffEmail = '';
+    let staffEmail: string;
     try {
-      const sessionData = JSON.parse(session.value);
-      staffEmail = sessionData.email;
+      staffEmail = await requireAdminAuth();
     } catch {
-      staffEmail = 'unknown';
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     // Parse and validate request body

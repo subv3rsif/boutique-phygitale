@@ -1,6 +1,6 @@
 // src/app/api/admin/products/[id]/stock/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { isAdmin } from '@/lib/auth/admin-check';
+import { requireAdminAuth } from '@/lib/auth/admin-auth';
 import { getProductById } from '@/lib/products';
 import { adjustStock, getStockMovements } from '@/lib/stock';
 import { stockAdjustmentSchema } from '@/lib/validations/product';
@@ -15,7 +15,9 @@ export async function GET(
 ) {
   try {
     // Check admin access
-    if (!(await isAdmin())) {
+    try {
+      await requireAdminAuth();
+    } catch {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -45,7 +47,9 @@ export async function POST(
 ) {
   try {
     // Check admin access
-    if (!(await isAdmin())) {
+    try {
+      await requireAdminAuth();
+    } catch {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
