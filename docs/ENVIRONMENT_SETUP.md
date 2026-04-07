@@ -160,15 +160,30 @@ CRON_SECRET=votre_secret_cron_aleatoire_securise
 # SENTRY (Monitoring d'erreurs - OPTIONNEL)
 # ============================================================================
 
-# DSN Sentry pour le monitoring
-# Récupérer depuis : https://sentry.io/settings/projects/
-SENTRY_DSN=https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx@o123456.ingest.sentry.io/1234567
+# DSN public (exposé côté client - utilisé pour capturer les erreurs frontend)
+# Récupérer depuis : https://sentry.io/settings/[org]/projects/[project]/keys/
+NEXT_PUBLIC_SENTRY_DSN=https://your-public-key@oXXXXXXXXXXXXXXXX.ingest.de.sentry.io/XXXXXXXXXX
 
-# Token d'authentification Sentry (pour source maps)
-SENTRY_AUTH_TOKEN=sntrys_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+# Token d'authentification Sentry (pour upload des source maps)
+# Récupérer depuis : https://sentry.io/settings/account/api/auth-tokens/
+SENTRY_AUTH_TOKEN=your_sentry_auth_token_here
 
-# DSN public (exposé côté client)
-NEXT_PUBLIC_SENTRY_DSN=https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx@o123456.ingest.sentry.io/1234567
+# Organisation Sentry (nom de votre organisation)
+SENTRY_ORG=your-org-name
+
+# Nom du projet Sentry
+SENTRY_PROJECT=your-project-name
+
+# Clé publique Sentry (extraite du DSN)
+SENTRY_PUBLIC_KEY=your-public-key-here
+
+# URL OTLP pour les traces (OpenTelemetry)
+# Récupérer depuis : Sentry > Settings > Developer Settings
+SENTRY_OTLP_TRACES_URL=https://oXXXXXXXXXXXXXXXX.ingest.de.sentry.io/api/XXXXXXXXXX/integration/otlp/v1/traces
+
+# URL du log drain Vercel (pour collecter les logs Vercel dans Sentry)
+# Récupérer depuis : Sentry > Settings > Integrations > Vercel
+SENTRY_VERCEL_LOG_DRAIN_URL=https://oXXXXXXXXXXXXXXXX.ingest.de.sentry.io/api/XXXXXXXXXX/integration/vercel/logs/
 
 # ============================================================================
 # PAYFIP (Paiement Tipi Régie)
@@ -336,16 +351,57 @@ PAYFIP_MODE=X                  # X = Production, T = Test
 **Où les obtenir :**
 1. Créer un compte sur [Sentry.io](https://sentry.io)
 2. Créer un projet Next.js
-3. Copier le DSN depuis `Settings` > `Projects` > `[Your Project]` > `Client Keys (DSN)`
+3. Récupérer les credentials :
+
+**Pour le DSN (Client Keys) :**
+- Aller dans `Settings` > `Projects` > `[Votre Projet]` > `Client Keys (DSN)`
+- Copier le DSN public → `NEXT_PUBLIC_SENTRY_DSN`
+- Extraire la clé publique (partie avant le @) → `SENTRY_PUBLIC_KEY`
+
+**Pour l'Auth Token :**
+- Aller dans `Settings` > `Account` > `API` > `Auth Tokens`
+- Créer un nouveau token avec les permissions :
+  - `project:read`
+  - `project:releases`
+  - `org:read`
+- Copier le token → `SENTRY_AUTH_TOKEN`
+
+**Pour l'intégration Vercel :**
+- Aller dans `Settings` > `Integrations` > `Vercel`
+- Connecter votre compte Vercel
+- Copier l'URL du log drain → `SENTRY_VERCEL_LOG_DRAIN_URL`
 
 **Variables requises :**
 ```bash
-SENTRY_DSN=https://xxxxx@o123456.ingest.sentry.io/1234567
-SENTRY_AUTH_TOKEN=sntrys_xxxxxxxxxxxxxxxxxxxxxxxxxx
-NEXT_PUBLIC_SENTRY_DSN=https://xxxxx@o123456.ingest.sentry.io/1234567
+# DSN public (frontend error tracking)
+NEXT_PUBLIC_SENTRY_DSN=https://your-key@oXXXXXX.ingest.de.sentry.io/XXXXXX
+
+# Auth token (pour upload source maps)
+SENTRY_AUTH_TOKEN=your_sentry_auth_token
+
+# Organisation et projet
+SENTRY_ORG=your-org-name
+SENTRY_PROJECT=your-project-name
+
+# Clé publique (extraite du DSN)
+SENTRY_PUBLIC_KEY=your-public-key
+
+# OTLP Traces URL (OpenTelemetry - optionnel)
+SENTRY_OTLP_TRACES_URL=https://oXXXXXX.ingest.de.sentry.io/api/XXXXXX/integration/otlp/v1/traces
+
+# Vercel Log Drain (optionnel - pour collecter les logs Vercel)
+SENTRY_VERCEL_LOG_DRAIN_URL=https://oXXXXXX.ingest.de.sentry.io/api/XXXXXX/integration/vercel/logs/
 ```
 
-**Note :** Facultatif pour MVP, recommandé pour production
+**Configuration Vercel :**
+1. Dans votre projet Vercel : `Settings` > `Integrations`
+2. Installer l'intégration Sentry
+3. Sentry configurera automatiquement `SENTRY_VERCEL_LOG_DRAIN_URL`
+
+**Note :**
+- Facultatif pour MVP, **fortement recommandé pour production**
+- Le plan gratuit inclut 5,000 erreurs/mois (largement suffisant pour démarrer)
+- Active le source mapping automatique pour debug les erreurs minified
 
 ---
 
@@ -364,6 +420,8 @@ NEXT_PUBLIC_SENTRY_DSN=https://xxxxx@o123456.ingest.sentry.io/1234567
 - `PAYFIP_NUMCLI`
 - `CRON_SECRET`
 - `SENTRY_AUTH_TOKEN`
+- `SENTRY_PUBLIC_KEY` (peut être reconstruit depuis DSN)
+- `SENTRY_VERCEL_LOG_DRAIN_URL`
 
 ✅ **Safe pour client-side (NEXT_PUBLIC_*) :**
 - `NEXT_PUBLIC_SUPABASE_URL`
