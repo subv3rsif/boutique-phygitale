@@ -28,9 +28,12 @@ const adapter = canInitializeDb
     })
   : undefined
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
-  // Only use adapter if available (runtime), not during build
-  ...(adapter && { adapter }),
+ export const { handlers, auth, signIn, signOut } = NextAuth({
+    // Only use adapter if available (runtime), not during build
+    ...(adapter && { adapter }),
+
+    // Secret for encryption (required in production)
+    secret: process.env.AUTH_SECRET,
 
   providers: [
     Google({
