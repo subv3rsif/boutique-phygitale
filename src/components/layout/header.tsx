@@ -4,8 +4,9 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
-import { Menu, ShoppingBag, X } from 'lucide-react';
+import { Menu, ShoppingBag, User, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useSession } from 'next-auth/react';
 import { useCart } from '@/store/cart';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -17,6 +18,7 @@ export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
   const totalItems = useCart((state) => state.totalItems());
+  const { data: session } = useSession();
 
   // Detect scroll
   useEffect(() => {
@@ -80,37 +82,55 @@ export function Header() {
             </div>
           </Link>
 
-          {/* Right: Cart */}
-          <Link href="/panier" className="relative focus-terra">
-            <Button
-              variant="ghost"
-              size="icon"
-              className={cn(
-                "text-pierre hover:text-encre transition-colors relative",
-                isScrolled ? "h-10 w-10" : "h-12 w-12"
-              )}
-              aria-label="Panier"
-            >
-              <ShoppingBag className="h-6 w-6" />
-
-              {/* Badge count */}
-              <AnimatePresence>
-                {totalItems > 0 && (
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    exit={{ scale: 0 }}
-                    transition={{ type: "spring", stiffness: 500, damping: 25 }}
-                    className="absolute -top-1 -right-1"
-                  >
-                    <Badge className="h-5 w-5 flex items-center justify-center p-0 rounded-full bg-terra text-ivoire border-2 border-background font-bold text-xs">
-                      {totalItems > 9 ? '9+' : totalItems}
-                    </Badge>
-                  </motion.div>
+          {/* Right: Account + Cart */}
+          <div className="flex items-center gap-2">
+            {/* Mon compte button */}
+            <Link href={session?.user ? '/profil' : '/connexion'} className="focus-terra">
+              <Button
+                variant="ghost"
+                size="icon"
+                className={cn(
+                  "text-pierre hover:text-encre transition-colors",
+                  isScrolled ? "h-10 w-10" : "h-12 w-12"
                 )}
-              </AnimatePresence>
-            </Button>
-          </Link>
+                aria-label={session?.user ? 'Mon profil' : 'Se connecter'}
+              >
+                <User className="h-6 w-6" />
+              </Button>
+            </Link>
+
+            {/* Cart button */}
+            <Link href="/panier" className="relative focus-terra">
+              <Button
+                variant="ghost"
+                size="icon"
+                className={cn(
+                  "text-pierre hover:text-encre transition-colors relative",
+                  isScrolled ? "h-10 w-10" : "h-12 w-12"
+                )}
+                aria-label="Panier"
+              >
+                <ShoppingBag className="h-6 w-6" />
+
+                {/* Badge count */}
+                <AnimatePresence>
+                  {totalItems > 0 && (
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      exit={{ scale: 0 }}
+                      transition={{ type: "spring", stiffness: 500, damping: 25 }}
+                      className="absolute -top-1 -right-1"
+                    >
+                      <Badge className="h-5 w-5 flex items-center justify-center p-0 rounded-full bg-terra text-ivoire border-2 border-background font-bold text-xs">
+                        {totalItems > 9 ? '9+' : totalItems}
+                      </Badge>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </Button>
+            </Link>
+          </div>
         </div>
       </header>
 

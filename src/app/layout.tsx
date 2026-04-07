@@ -7,6 +7,7 @@ import { ThemeScript } from "./theme-script";
 import { Header } from "@/components/layout/header";
 import { ClientLayoutWrapper } from "@/components/layout/client-layout-wrapper";
 import { Toaster } from "@/components/ui/sonner";
+import { SessionProvider } from "next-auth/react";
 
 // Display: 1885 geometric sans for refined titles
 const josefin = Josefin_Sans({
@@ -89,28 +90,30 @@ export default function RootLayout({
         <ThemeScript />
       </head>
       <body className={`${josefin.variable} ${dmSans.variable} ${jetbrains.variable} font-sans antialiased`}>
-        <ThemeProvider>
-          <Header />
-          <main className="min-h-[calc(100vh-4rem)] pb-24">{children}</main>
-          <footer className="w-full border-t py-8 mt-12 mb-20">
-            <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm text-muted-foreground">
-              <div className="flex justify-center gap-4 mb-4">
-                <a href="/mentions-legales" className="hover:underline focus-terra rounded px-2 py-1">
-                  Mentions légales
-                </a>
-                <a href="/politique-confidentialite" className="hover:underline focus-terra rounded px-2 py-1">
-                  Politique de confidentialité
-                </a>
-                <a href="/cgv" className="hover:underline focus-terra rounded px-2 py-1">
-                  CGV
-                </a>
+        <SessionProvider>
+          <ThemeProvider>
+            <Header />
+            <main className="min-h-[calc(100vh-4rem)] pb-24">{children}</main>
+            <footer className="w-full border-t py-8 mt-12 mb-20">
+              <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm text-muted-foreground">
+                <div className="flex justify-center gap-4 mb-4">
+                  <a href="/mentions-legales" className="hover:underline focus-terra rounded px-2 py-1">
+                    Mentions légales
+                  </a>
+                  <a href="/politique-confidentialite" className="hover:underline focus-terra rounded px-2 py-1">
+                    Politique de confidentialité
+                  </a>
+                  <a href="/cgv" className="hover:underline focus-terra rounded px-2 py-1">
+                    CGV
+                  </a>
+                </div>
+                <p>© 2026 Boutique 1885 - Édition municipale</p>
               </div>
-              <p>© 2026 Boutique 1885 - Édition municipale</p>
-            </div>
-          </footer>
-          <ClientLayoutWrapper />
-          <Toaster />
-        </ThemeProvider>
+            </footer>
+            <ClientLayoutWrapper />
+            <Toaster />
+          </ThemeProvider>
+        </SessionProvider>
       </body>
     </html>
   );
