@@ -36,6 +36,79 @@ Une boutique en ligne "phygitale" pour une municipalité française, permettant 
 - 📲 Scanner QR pour validation des retraits
 - 📧 Renvoi des emails de confirmation
 
+## 🔐 Authentification
+
+Cette application utilise **deux systèmes d'authentification séparés** :
+
+### 1. Admin Authentication (Custom Email/Password)
+
+Système dédié aux administrateurs de la boutique.
+
+**Accès :** `/admin/login`
+**Routes protégées :** `/admin/*`
+**Session :** Cookie HTTP-only `admin-token` (validité 8 heures)
+
+**Variables d'environnement requises :**
+```bash
+ADMIN_EMAIL=admin@ville.fr
+ADMIN_PASSWORD=<mot-de-passe-sécurisé>
+AUTH_SECRET=<clé-pour-signer-les-sessions>
+```
+
+**Générer AUTH_SECRET :**
+```bash
+openssl rand -base64 32
+```
+
+**Authentification :**
+- Email/mot de passe configurés en variables d'environnement
+- Vérification à chaque requête admin
+- Session limitée à 8 heures (logout automatique)
+- Pas de "Se souvenir de moi" (sécurité renforcée)
+
+### 2. Client Authentication (NextAuth + Google OAuth)
+
+Système optionnel pour les clients (suivi de commandes, profil).
+
+**Accès :** `/connexion`
+**Routes protégées :** `/profil/*`
+**Session :** Cookie `authjs.session-token` (30 jours)
+
+**Variables d'environnement requises :**
+```bash
+GOOGLE_CLIENT_ID=<votre-client-id>.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=GOCSPX-<votre-secret>
+AUTH_URL=https://votre-domaine.vercel.app
+```
+
+**Authentification :**
+- Google OAuth (optional login)
+- Permet de sauvegarder commandes et préférences
+- Suivi de commandes historiques
+- Lien personnel de paiement non reçu par email
+
+### 📦 Checkout Invité (sans créer de compte)
+
+Les clients **peuvent commander sans créer de compte** :
+- Panier local (localStorage)
+- Email + infos de livraison/retrait saisis au checkout
+- Lien unique `/ma-commande/[orderId]` pour suivi post-paiement
+- QR code pour retrait clic & collect
+- Aucune création de compte requise
+
+**Flux complet :** `Catalogue` → `Panier` → `Paiement Stripe` → `Email de confirmation` → Suivi via lien unique
+
+### 🔒 Sécurité
+
+- **Secrets en variables d'environnement** : Aucun credential en Git
+- **Sessions hashées** : Tokens signés avec `AUTH_SECRET`
+- **HTTP-only cookies** : Protégés contre XSS
+- **CSRF protection** : NextAuth inclus
+- **Rate limiting** : Protection contre brute force
+- **Admin session courte** : Logout après 8 heures
+
+Pour plus de détails, voir [docs/VERCEL-ENV-TEMPLATE.md](./docs/VERCEL-ENV-TEMPLATE.md)
+
 ## 🛠️ Installation
 
 ### Prérequis
