@@ -7,13 +7,14 @@
  */
 
 import { cookies } from 'next/headers'
-import { createHmac, randomBytes } from 'crypto'
+import { createHmac, randomBytes, timingSafeEqual } from 'crypto'
 
 // Token expiration: 8 hours in milliseconds
 const TOKEN_EXPIRATION_MS = 8 * 60 * 60 * 1000
 
 /**
  * Verify admin credentials against environment variables
+ * Uses constant-time comparison to prevent timing attacks.
  * @param email - Email to verify
  * @param password - Password to verify
  * @returns true if credentials match, false otherwise
@@ -27,7 +28,20 @@ export function verifyAdminCredentials(email: string, password: string): boolean
     return false
   }
 
-  return email === ADMIN_EMAIL && password === ADMIN_PASSWORD
+  try {
+    // Pad to fixed length to avoid length-based timing attacks
+    const emailMatch = timingSafeEqual(
+      Buffer.from(email.padEnd(256)),
+      Buffer.from(ADMIN_EMAIL.padEnd(256))
+    )
+    const passwordMatch = timingSafeEqual(
+      Buffer.from(password.padEnd(256)),
+      Buffer.from(ADMIN_PASSWORD.padEnd(256))
+    )
+    return emailMatch && passwordMatch
+  } catch {
+    return false
+  }
 }
 
 /**

@@ -1,22 +1,23 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest'
 import { createHmac, randomBytes } from 'crypto'
 import { cookies } from 'next/headers'
+import type { verifyAdminCredentials, createAdminToken, verifyAdminToken, requireAdminAuth } from '../admin-auth'
 
 // We need to import these dynamically to allow env vars to be set during tests
-let verifyAdminCredentials: any
-let createAdminToken: any
-let verifyAdminToken: any
-let requireAdminAuth: any
+let verifyAdminCredentialsImpl: typeof verifyAdminCredentials
+let createAdminTokenImpl: typeof createAdminToken
+let verifyAdminTokenImpl: typeof verifyAdminToken
+let requireAdminAuthImpl: typeof requireAdminAuth
 
 // Reload the module before each test to pick up new env vars
 beforeEach(async () => {
   // Clear the require cache
   vi.resetModules()
   const adminAuth = await import('../admin-auth')
-  verifyAdminCredentials = adminAuth.verifyAdminCredentials
-  createAdminToken = adminAuth.createAdminToken
-  verifyAdminToken = adminAuth.verifyAdminToken
-  requireAdminAuth = adminAuth.requireAdminAuth
+  verifyAdminCredentialsImpl = adminAuth.verifyAdminCredentials
+  createAdminTokenImpl = adminAuth.createAdminToken
+  verifyAdminTokenImpl = adminAuth.verifyAdminToken
+  requireAdminAuthImpl = adminAuth.requireAdminAuth
 })
 
 describe('verifyAdminCredentials', () => {
@@ -26,17 +27,17 @@ describe('verifyAdminCredentials', () => {
   })
 
   it('accepte credentials valides', () => {
-    const result = verifyAdminCredentials('admin@test.com', 'test-password-123')
+    const result = verifyAdminCredentialsImpl('admin@test.com', 'test-password-123')
     expect(result).toBe(true)
   })
 
   it('rejette email invalide', () => {
-    const result = verifyAdminCredentials('fake@test.com', 'test-password-123')
+    const result = verifyAdminCredentialsImpl('fake@test.com', 'test-password-123')
     expect(result).toBe(false)
   })
 
   it('rejette password invalide', () => {
-    const result = verifyAdminCredentials('admin@test.com', 'wrong-password')
+    const result = verifyAdminCredentialsImpl('admin@test.com', 'wrong-password')
     expect(result).toBe(false)
   })
 
@@ -44,7 +45,7 @@ describe('verifyAdminCredentials', () => {
     delete process.env.ADMIN_EMAIL
     delete process.env.ADMIN_PASSWORD
 
-    const result = verifyAdminCredentials('admin@test.com', 'test-password-123')
+    const result = verifyAdminCredentialsImpl('admin@test.com', 'test-password-123')
     expect(result).toBe(false)
   })
 })
@@ -55,8 +56,8 @@ describe('createAdminToken + verifyAdminToken', () => {
   })
 
   it('génère et vérifie token valide', () => {
-    const token = createAdminToken()
-    const result = verifyAdminToken(token)
+    const token = createAdminTokenImpl()
+    const result = verifyAdminTokenImpl(token)
 
     expect(result.valid).toBe(true)
     expect(result.expired).toBe(false)
@@ -64,7 +65,7 @@ describe('createAdminToken + verifyAdminToken', () => {
 
   it('rejette token avec signature invalide', () => {
     const token = '1234567890.abcdef1234567890.fakesignature'
-    const result = verifyAdminToken(token)
+    const result = verifyAdminTokenImpl(token)
 
     expect(result.valid).toBe(false)
     expect(result.expired).toBe(false)
@@ -72,7 +73,7 @@ describe('createAdminToken + verifyAdminToken', () => {
 
   it('rejette token malformé', () => {
     const token = 'invalid-token-format'
-    const result = verifyAdminToken(token)
+    const result = verifyAdminTokenImpl(token)
 
     expect(result.valid).toBe(false)
     expect(result.expired).toBe(false)
@@ -88,7 +89,7 @@ describe('createAdminToken + verifyAdminToken', () => {
       .digest('hex')
     const expiredToken = `${payload}.${signature}`
 
-    const result = verifyAdminToken(expiredToken)
+    const result = verifyAdminTokenImpl(expiredToken)
 
     expect(result.valid).toBe(false)
     expect(result.expired).toBe(true)
@@ -97,7 +98,7 @@ describe('createAdminToken + verifyAdminToken', () => {
   it('rejette si AUTH_SECRET manquant', () => {
     delete process.env.AUTH_SECRET
 
-    expect(() => createAdminToken()).toThrow()
+    expect(() => createAdminTokenImpl()).toThrow()
   })
 })
 
@@ -117,7 +118,7 @@ describe('requireAdminAuth', () => {
     }
     vi.mocked(cookies).mockResolvedValue(mockCookies as any)
 
-    await expect(requireAdminAuth()).rejects.toThrow('Unauthorized: No admin token')
+    await expect(requireAdminAuthImpl()).rejects.toThrow('Unauthorized: No admin token')
   })
 
   it('throw si token invalide', async () => {
@@ -126,7 +127,7 @@ describe('requireAdminAuth', () => {
     }
     vi.mocked(cookies).mockResolvedValue(mockCookies as any)
 
-    await expect(requireAdminAuth()).rejects.toThrow('Unauthorized: Invalid token')
+    await expect(requireAdminAuthImpl()).rejects.toThrow('Unauthorized: Invalid token')
   })
 
   it('throw si token expiré', async () => {
@@ -144,16 +145,16 @@ describe('requireAdminAuth', () => {
     }
     vi.mocked(cookies).mockResolvedValue(mockCookies as any)
 
-    await expect(requireAdminAuth()).rejects.toThrow('Unauthorized: Session expired')
+    await expect(requireAdminAuthImpl()).rejects.toThrow('Unauthorized: Session expired')
   })
 
   it('ne throw pas si token valide', async () => {
-    const validToken = createAdminToken()
+    const validToken = createAdminTokenImpl()
     const mockCookies = {
       get: vi.fn().mockReturnValue({ value: validToken })
     }
     vi.mocked(cookies).mockResolvedValue(mockCookies as any)
 
-    await expect(requireAdminAuth()).resolves.toBeUndefined()
+    await expect(requireAdminAuthImpl()).resolves.toBeUndefined()
   })
 })
