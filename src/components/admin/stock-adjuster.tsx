@@ -2,8 +2,7 @@
 
 import { useState } from 'react';
 import { Plus, Minus, RefreshCw, History, AlertTriangle, AlertCircle } from 'lucide-react';
-import type { Product } from '@/lib/db/schema-products';
-import type { StockMovement } from '@/types/product';
+import type { Product, StockMovement } from '@/types/product';
 
 type AdjustmentType = 'add' | 'remove' | 'set';
 
