@@ -52,7 +52,11 @@
       "Bash(do echo \"=== Testing /$page ===\")",
       "Bash(done)",
       "Bash(do echo \"=== /$page ===\")",
-      "Bash(pkill:*)"
+      "Bash(pkill:*)",
+      "Bash(pip3 install:*)",
+      "Bash(source:*)",
+      "Bash(pip install:*)",
+      "Bash(npx tsx:*)"
     ]
   }
 }
