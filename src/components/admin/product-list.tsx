@@ -260,7 +260,7 @@ export function ProductList({ initialProducts }: ProductListProps) {
                           asChild
                           className="h-8 px-2 hover:bg-terra/10 hover:border-terra hover:text-terra"
                         >
-                          <Link href={`/admin/products/${product.id}`}>
+                          <Link href={`/admin/products/${product.id}/edit`}>
                             <Pencil className="h-3.5 w-3.5" />
                             <span className="sr-only">Modifier {product.name}</span>
                           </Link>
