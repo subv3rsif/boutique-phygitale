@@ -10,7 +10,7 @@ export default async function PickupScannerPage() {
   const session = cookieStore.get('admin-session');
 
   if (!session) {
-    redirect('/login');
+    redirect('/connexion');
   }
 
   return (

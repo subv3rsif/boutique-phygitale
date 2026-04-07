@@ -38,7 +38,7 @@ export default async function OrderDetailPage({
   const session = cookieStore.get('admin-session');
 
   if (!session) {
-    redirect('/login');
+    redirect('/connexion');
   }
 
   // Fetch order details

@@ -45,7 +45,7 @@ export default async function OrdersPage() {
   const session = cookieStore.get('admin-session');
 
   if (!session) {
-    redirect('/login');
+    redirect('/connexion');
   }
 
   // Fetch all orders (could add pagination/filtering later)

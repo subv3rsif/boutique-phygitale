@@ -11,7 +11,7 @@ export default async function DashboardPage() {
   const session = cookieStore.get('admin-session');
 
   if (!session) {
-    redirect('/login');
+    redirect('/connexion');
   }
 
   // Fetch order statistics

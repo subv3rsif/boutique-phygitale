@@ -14,7 +14,7 @@ export default async function AdminLayout({
   const session = cookieStore.get('admin-session');
 
   if (!session) {
-    redirect('/login');
+    redirect('/connexion');
   }
 
   // Parse session to get user email
@@ -23,7 +23,7 @@ export default async function AdminLayout({
     const sessionData = JSON.parse(session.value);
     userEmail = sessionData.email;
   } catch {
-    redirect('/login');
+    redirect('/connexion');
   }
 
   const navigation = [
