@@ -56,7 +56,9 @@
       "Bash(pip3 install:*)",
       "Bash(source:*)",
       "Bash(pip install:*)",
-      "Bash(npx tsx:*)"
+      "Bash(npx tsx:*)",
+      "Bash(git stash:*)",
+      "Bash(grep:*)"
     ]
   }
 }
