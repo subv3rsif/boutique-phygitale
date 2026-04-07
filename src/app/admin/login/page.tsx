@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -16,16 +16,24 @@ import { cn } from '@/lib/utils'
  * - Email + password form with validation
  * - Error handling (credentials, session expired)
  * - Loading states
- * - Redirect to /admin/dashboard on success
+ * - Redirect to /admin/dashboard on success (or redirectTo param if valid)
  * - Consistent styling with app theme (glass-love, Love Symbol colors)
+ * - Security: error message sanitization, redirect validation, no console logs in production
  */
 
 export default function AdminLoginPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+
+  // Whitelist of safe error messages to prevent info leakage
+  const knownErrors: Record<string, string> = {
+    'Invalid email or password': 'Email ou mot de passe incorrect',
+    'Validation failed': 'Les données fournies sont invalides',
+  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -33,7 +41,8 @@ export default function AdminLoginPage() {
     setLoading(true)
 
     try {
-      // Call login API route
+      // Password is sent as plain text over HTTPS
+      // Server-side hashing is performed in the API route
       const response = await fetch('/api/admin/auth/login', {
         method: 'POST',
         headers: {
@@ -51,15 +60,22 @@ export default function AdminLoginPage() {
         } else if (response.status === 400) {
           setError('Les données fournies sont invalides')
         } else {
-          setError(data.error || 'Une erreur est survenue')
+          // Sanitize error message: only show known errors, fallback to generic message
+          setError(knownErrors[data.error] || 'Une erreur est survenue')
         }
         return
       }
 
-      // Success - redirect to dashboard
-      router.push('/admin/dashboard')
+      // Success - redirect to dashboard or intended page
+      // Validate redirect target to prevent open redirect attacks
+      const redirectTo = searchParams.get('redirectTo')
+      const safeRedirect = redirectTo?.startsWith('/admin') ? redirectTo : '/admin/dashboard'
+      router.push(safeRedirect)
     } catch (err) {
-      console.error('[LOGIN] Error:', err)
+      // Only log errors in development to avoid exposing sensitive info
+      if (process.env.NODE_ENV === 'development') {
+        console.error('[LOGIN] Error:', err)
+      }
       setError('Une erreur est survenue. Veuillez réessayer.')
     } finally {
       setLoading(false)
