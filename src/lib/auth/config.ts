@@ -28,12 +28,9 @@ const adapter = canInitializeDb
     })
   : undefined
 
- export const { handlers, auth, signIn, signOut } = NextAuth({
-    // Only use adapter if available (runtime), not during build
-    ...(adapter && { adapter }),
-
-    // Secret for encryption (required in production)
-    secret: process.env.AUTH_SECRET,
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  // Only use adapter if available (runtime), not during build
+  ...(adapter && { adapter }),
 
   // Secret for session encryption (required)
   secret: process.env.AUTH_SECRET,
