@@ -86,17 +86,17 @@ export default async function AdminLayout({
               <p className="text-xs text-muted-foreground">Administrateur</p>
             </div>
 
-            <form action="/api/auth/logout" method="POST">
-              <Button
-                type="submit"
-                variant="outline"
-                className="w-full"
-                size="sm"
-              >
+            <Button
+              asChild
+              variant="outline"
+              className="w-full"
+              size="sm"
+            >
+              <Link href="/deconnexion">
                 <LogOut className="mr-2 h-4 w-4" />
                 Déconnexion
-              </Button>
-            </form>
+              </Link>
+            </Button>
           </div>
         </div>
       </div>
