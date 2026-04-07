@@ -62,3 +62,6 @@ credentials.json
 # test coverage
 .coverage/
 coverage/
+
+# Google OAuth credentials (sensitive)
+docs/client_secret_*.json
