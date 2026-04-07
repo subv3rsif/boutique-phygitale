@@ -43,7 +43,16 @@
       "Bash(npx drizzle-kit:*)",
       "Bash(npm uninstall:*)",
       "Bash(echo:*)",
-      "Bash(npx shadcn@latest add:*)"
+      "Bash(npx shadcn@latest add:*)",
+      "WebFetch(domain:boutique-phygitale.vercel.app)",
+      "Bash(npm run dev:*)",
+      "Bash(psql:*)",
+      "WebFetch(domain:localhost)",
+      "Bash(for page in collection editions artisans atelier)",
+      "Bash(do echo \"=== Testing /$page ===\")",
+      "Bash(done)",
+      "Bash(do echo \"=== /$page ===\")",
+      "Bash(pkill:*)"
     ]
   }
 }

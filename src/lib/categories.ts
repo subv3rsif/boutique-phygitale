@@ -12,6 +12,14 @@ export type CategoryConfig = {
 
 /**
  * All category configurations
+ *
+ * Note: The 'collection' category has 3 themed sub-collections:
+ * - 'heritage': Articles issus de l'histoire d'Alfortville
+ * - 'graffiti': Œuvres de street art de la ville
+ * - 'supporter': Accessoires et vêtements aux couleurs des clubs
+ *
+ * Products should have both 'collection' tag AND a sub-collection tag.
+ * Example: tags: ['collection', 'heritage']
  */
 export const categories: Record<string, CategoryConfig> = {
   collection: {
