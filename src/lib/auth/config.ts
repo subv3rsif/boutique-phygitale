@@ -35,6 +35,9 @@ const adapter = canInitializeDb
     // Secret for encryption (required in production)
     secret: process.env.AUTH_SECRET,
 
+  // Secret for session encryption (required)
+  secret: process.env.AUTH_SECRET,
+
   providers: [
     Google({
       clientId: process.env.GOOGLE_CLIENT_ID || "dummy_client_id",
