@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Plus, Minus, RefreshCw, History, AlertTriangle, AlertCircle } from 'lucide-react';
 import type { Product, StockMovement } from '@/types/product';
 
@@ -8,7 +9,6 @@ type AdjustmentType = 'add' | 'remove' | 'set';
 
 interface StockAdjusterProps {
   product: Product;
-  onUpdate: () => void;
 }
 
 /**
@@ -20,12 +20,10 @@ interface StockAdjusterProps {
  * - Movement history display
  *
  * Usage:
- * <StockAdjuster
- *   product={product}
- *   onUpdate={() => window.location.reload()}
- * />
+ * <StockAdjuster product={product} />
  */
-export function StockAdjuster({ product, onUpdate }: StockAdjusterProps) {
+export function StockAdjuster({ product }: StockAdjusterProps) {
+  const router = useRouter();
   const [type, setType] = useState<AdjustmentType>('add');
   const [quantity, setQuantity] = useState<number>(1);
   const [note, setNote] = useState<string>('');
@@ -71,8 +69,8 @@ export function StockAdjuster({ product, onUpdate }: StockAdjusterProps) {
         await fetchHistory();
       }
 
-      // Trigger parent update
-      onUpdate();
+      // Refresh page data
+      router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {

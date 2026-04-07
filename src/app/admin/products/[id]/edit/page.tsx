@@ -46,27 +46,11 @@ export default async function EditProductPage({
         <h2 className="text-xl font-semibold text-encre mb-4">
           Images du Produit
         </h2>
-        <ImageUpload
-          product={product}
-          onUpdate={() => {
-            // Force page reload to refresh images
-            if (typeof window !== 'undefined') {
-              window.location.reload();
-            }
-          }}
-        />
+        <ImageUpload product={product} />
       </div>
 
       {/* Stock Adjuster */}
-      <StockAdjuster
-        product={product}
-        onUpdate={() => {
-          // Force page reload to refresh stock
-          if (typeof window !== 'undefined') {
-            window.location.reload();
-          }
-        }}
-      />
+      <StockAdjuster product={product} />
 
       {/* Product Form */}
       <ProductForm mode="edit" product={product} />

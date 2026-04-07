@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { Star, X, Upload } from 'lucide-react';
 import type { Product } from '@/types/product';
 import Image from 'next/image';
@@ -10,7 +11,6 @@ import Image from 'next/image';
  */
 type ImageUploadProps = {
   product: Product;
-  onUpdate: () => void;
 };
 
 /**
@@ -26,13 +26,11 @@ type ImageUploadProps = {
  *
  * Usage:
  * ```tsx
- * <ImageUpload
- *   product={product}
- *   onUpdate={() => window.location.reload()}
- * />
+ * <ImageUpload product={product} />
  * ```
  */
-export function ImageUpload({ product, onUpdate }: ImageUploadProps) {
+export function ImageUpload({ product }: ImageUploadProps) {
+  const router = useRouter();
   const [uploading, setUploading] = useState(false);
   const [deleting, setDeleting] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -87,8 +85,8 @@ export function ImageUpload({ product, onUpdate }: ImageUploadProps) {
         fileInputRef.current.value = '';
       }
 
-      // Trigger update
-      onUpdate();
+      // Refresh page data
+      router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Upload failed');
     } finally {
@@ -122,8 +120,8 @@ export function ImageUpload({ product, onUpdate }: ImageUploadProps) {
         throw new Error(data.error || 'Delete failed');
       }
 
-      // Trigger update
-      onUpdate();
+      // Refresh page data
+      router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Delete failed');
     } finally {
