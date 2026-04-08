@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 // Luxury Minimal Fonts - Zara/COS inspired
 import { Josefin_Sans, DM_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+
+// Initialize Sentry for client-side error tracking
+// This must be imported early in the app lifecycle
+import '../../sentry.client.config';
 import { ThemeProvider } from "@/components/theme-provider";
 import { ThemeScript } from "./theme-script";
 import { Header } from "@/components/layout/header";
