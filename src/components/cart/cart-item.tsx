@@ -1,22 +1,91 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { formatCurrency, getProductById } from '@/lib/catalogue';
 import { useCart } from '@/store/cart';
-import { Trash2, Minus, Plus } from 'lucide-react';
+import { Trash2, Minus, Plus, Loader2 } from 'lucide-react';
 
 type CartItemProps = {
   id: string;
   qty: number;
 };
 
+// Format currency helper
+function formatCurrency(cents: number): string {
+  return new Intl.NumberFormat('fr-FR', {
+    style: 'currency',
+    currency: 'EUR',
+  }).format(cents / 100);
+}
+
+// Product type from DB
+type Product = {
+  id: string;
+  name: string;
+  description: string;
+  priceCents: number;
+  images: Array<{ url: string; isPrimary?: boolean }>;
+};
+
 export function CartItem({ id, qty }: CartItemProps) {
-  const product = getProductById(id);
+  const [product, setProduct] = useState<Product | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const { updateQty, removeItem } = useCart();
 
-  if (!product) return null;
+  // Fetch product from DB API
+  useEffect(() => {
+    async function loadProduct() {
+      try {
+        setLoading(true);
+        setError(false);
+        const response = await fetch(`/api/products/by-id/${id}`);
+
+        if (!response.ok) {
+          throw new Error('Product not found');
+        }
+
+        const data = await response.json();
+        setProduct(data.product);
+      } catch (err) {
+        console.error('Failed to load product:', err);
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadProduct();
+  }, [id]);
+
+  // Loading state
+  if (loading) {
+    return (
+      <div className="flex gap-4 sm:gap-5 items-center justify-center py-4">
+        <Loader2 className="h-5 w-5 animate-spin text-primary" />
+        <span className="text-sm text-muted-foreground">Chargement...</span>
+      </div>
+    );
+  }
+
+  // Error state or product not found
+  if (error || !product) {
+    return (
+      <div className="flex gap-4 sm:gap-5 items-center justify-between py-4">
+        <span className="text-sm text-muted-foreground">Produit introuvable</span>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => removeItem(id)}
+          className="text-destructive hover:text-destructive hover:bg-destructive/8"
+        >
+          <Trash2 className="h-3.5 w-3.5" />
+        </Button>
+      </div>
+    );
+  }
 
   const itemTotal = product.priceCents * qty;
 
@@ -35,7 +104,7 @@ export function CartItem({ id, qty }: CartItemProps) {
         {/* Skeleton shimmer */}
         <div className="absolute inset-0 animate-pulse bg-gradient-to-br from-muted to-muted/50" />
         <Image
-          src={product.image}
+          src={product.images?.[0]?.url || 'https://placehold.co/96x96/503B64/F3EFEA?text=No+Image'}
           alt={product.name}
           fill
           className="object-cover relative z-10"

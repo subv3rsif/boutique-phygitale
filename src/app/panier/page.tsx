@@ -10,18 +10,72 @@ import { FulfillmentSelector } from '@/components/cart/fulfillment-selector';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import { calculateCartTotals, formatCurrency } from '@/lib/catalogue';
 import { ShoppingBag, ArrowLeft, Package, Info, Shield, Lock, Loader2 } from 'lucide-react';
+
+// Format currency helper
+function formatCurrency(cents: number): string {
+  return new Intl.NumberFormat('fr-FR', {
+    style: 'currency',
+    currency: 'EUR',
+  }).format(cents / 100);
+}
 
 export default function CartPage() {
   // Fix hydration mismatch: wait for client-side mount before reading from Zustand (localStorage)
   const [mounted, setMounted] = useState(false);
+  const [totalsLoading, setTotalsLoading] = useState(false);
+  const [itemsTotal, setItemsTotal] = useState(0);
+  const [shippingTotal, setShippingTotal] = useState(0);
+  const [grandTotal, setGrandTotal] = useState(0);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
   const { items, fulfillmentMode, gdprConsent, setGdprConsent, totalItems } = useCart();
+
+  // Fetch cart totals from API (database validation)
+  useEffect(() => {
+    if (!mounted || items.length === 0) {
+      setItemsTotal(0);
+      setShippingTotal(0);
+      setGrandTotal(0);
+      return;
+    }
+
+    async function fetchTotals() {
+      setTotalsLoading(true);
+      try {
+        const response = await fetch('/api/cart/totals', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            items: items.map((item) => ({ id: item.id, qty: item.qty })),
+            fulfillmentMode,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to calculate totals');
+        }
+
+        const data = await response.json();
+        setItemsTotal(data.itemsTotal);
+        setShippingTotal(data.shippingTotal);
+        setGrandTotal(data.grandTotal);
+      } catch (error) {
+        console.error('Error calculating cart totals:', error);
+        // Fallback to 0
+        setItemsTotal(0);
+        setShippingTotal(0);
+        setGrandTotal(0);
+      } finally {
+        setTotalsLoading(false);
+      }
+    }
+
+    fetchTotals();
+  }, [mounted, items, fulfillmentMode]);
 
   // Show loading state during SSR/hydration to prevent mismatch
   if (!mounted) {
@@ -34,16 +88,6 @@ export default function CartPage() {
       </div>
     );
   }
-
-  const calculation = calculateCartTotals(
-    items.map((item) => ({ id: item.id, qty: item.qty })),
-    fulfillmentMode
-  );
-
-  const { itemsTotal, shippingTotal, grandTotal } =
-    'error' in calculation
-      ? { itemsTotal: 0, shippingTotal: 0, grandTotal: 0 }
-      : calculation;
 
   // ── Empty cart state ────────────────────────────────────────────────────────
   if (items.length === 0) {
