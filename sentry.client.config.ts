@@ -16,6 +16,9 @@ if (!SENTRY_DSN) {
 Sentry.init({
   dsn: SENTRY_DSN,
 
+  // Tunnel to bypass ad-blockers
+  tunnel: '/monitoring',
+
   // Adjust this value in production, or use tracesSampler for greater control
   tracesSampleRate: 1,
 
