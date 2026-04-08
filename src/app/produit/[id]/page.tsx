@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { PremiumBadge } from '@/components/ui/premium-badge';
 import { GoldDivider } from '@/components/ui/gold-divider';
+import { SocialShare } from '@/components/ui/social-share';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 
@@ -235,6 +236,14 @@ export default function ProductPage({ params }: PageProps) {
                   ))}
                 </div>
               )}
+
+              {/* Social Share */}
+              <SocialShare
+                url={typeof window !== 'undefined' ? window.location.href : `https://boutique-phygitale.vercel.app/produit/${product.id}`}
+                title={product.name}
+                description={product.description}
+                image={product.images?.[0]?.url}
+              />
             </div>
 
             {/* Pricing */}

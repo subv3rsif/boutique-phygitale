@@ -246,41 +246,22 @@ export function ProductForm({ product, mode }: ProductFormProps) {
           Informations Générales
         </h2>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          {/* Name */}
-          <div className="space-y-2">
-            <Label htmlFor="name">
-              Nom du Produit <span className="text-red-500">*</span>
-            </Label>
-            <Input
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              placeholder="Ex: Mug Love Symbol Edition"
-              required
-            />
-          </div>
-
-          {/* Slug */}
-          <div className="space-y-2">
-            <Label htmlFor="slug">
-              Slug (URL) <span className="text-red-500">*</span>
-            </Label>
-            <Input
-              id="slug"
-              name="slug"
-              value={formData.slug}
-              onChange={handleChange}
-              placeholder="ex: mug-love-symbol"
-              pattern="^[a-z0-9-]+$"
-              title="Minuscules, chiffres et tirets uniquement"
-              required
-            />
-            {mode === 'create' && autoGenerateSlug && (
-              <p className="text-xs text-pierre">Généré automatiquement depuis le nom</p>
-            )}
-          </div>
+        {/* Name */}
+        <div className="space-y-2">
+          <Label htmlFor="name">
+            Nom du Produit <span className="text-red-500">*</span>
+          </Label>
+          <Input
+            id="name"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            placeholder="Ex: Mug Love Symbol Edition"
+            required
+          />
+          <p className="text-xs text-pierre">
+            L&apos;URL du produit sera générée automatiquement
+          </p>
         </div>
 
         {/* Description */}
