@@ -36,7 +36,8 @@ export const products = pgTable(
     stockQuantity: integer('stock_quantity').default(0).notNull(),
     stockAlertThreshold: integer('stock_alert_threshold').default(5).notNull(),
     weightGrams: integer('weight_grams'),
-    tags: text('tags').array(),
+    tags: text('tags').array(), // Category tags: héritage, graffiti, collection, artisan
+    badges: text('badges').array(), // Display badges: pièce phare, nouveauté, etc.
     payfipProductCode: varchar('payfip_product_code', { length: 10 }).default(
       '11'
     ),

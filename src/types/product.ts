@@ -29,7 +29,8 @@ export type Product = {
   stockQuantity: number; // Current stock level
   stockAlertThreshold: number; // Threshold for low stock alerts
   weightGrams: number | null; // Product weight in grams (optional)
-  tags: string[] | null; // Array of tags for filtering/categorization
+  tags: string[] | null; // Category tags for navigation/filtering (héritage, graffiti, collection, artisan)
+  badges: string[] | null; // Display badges shown on product images (pièce phare, nouveauté, etc.)
   payfipProductCode: string | null; // PayFIP product code for administrative tracking
   editionNumber: number | null; // Edition number if part of limited series
   editionTotal: number | null; // Total editions if part of limited series
@@ -72,7 +73,8 @@ export type CreateProductInput = {
   stockQuantity?: number; // Initial stock (default: 0)
   stockAlertThreshold?: number; // Low stock threshold (default: 5)
   weightGrams?: number; // Weight in grams (optional)
-  tags?: string; // Comma-separated tags (optional)
+  tags?: string; // Comma-separated category tags (optional)
+  badges?: string; // Comma-separated display badges (optional)
   payfipProductCode?: string; // PayFIP code (default: '11')
   editionNumber?: number; // Edition number (optional)
   editionTotal?: number; // Total editions (optional)

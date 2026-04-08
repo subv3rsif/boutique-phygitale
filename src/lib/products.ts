@@ -2,7 +2,7 @@
 import { db, products } from '@/lib/db';
 import { eq, and, desc } from 'drizzle-orm';
 import type { Product, CreateProductInput, UpdateProductInput } from '@/types/product';
-import { parseTags } from '@/lib/validations/product';
+import { parseTags, parseBadges } from '@/lib/validations/product';
 
 /**
  * Get all products (admin)
@@ -79,8 +79,9 @@ export async function createProduct(input: CreateProductInput): Promise<Product>
     throw new Error('Slug already exists');
   }
 
-  // Parse tags
+  // Parse tags and badges
   const tagsArray = parseTags(input.tags);
+  const badgesArray = parseBadges(input.badges);
 
   const [product] = await db
     .insert(products)
@@ -94,6 +95,7 @@ export async function createProduct(input: CreateProductInput): Promise<Product>
       stockAlertThreshold: input.stockAlertThreshold ?? 5,
       weightGrams: input.weightGrams ?? null,
       tags: tagsArray.length > 0 ? tagsArray : null,
+      badges: badgesArray.length > 0 ? badgesArray : null,
       payfipProductCode: input.payfipProductCode ?? '11',
       editionNumber: input.editionNumber ?? null,
       editionTotal: input.editionTotal ?? null,
@@ -125,12 +127,14 @@ export async function updateProduct(
     }
   }
 
-  // Parse tags if provided
+  // Parse tags and badges if provided
   const tagsArray = input.tags ? parseTags(input.tags) : undefined;
+  const badgesArray = input.badges ? parseBadges(input.badges) : undefined;
 
   const updateData: any = {
     ...input,
     tags: tagsArray,
+    badges: badgesArray,
     updatedAt: new Date(),
   };
 

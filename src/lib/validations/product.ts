@@ -25,7 +25,8 @@ export const productSchema = z.object({
   stockQuantity: z.number().int().min(0, 'Stock >= 0').default(0),
   stockAlertThreshold: z.number().int().min(0, 'Seuil >= 0').default(5),
   weightGrams: z.number().int().min(0).optional(),
-  tags: z.string().optional(),
+  tags: z.string().optional(), // Category tags (comma-separated)
+  badges: z.string().optional(), // Display badges (comma-separated)
   payfipProductCode: z.string().max(10).default('11'),
   editionNumber: z.number().int().min(1).optional(),
   editionTotal: z.number().int().min(1).optional(),
@@ -67,18 +68,33 @@ export const imageUploadSchema = z.object({
 export type ImageUploadInput = z.infer<typeof imageUploadSchema>;
 
 /**
- * Transform comma-separated tags string into array
+ * Transform comma-separated string into array
  * Handles trimming and filtering empty values
+ * Used for both tags and badges
  *
- * @param tagsString - Comma-separated tags string
- * @returns Array of trimmed, non-empty tags
+ * @param csvString - Comma-separated string
+ * @returns Array of trimmed, non-empty values
+ */
+export function parseCommaSeparated(csvString?: string): string[] {
+  if (!csvString) return [];
+  return csvString
+    .split(',')
+    .map((item) => item.trim())
+    .filter((item) => item.length > 0);
+}
+
+/**
+ * Parse tags (alias for backwards compatibility)
  */
 export function parseTags(tagsString?: string): string[] {
-  if (!tagsString) return [];
-  return tagsString
-    .split(',')
-    .map((tag) => tag.trim())
-    .filter((tag) => tag.length > 0);
+  return parseCommaSeparated(tagsString);
+}
+
+/**
+ * Parse badges
+ */
+export function parseBadges(badgesString?: string): string[] {
+  return parseCommaSeparated(badgesString);
 }
 
 /**

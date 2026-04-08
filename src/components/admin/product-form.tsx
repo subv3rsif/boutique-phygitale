@@ -16,11 +16,20 @@ type ProductFormProps = {
   mode: 'create' | 'edit';
 };
 
+// Predefined category tags for navigation/filtering
+const CATEGORY_TAGS = [
+  { value: 'héritage', label: 'Héritage' },
+  { value: 'graffiti', label: 'Graffiti' },
+  { value: 'collection', label: 'Collection' },
+  { value: 'artisan', label: 'Artisan' },
+] as const;
+
 type FormData = {
   name: string;
   slug: string;
   description: string;
-  tags: string;
+  selectedTags: string[]; // Array of selected category tags
+  badges: string; // Comma-separated badges for display
   priceCents: string; // String for input, converted to number
   shippingCents: string;
   stockQuantity: string;
@@ -58,7 +67,8 @@ export function ProductForm({ product, mode }: ProductFormProps) {
     name: product?.name || '',
     slug: product?.slug || '',
     description: product?.description || '',
-    tags: product?.tags?.join(', ') || '',
+    selectedTags: product?.tags || [],
+    badges: product?.badges?.join(', ') || '',
     priceCents: product?.priceCents ? (product.priceCents / 100).toFixed(2) : '',
     shippingCents: product?.shippingCents ? (product.shippingCents / 100).toFixed(2) : '',
     stockQuantity: product?.stockQuantity?.toString() || '0',
@@ -96,6 +106,17 @@ export function ProductForm({ product, mode }: ProductFormProps) {
   // Handle switch toggle
   const handleSwitchChange = (checked: boolean) => {
     setFormData((prev) => ({ ...prev, active: checked }));
+  };
+
+  // Handle tag checkbox toggle
+  const handleTagToggle = (tag: string) => {
+    setFormData((prev) => {
+      const isSelected = prev.selectedTags.includes(tag);
+      const newTags = isSelected
+        ? prev.selectedTags.filter((t) => t !== tag)
+        : [...prev.selectedTags, tag];
+      return { ...prev, selectedTags: newTags };
+    });
   };
 
   // Validate form
@@ -159,7 +180,8 @@ export function ProductForm({ product, mode }: ProductFormProps) {
         stockQuantity: parseInt(formData.stockQuantity),
         stockAlertThreshold: parseInt(formData.stockAlertThreshold),
         weightGrams: formData.weightGrams ? parseInt(formData.weightGrams) : undefined,
-        tags: formData.tags.trim() || undefined,
+        tags: formData.selectedTags.length > 0 ? formData.selectedTags.join(',') : undefined,
+        badges: formData.badges.trim() || undefined,
         payfipProductCode: formData.payfipProductCode.trim(),
         editionNumber: formData.editionNumber ? parseInt(formData.editionNumber) : undefined,
         editionTotal: formData.editionTotal ? parseInt(formData.editionTotal) : undefined,
@@ -274,17 +296,45 @@ export function ProductForm({ product, mode }: ProductFormProps) {
           />
         </div>
 
-        {/* Tags */}
+        {/* Category Tags (Checkboxes) */}
+        <div className="space-y-3">
+          <div>
+            <Label>Catégories (Navigation du site)</Label>
+            <p className="text-xs text-pierre mt-1">
+              Sélectionnez les catégories auxquelles appartient ce produit
+            </p>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            {CATEGORY_TAGS.map((tag) => (
+              <label
+                key={tag.value}
+                className="flex items-center space-x-2 cursor-pointer"
+              >
+                <input
+                  type="checkbox"
+                  checked={formData.selectedTags.includes(tag.value)}
+                  onChange={() => handleTagToggle(tag.value)}
+                  className="w-4 h-4 rounded border-gray-300 text-amethyste focus:ring-amethyste cursor-pointer"
+                />
+                <span className="text-sm text-encre">{tag.label}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+        {/* Badges (Free text) */}
         <div className="space-y-2">
-          <Label htmlFor="tags">Tags</Label>
+          <Label htmlFor="badges">Badges d&apos;Affichage</Label>
           <Input
-            id="tags"
-            name="tags"
-            value={formData.tags}
+            id="badges"
+            name="badges"
+            value={formData.badges}
             onChange={handleChange}
-            placeholder="vaisselle, collection, nouveau (séparés par des virgules)"
+            placeholder="pièce phare, nouveauté, édition limitée (séparés par des virgules)"
           />
-          <p className="text-xs text-pierre">Séparez les tags par des virgules</p>
+          <p className="text-xs text-pierre">
+            Badges affichés sur l&apos;image du produit (ex: &quot;pièce phare&quot;, &quot;nouveauté&quot;)
+          </p>
         </div>
       </div>
 
