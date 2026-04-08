@@ -1,12 +1,12 @@
 'use client';
 
-import { useState, use } from 'react';
+import { useState, use, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ChevronLeft, ShoppingCart, Package, MapPin, Truck, Sparkles, Check, Loader2, ChevronDown } from 'lucide-react';
-import { getProductById, formatCurrency } from '@/lib/catalogue';
+import type { Product } from '@/types/product';
 import { useCart } from '@/store/cart';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -14,6 +14,14 @@ import { PremiumBadge } from '@/components/ui/premium-badge';
 import { GoldDivider } from '@/components/ui/gold-divider';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+
+// Format currency helper
+function formatCurrency(cents: number): string {
+  return new Intl.NumberFormat('fr-FR', {
+    style: 'currency',
+    currency: 'EUR',
+  }).format(cents / 100);
+}
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -62,12 +70,41 @@ const accordionItems = [
 
 export default function ProductPage({ params }: PageProps) {
   const resolvedParams = use(params);
-  const product = getProductById(resolvedParams.id);
-
+  const [product, setProduct] = useState<Product | null>(null);
+  const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
   const [isAdding, setIsAdding] = useState(false);
   const [activeAccordion, setActiveAccordion] = useState<string | null>('shipping');
   const addItem = useCart((state) => state.addItem);
+
+  // Fetch product from API
+  useEffect(() => {
+    async function loadProduct() {
+      try {
+        const response = await fetch(`/api/products/by-id/${resolvedParams.id}`);
+        if (!response.ok) {
+          notFound();
+          return;
+        }
+        const data = await response.json();
+        setProduct(data.product);
+      } catch (error) {
+        console.error('Failed to load product:', error);
+        notFound();
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadProduct();
+  }, [resolvedParams.id]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   if (!product) {
     notFound();
@@ -127,7 +164,7 @@ export default function ProductPage({ params }: PageProps) {
             {/* Main Image */}
             <div className="relative aspect-square rounded-2xl overflow-hidden bg-muted shadow-premium-lg">
               <Image
-                src={product.image}
+                src={product.images?.[0]?.url || 'https://placehold.co/600x750/503B64/F3EFEA?text=No+Image'}
                 alt={product.name}
                 fill
                 className="object-cover"
