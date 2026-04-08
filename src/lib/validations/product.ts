@@ -9,6 +9,16 @@ import { z } from 'zod';
 const slugRegex = /^[a-z0-9-]+$/;
 
 /**
+ * Product image schema
+ */
+const productImageSchema = z.object({
+  url: z.string().url(),
+  path: z.string(),
+  order: z.number().int().min(0),
+  isPrimary: z.boolean(),
+});
+
+/**
  * Complete product creation schema
  * Used for creating new products via admin API
  */
@@ -22,6 +32,7 @@ export const productSchema = z.object({
   description: z.string().min(1, 'Description requise'),
   priceCents: z.number().int().min(0, 'Prix doit être >= 0'),
   shippingCents: z.number().int().min(0, 'Frais de port >= 0'),
+  images: z.array(productImageSchema).optional(), // Product images gallery
   stockQuantity: z.number().int().min(0, 'Stock >= 0').default(0),
   stockAlertThreshold: z.number().int().min(0, 'Seuil >= 0').default(5),
   weightGrams: z.number().int().min(0).optional(),
