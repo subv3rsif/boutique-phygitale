@@ -58,7 +58,8 @@
       "Bash(pip install:*)",
       "Bash(npx tsx:*)",
       "Bash(git stash:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(node scripts/create-nextauth-tables.mjs:*)"
     ]
   }
 }
