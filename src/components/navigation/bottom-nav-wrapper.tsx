@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { useCart } from '@/store/cart';
 import { BottomNav } from './bottom-nav';
 
@@ -10,6 +11,7 @@ import { BottomNav } from './bottom-nav';
  * - Connects to Zustand cart store (client-only)
  * - Keeps layout.tsx as Server Component
  * - Provides cart count to BottomNav
+ * - Prevents hydration mismatch by waiting for client mount
  *
  * Usage in layout.tsx:
  * ```tsx
@@ -19,8 +21,15 @@ import { BottomNav } from './bottom-nav';
  * ```
  */
 export function BottomNavWrapper() {
+  // Fix hydration: wait for client mount before reading from Zustand (localStorage)
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const cartStore = useCart();
-  const cartCount = cartStore.totalItems();
+  const cartCount = mounted ? cartStore.totalItems() : 0;
 
   return (
     <BottomNav

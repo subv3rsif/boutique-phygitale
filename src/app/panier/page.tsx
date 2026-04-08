@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '@/store/cart';
@@ -10,10 +11,29 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { calculateCartTotals, formatCurrency } from '@/lib/catalogue';
-import { ShoppingBag, ArrowLeft, Package, Info, Shield, Lock } from 'lucide-react';
+import { ShoppingBag, ArrowLeft, Package, Info, Shield, Lock, Loader2 } from 'lucide-react';
 
 export default function CartPage() {
+  // Fix hydration mismatch: wait for client-side mount before reading from Zustand (localStorage)
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const { items, fulfillmentMode, gdprConsent, setGdprConsent, totalItems } = useCart();
+
+  // Show loading state during SSR/hydration to prevent mismatch
+  if (!mounted) {
+    return (
+      <div className="min-h-[70vh] flex items-center justify-center bg-background">
+        <div className="text-center space-y-4">
+          <Loader2 className="h-8 w-8 animate-spin text-primary mx-auto" />
+          <p className="text-sm text-muted-foreground font-sans">Chargement du panier...</p>
+        </div>
+      </div>
+    );
+  }
 
   const calculation = calculateCartTotals(
     items.map((item) => ({ id: item.id, qty: item.qty })),

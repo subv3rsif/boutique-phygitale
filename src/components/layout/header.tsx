@@ -16,9 +16,15 @@ import { cn } from '@/lib/utils';
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
   const totalItems = useCart((state) => state.totalItems());
   const { data: session } = useSession();
+
+  // Fix hydration: wait for client mount before showing cart badge from localStorage
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Detect scroll
   useEffect(() => {
@@ -112,9 +118,9 @@ export function Header() {
               >
                 <ShoppingBag className="h-6 w-6" />
 
-                {/* Badge count */}
+                {/* Badge count - Only show after client mount to prevent hydration mismatch */}
                 <AnimatePresence>
-                  {totalItems > 0 && (
+                  {mounted && totalItems > 0 && (
                     <motion.div
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
