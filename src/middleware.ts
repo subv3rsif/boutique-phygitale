@@ -1,13 +1,16 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { verifyAdminToken } from '@/lib/auth/admin-auth';
 
 /**
  * Middleware for protecting admin routes and applying security headers
  *
  * This middleware:
- * 1. Protects /admin/* routes by verifying admin-token cookie
+ * 1. Checks for admin-token cookie presence (full verification happens in API routes)
  * 2. Applies security headers to all responses
+ *
+ * Note: We don't verify the token signature here because Edge Runtime doesn't support
+ * Node.js crypto module. Token verification happens in API routes via requireAdminAuth().
+ * This provides defense-in-depth: edge check + server-side verification.
  */
 
 export async function middleware(request: NextRequest) {
@@ -18,23 +21,14 @@ export async function middleware(request: NextRequest) {
     const token = request.cookies.get('admin-token')?.value;
 
     if (!token) {
-      // Redirect to admin login
+      // No token - redirect to admin login
       const loginUrl = new URL('/auth/admin', request.url);
       loginUrl.searchParams.set('redirect', pathname);
       return NextResponse.redirect(loginUrl);
     }
 
-    // Verify token
-    const isValid = await verifyAdminToken(token);
-    if (!isValid) {
-      // Token invalid or expired - redirect to login
-      const loginUrl = new URL('/auth/admin', request.url);
-      loginUrl.searchParams.set('redirect', pathname);
-      const response = NextResponse.redirect(loginUrl);
-      // Clear invalid token
-      response.cookies.delete('admin-token');
-      return response;
-    }
+    // Token exists - let it through
+    // Full verification happens in page/API route via requireAdminAuth()
   }
 
   // Apply security headers to all responses

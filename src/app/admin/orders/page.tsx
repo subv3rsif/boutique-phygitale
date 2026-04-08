@@ -1,3 +1,6 @@
+// Force dynamic rendering - admin pages with database queries
+export const dynamic = 'force-dynamic';
+
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import {

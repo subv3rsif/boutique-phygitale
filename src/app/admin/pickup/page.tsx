@@ -1,3 +1,6 @@
+// Force dynamic rendering - admin pages
+export const dynamic = 'force-dynamic';
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { QRScanner } from '@/components/admin/qr-scanner';
 import { QrCode } from 'lucide-react';

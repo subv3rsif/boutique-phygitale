@@ -1,3 +1,6 @@
+// Force dynamic rendering - admin pages with database queries
+export const dynamic = 'force-dynamic';
+
 import { notFound } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';

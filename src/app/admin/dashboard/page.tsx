@@ -3,6 +3,9 @@ import { Package, TrendingUp, Clock, CheckCircle2 } from 'lucide-react';
 import { getOrderStats } from '@/lib/db/helpers';
 import { formatCurrency } from '@/lib/utils';
 
+// Force dynamic rendering - don't try to prerender at build time
+export const dynamic = 'force-dynamic';
+
 export default async function DashboardPage() {
   // Auth is handled by admin layout (requireAdminAuth)
 
