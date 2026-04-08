@@ -90,7 +90,8 @@ export default function RootLayout({
         <ThemeScript />
       </head>
       <body className={`${josefin.variable} ${dmSans.variable} ${jetbrains.variable} font-sans antialiased`}>
-        <SessionProvider>
+        {/* SessionProvider temporarily disabled until NextAuth DB tables are created */}
+        {/* <SessionProvider> */}
           <ThemeProvider>
             <Header />
             <main className="min-h-[calc(100vh-4rem)] pb-24">{children}</main>
@@ -113,7 +114,7 @@ export default function RootLayout({
             <ClientLayoutWrapper />
             <Toaster />
           </ThemeProvider>
-        </SessionProvider>
+        {/* </SessionProvider> */}
       </body>
     </html>
   );
