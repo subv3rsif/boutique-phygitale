@@ -200,63 +200,66 @@ function BentoCardSmall({ product, index }: { product: Product; index: number })
       className="h-full"
     >
       <AnimatedBorderCard className="h-full">
-        <Link href={`/produit/${product.id}`} className="group/small relative flex flex-col h-full">
-          {/* Image zone - 3:4 */}
-          <div className="relative aspect-[3/4] bg-muted overflow-hidden">
-            {!imageLoaded && (
-              <div className="absolute inset-0 animate-pulse bg-stone-200 dark:bg-purple-900/50" />
-            )}
-            <motion.div
-              animate={{ scale: isHovered ? 1.07 : 1 }}
-              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="absolute inset-0"
-            >
-              <Image
-                src={getPrimaryImage(product)}
-                alt={product.name}
-                fill
-                className={cn(
-                  'object-cover transition-opacity duration-500',
-                  imageLoaded ? 'opacity-100' : 'opacity-0'
-                )}
-                sizes="(max-width: 768px) 50vw, 25vw"
-                onLoad={() => setImageLoaded(true)}
-              />
-            </motion.div>
+        <Link href={`/produit/${product.id}`} className="group/small relative block h-full min-h-[400px] bg-muted">
+          {/* Background image - Full card */}
+          {!imageLoaded && (
+            <div className="absolute inset-0 animate-pulse bg-stone-200 dark:bg-purple-900/50" />
+          )}
+          <motion.div
+            animate={{ scale: isHovered ? 1.07 : 1 }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute inset-0"
+          >
+            <Image
+              src={getPrimaryImage(product)}
+              alt={product.name}
+              fill
+              className={cn(
+                'object-cover transition-opacity duration-500',
+                imageLoaded ? 'opacity-100' : 'opacity-0'
+              )}
+              sizes="(max-width: 768px) 50vw, 25vw"
+              onLoad={() => setImageLoaded(true)}
+            />
+          </motion.div>
 
-            {/* Premium Badge */}
-            {isNew && (
-              <div className="absolute top-3 left-3 z-10">
-                <PremiumBadge label="Nouveau" variant="glass" size="sm" />
-              </div>
-            )}
+          {/* Gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
-            {/* Hover overlay CTA */}
+          {/* Premium Badge */}
+          {isNew && (
+            <div className="absolute top-3 left-3 z-10">
+              <PremiumBadge label="Nouveau" variant="solid" size="sm" />
+            </div>
+          )}
+
+          {/* Bottom content - Always visible */}
+          <div className="absolute bottom-0 inset-x-0 p-4 flex flex-col gap-3">
+            {/* Product info */}
+            <div className="space-y-1">
+              <h3 className="font-display text-lg font-semibold text-white leading-tight line-clamp-2">
+                {product.name}
+              </h3>
+              <p className="font-sans font-bold text-white text-base">
+                {formatCurrency(product.priceCents)}
+              </p>
+            </div>
+
+            {/* Add to cart button - Show on hover */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: isHovered && !isOutOfStock ? 1 : 0, y: isHovered ? 0 : 10 }}
               transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-              className="absolute bottom-0 inset-x-0 p-4 glass dark:glass-dark"
             >
               <Button
                 onClick={handleAdd}
                 disabled={isAdding || isOutOfStock}
                 size="sm"
-                className="w-full bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl font-sans text-xs font-semibold uppercase tracking-wide h-10 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                className="w-full bg-white/10 backdrop-blur-md text-white border border-white/30 hover:bg-white hover:text-foreground rounded-xl font-sans text-xs font-semibold uppercase tracking-wide h-10 hover:scale-[1.02] active:scale-[0.98] transition-all"
               >
                 {isAdding ? <Loader2 className="h-3 w-3 animate-spin" /> : 'Ajouter au panier'}
               </Button>
             </motion.div>
-          </div>
-
-          {/* Info */}
-          <div className="p-4 space-y-1 bg-card flex-shrink-0">
-            <h3 className="font-display text-base font-normal text-foreground line-clamp-2 group-hover/small:text-primary transition-colors duration-300">
-              {product.name}
-            </h3>
-            <p className="font-sans text-sm font-semibold text-foreground">
-              {formatCurrency(product.priceCents)}
-            </p>
           </div>
         </Link>
       </AnimatedBorderCard>

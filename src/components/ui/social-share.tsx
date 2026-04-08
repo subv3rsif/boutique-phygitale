@@ -1,7 +1,7 @@
 'use client';
 
 import { Share2, Facebook, Twitter, Linkedin, MessageCircle, Mail, Copy, Check } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -17,6 +17,21 @@ interface SocialShareProps {
 export function SocialShare({ url, title, description, image, className }: SocialShareProps) {
   const [showOptions, setShowOptions] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect mobile device on mount
+  useEffect(() => {
+    const checkMobile = () => {
+      // Check both screen size and touch capability
+      const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      const isSmallScreen = window.innerWidth < 768;
+
+      setIsMobile(isMobileDevice || (isTouchDevice && isSmallScreen));
+    };
+
+    checkMobile();
+  }, []);
 
   const encodedUrl = encodeURIComponent(url);
   const encodedTitle = encodeURIComponent(title);
@@ -49,7 +64,9 @@ export function SocialShare({ url, title, description, image, className }: Socia
   };
 
   const handleNativeShare = async () => {
-    if (navigator.share) {
+    // On mobile: use native share sheet if available
+    // On desktop: always show custom menu for better UX
+    if (isMobile && navigator.share) {
       try {
         await navigator.share({
           title,
@@ -58,11 +75,12 @@ export function SocialShare({ url, title, description, image, className }: Socia
         });
         setShowOptions(false);
       } catch (err) {
-        // User cancelled or error occurred
+        // User cancelled or error occurred - show custom menu as fallback
         console.log('Share cancelled or failed:', err);
+        setShowOptions(!showOptions);
       }
     } else {
-      // Fallback to showing custom share options
+      // Desktop or no native share: show custom share options
       setShowOptions(!showOptions);
     }
   };
