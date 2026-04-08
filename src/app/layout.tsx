@@ -8,6 +8,8 @@ import { Header } from "@/components/layout/header";
 import { ClientLayoutWrapper } from "@/components/layout/client-layout-wrapper";
 import { Toaster } from "@/components/ui/sonner";
 import { SessionProvider } from "next-auth/react";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 // Display: 1885 geometric sans for refined titles
 const josefin = Josefin_Sans({
@@ -114,6 +116,8 @@ export default function RootLayout({
             <Toaster />
           </ThemeProvider>
         </SessionProvider>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
