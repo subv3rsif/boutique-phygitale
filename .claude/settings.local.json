@@ -62,7 +62,9 @@
       "Bash(node scripts/create-nextauth-tables.mjs:*)",
       "Bash(git log:*)",
       "Bash(npm audit:*)",
-      "Bash(npm update:*)"
+      "Bash(npm update:*)",
+      "Bash(sentry.client.config.ts << 'EOF'\n// This file configures the initialization of Sentry on the client.\n// The config you add here will be used whenever a users loads a page in their browser.\n// https://docs.sentry.io/platforms/javascript/guides/nextjs/\n\nimport * as Sentry from \"@sentry/nextjs\";\n\nSentry.init\\({\n  dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,\n\n  // Adjust this value in production, or use tracesSampler for greater control\n  tracesSampleRate: 1,\n\n  // Setting this option to true will print useful information to the console while you're setting up Sentry.\n  debug: false,\n\n  replaysOnErrorSampleRate: 1.0,\n\n  // This sets the sample rate to be 10%. You may want this to be 100% while\n  // in development and sample at a lower rate in production\n  replaysSessionSampleRate: 0.1,\n\n  // You can remove this option if you're not planning to use the Sentry Session Replay feature:\n  integrations: [\n    Sentry.replayIntegration\\({\n      // Additional Replay configuration goes in here, for example:\n      maskAllText: true,\n      blockAllMedia: true,\n    }\\),\n  ],\n}\\);\nEOF)",
+      "Bash(sentry.server.config.ts << 'EOF'\n// This file configures the initialization of Sentry on the server.\n// The config you add here will be used whenever the server handles a request.\n// https://docs.sentry.io/platforms/javascript/guides/nextjs/\n\nimport * as Sentry from \"@sentry/nextjs\";\n\nSentry.init\\({\n  dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,\n\n  // Adjust this value in production, or use tracesSampler for greater control\n  tracesSampleRate: 1,\n\n  // Setting this option to true will print useful information to the console while you're setting up Sentry.\n  debug: false,\n}\\);\nEOF)"
     ]
   }
 }
