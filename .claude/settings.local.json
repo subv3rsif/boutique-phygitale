@@ -60,7 +60,9 @@
       "Bash(git stash:*)",
       "Bash(grep:*)",
       "Bash(node scripts/create-nextauth-tables.mjs:*)",
-      "Bash(git log:*)"
+      "Bash(git log:*)",
+      "Bash(npm audit:*)",
+      "Bash(npm update:*)"
     ]
   }
 }

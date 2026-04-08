@@ -1,0 +1,88 @@
+# Dependabot configuration for automated dependency updates
+# https://docs.github.com/en/code-security/dependabot/dependabot-version-updates
+
+version: 2
+updates:
+  # NPM dependencies
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Europe/Paris"
+    open-pull-requests-limit: 5
+
+    # Auto-merge rules
+    labels:
+      - "dependencies"
+      - "automerge"
+
+    # Grouping strategies
+    groups:
+      # Group all patch updates together
+      patch-updates:
+        patterns:
+          - "*"
+        update-types:
+          - "patch"
+
+      # Group development dependencies
+      dev-dependencies:
+        dependency-type: "development"
+        update-types:
+          - "minor"
+          - "patch"
+
+      # Group Next.js ecosystem
+      nextjs:
+        patterns:
+          - "next"
+          - "next-*"
+          - "@next/*"
+        update-types:
+          - "minor"
+          - "patch"
+
+      # Group React ecosystem
+      react:
+        patterns:
+          - "react"
+          - "react-*"
+          - "@types/react"
+        update-types:
+          - "minor"
+          - "patch"
+
+    # Ignore specific packages that need manual review
+    ignore:
+      # Major version updates require testing
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+
+      # Beta versions
+      - dependency-name: "next-auth"
+        update-types: ["version-update:semver-major"]
+
+    # Commit message prefix
+    commit-message:
+      prefix: "chore"
+      prefix-development: "chore(dev)"
+      include: "scope"
+
+    # Rebase strategy
+    rebase-strategy: "auto"
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Europe/Paris"
+    labels:
+      - "dependencies"
+      - "github-actions"
+    commit-message:
+      prefix: "ci"
