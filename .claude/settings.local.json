@@ -59,7 +59,8 @@
       "Bash(npx tsx:*)",
       "Bash(git stash:*)",
       "Bash(grep:*)",
-      "Bash(node scripts/create-nextauth-tables.mjs:*)"
+      "Bash(node scripts/create-nextauth-tables.mjs:*)",
+      "Bash(git log:*)"
     ]
   }
 }
