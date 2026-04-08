@@ -44,7 +44,15 @@ export default function SentryExamplePage() {
           {/* Client-side Error */}
           <button
             onClick={() => {
-              throw new Error("✅ Sentry Client Error Test - This is intentional!");
+              try {
+                console.log('🔴 Triggering client error...');
+                throw new Error("✅ Sentry Client Error Test - This is intentional!");
+              } catch (error) {
+                // Manually capture to ensure it reaches Sentry
+                console.log('📤 Capturing error with Sentry...');
+                Sentry.captureException(error);
+                throw error; // Re-throw for normal error handling
+              }
             }}
             style={{
               padding: "1rem 2rem",
