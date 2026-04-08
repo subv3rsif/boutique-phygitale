@@ -15,9 +15,9 @@ export default async function AdminLayout({
   } catch (error) {
     const message = error instanceof Error ? error.message : '';
     if (message.includes('Session expired')) {
-      redirect('/admin/login?error=session_expired');
+      redirect('/auth/admin?error=session_expired');
     }
-    redirect('/admin/login');
+    redirect('/auth/admin');
   }
 
   // Get user email from environment
