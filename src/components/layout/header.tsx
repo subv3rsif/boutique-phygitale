@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import { Menu, ShoppingBag, User, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-// import { useSession } from 'next-auth/react'; // Temporarily disabled until DB tables created
+import { useSession } from 'next-auth/react';
 import { useCart } from '@/store/cart';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -18,8 +18,7 @@ export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
   const totalItems = useCart((state) => state.totalItems());
-  // const { data: session } = useSession(); // Temporarily disabled
-  const session = null; // Temporary: will show "Se connecter" until NextAuth tables are created
+  const { data: session } = useSession();
 
   // Detect scroll
   useEffect(() => {

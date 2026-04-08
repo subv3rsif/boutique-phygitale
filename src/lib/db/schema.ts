@@ -152,7 +152,7 @@ export const productStock = pgTable('product_stock', {
 /**
  * Users table - NextAuth users
  */
-export const users = pgTable('users', {
+export const users = pgTable('nextauth_users', {
   id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
   name: text('name'),
   email: text('email').notNull().unique(),
@@ -164,7 +164,7 @@ export const users = pgTable('users', {
 /**
  * Accounts table - NextAuth provider accounts (Google, GitHub, etc.)
  */
-export const accounts = pgTable('accounts', {
+export const accounts = pgTable('nextauth_accounts', {
   userId: text('user_id')
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
@@ -185,7 +185,7 @@ export const accounts = pgTable('accounts', {
 /**
  * Sessions table - NextAuth sessions
  */
-export const sessions = pgTable('sessions', {
+export const sessions = pgTable('nextauth_sessions', {
   sessionToken: text('session_token').primaryKey(),
   userId: text('user_id')
     .notNull()
@@ -196,7 +196,7 @@ export const sessions = pgTable('sessions', {
 /**
  * Verification Tokens table - NextAuth email verification
  */
-export const verificationTokens = pgTable('verification_tokens', {
+export const verificationTokens = pgTable('nextauth_verification_tokens', {
   identifier: text('identifier').notNull(),
   token: text('token').notNull(),
   expires: timestamp('expires', { mode: 'date' }).notNull(),
