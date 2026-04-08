@@ -1,17 +1,9 @@
-import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { QRScanner } from '@/components/admin/qr-scanner';
 import { QrCode } from 'lucide-react';
 
 export default async function PickupScannerPage() {
-  // Check authentication
-  const cookieStore = await cookies();
-  const session = cookieStore.get('admin-session');
-
-  if (!session) {
-    redirect('/connexion');
-  }
+  // Auth is handled by admin layout (requireAdminAuth)
 
   return (
     <div>

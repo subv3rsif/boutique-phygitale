@@ -1,18 +1,10 @@
-import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Package, TrendingUp, Clock, CheckCircle2 } from 'lucide-react';
 import { getOrderStats } from '@/lib/db/helpers';
 import { formatCurrency } from '@/lib/utils';
 
 export default async function DashboardPage() {
-  // Check authentication (redundant with middleware but good for clarity)
-  const cookieStore = await cookies();
-  const session = cookieStore.get('admin-session');
-
-  if (!session) {
-    redirect('/connexion');
-  }
+  // Auth is handled by admin layout (requireAdminAuth)
 
   // Fetch order statistics
   const stats = await getOrderStats();

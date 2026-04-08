@@ -1,5 +1,4 @@
-import { cookies } from 'next/headers';
-import { redirect, notFound } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { getOrderById } from '@/lib/db/helpers';
@@ -33,13 +32,7 @@ export default async function OrderDetailPage({
 }) {
   const { id } = await params;
 
-  // Check authentication
-  const cookieStore = await cookies();
-  const session = cookieStore.get('admin-session');
-
-  if (!session) {
-    redirect('/connexion');
-  }
+  // Auth is handled by admin layout (requireAdminAuth)
 
   // Fetch order details
   const order = await getOrderById(id);

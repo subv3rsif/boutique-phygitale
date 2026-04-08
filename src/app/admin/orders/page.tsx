@@ -1,5 +1,3 @@
-import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -40,13 +38,7 @@ function getModeBadge(mode: string) {
 }
 
 export default async function OrdersPage() {
-  // Check authentication
-  const cookieStore = await cookies();
-  const session = cookieStore.get('admin-session');
-
-  if (!session) {
-    redirect('/connexion');
-  }
+  // Auth is handled by admin layout (requireAdminAuth)
 
   // Fetch all orders (could add pagination/filtering later)
   const orders = await getAllOrders();
