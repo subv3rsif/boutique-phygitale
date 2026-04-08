@@ -22,6 +22,9 @@ const CATEGORY_TAGS = [
   { value: 'graffiti', label: 'Graffiti' },
   { value: 'collection', label: 'Collection' },
   { value: 'artisan', label: 'Artisan' },
+  { value: 'supporter', label: 'Supporter' },
+  { value: 'edition', label: 'Édition' },
+  { value: 'atelier', label: "L'atelier" },
 ] as const;
 
 type FormData = {
