@@ -26,6 +26,18 @@ export async function getActiveProducts(): Promise<Product[]> {
 }
 
 /**
+ * Get featured products (for homepage)
+ * Returns active products marked as featured, ordered by creation date
+ */
+export async function getFeaturedProducts(): Promise<Product[]> {
+  return await db
+    .select()
+    .from(products)
+    .where(and(eq(products.active, true), eq(products.featured, true)))
+    .orderBy(desc(products.createdAt));
+}
+
+/**
  * Get product by ID
  */
 export async function getProductById(id: string): Promise<Product | null> {

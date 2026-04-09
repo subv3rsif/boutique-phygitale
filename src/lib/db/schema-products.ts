@@ -44,12 +44,14 @@ export const products = pgTable(
     editionNumber: integer('edition_number'),
     editionTotal: integer('edition_total'),
     active: boolean('active').default(true).notNull(),
+    featured: boolean('featured').default(false).notNull(),
     createdAt: timestamp('created_at').defaultNow().notNull(),
     updatedAt: timestamp('updated_at').defaultNow().notNull(),
   },
   (table) => ({
     slugIdx: index('idx_products_slug').on(table.slug),
     activeIdx: index('idx_products_active').on(table.active),
+    featuredIdx: index('idx_products_featured').on(table.featured),
     stockIdx: index('idx_products_stock').on(table.stockQuantity),
   })
 );

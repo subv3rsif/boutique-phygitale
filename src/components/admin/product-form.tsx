@@ -42,6 +42,7 @@ type FormData = {
   editionNumber: string;
   editionTotal: string;
   active: boolean;
+  featured: boolean;
 };
 
 /**
@@ -81,6 +82,7 @@ export function ProductForm({ product, mode }: ProductFormProps) {
     editionNumber: product?.editionNumber?.toString() || '',
     editionTotal: product?.editionTotal?.toString() || '',
     active: product?.active ?? true,
+    featured: product?.featured ?? false,
   });
 
   // Auto-generate slug when name changes (create mode only)
@@ -109,6 +111,11 @@ export function ProductForm({ product, mode }: ProductFormProps) {
   // Handle switch toggle
   const handleSwitchChange = (checked: boolean) => {
     setFormData((prev) => ({ ...prev, active: checked }));
+  };
+
+  // Handle featured toggle
+  const handleFeaturedChange = (checked: boolean) => {
+    setFormData((prev) => ({ ...prev, featured: checked }));
   };
 
   // Handle tag checkbox toggle
@@ -189,6 +196,7 @@ export function ProductForm({ product, mode }: ProductFormProps) {
         editionNumber: formData.editionNumber ? parseInt(formData.editionNumber) : undefined,
         editionTotal: formData.editionTotal ? parseInt(formData.editionTotal) : undefined,
         active: formData.active,
+        featured: formData.featured,
       };
 
       // API call
@@ -482,6 +490,21 @@ export function ProductForm({ product, mode }: ProductFormProps) {
             Produit actif (visible sur la boutique)
           </Label>
         </div>
+
+        {/* Featured Toggle */}
+        <div className="flex items-center space-x-3">
+          <Switch
+            id="featured"
+            checked={formData.featured}
+            onCheckedChange={handleFeaturedChange}
+          />
+          <Label htmlFor="featured" className="cursor-pointer">
+            ⭐ Mettre à la une (homepage)
+          </Label>
+        </div>
+        <p className="text-xs text-pierre -mt-2 ml-14">
+          Les produits à la une apparaissent en priorité sur la page d'accueil
+        </p>
       </div>
 
       {/* Form Actions */}
