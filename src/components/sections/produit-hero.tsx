@@ -33,7 +33,7 @@ export function ProduitHero({ featuredProduct }: ProduitHeroProps) {
   };
 
   return (
-    <section ref={ref} className="bg-encre-2 min-h-[80vh]">
+    <section ref={ref} className="bg-[#2D2620] dark:bg-[#1A1613] min-h-[80vh]">
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-0 items-center min-h-[80vh]">
           {/* Left: Text */}
@@ -44,22 +44,22 @@ export function ProduitHero({ featuredProduct }: ProduitHeroProps) {
             className="py-16 md:py-24 md:pr-12 space-y-8"
           >
             {/* Label */}
-            <p className="font-sans font-semibold text-xs text-terra uppercase tracking-wide">
+            <p className="font-sans font-semibold text-xs text-[#C56339] uppercase tracking-wide">
               À la une
             </p>
 
             {/* Product name */}
-            <h2 className="font-display font-bold text-4xl md:text-5xl text-ivoire leading-tight">
+            <h2 className="font-display font-bold text-4xl md:text-5xl text-white leading-tight">
               {featuredProduct.name}
             </h2>
 
             {/* Description */}
-            <p className="font-sans text-base text-ivoire/60 leading-relaxed max-w-lg">
+            <p className="font-sans text-base text-white/80 leading-relaxed max-w-lg">
               {featuredProduct.description}
             </p>
 
             {/* Price */}
-            <div className="font-display font-bold text-5xl text-terra">
+            <div className="font-display font-bold text-5xl text-[#C56339]">
               {(featuredProduct.priceCents / 100).toFixed(2)} €
             </div>
 
@@ -67,7 +67,7 @@ export function ProduitHero({ featuredProduct }: ProduitHeroProps) {
             <div className="flex flex-row gap-4">
               <Button
                 onClick={handleAddToCart}
-                className="bg-terra text-ivoire hover:bg-terra/90 font-semibold"
+                className="bg-[#C56339] text-white hover:bg-[#C56339]/90 font-semibold shadow-lg"
               >
                 Ajouter au panier
               </Button>
@@ -75,7 +75,7 @@ export function ProduitHero({ featuredProduct }: ProduitHeroProps) {
               <Link href="/collection">
                 <Button
                   variant="outline"
-                  className="border-ivoire text-ivoire hover:bg-ivoire/10"
+                  className="border-white/30 text-white hover:bg-white/10 backdrop-blur-sm"
                 >
                   Voir toute la collection
                   <ArrowRight className="ml-2 h-4 w-4" />
