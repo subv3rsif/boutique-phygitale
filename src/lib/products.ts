@@ -3,6 +3,7 @@ import { db, products } from '@/lib/db';
 import { eq, and, desc } from 'drizzle-orm';
 import type { Product, CreateProductInput, UpdateProductInput } from '@/types/product';
 import { parseTags, parseBadges } from '@/lib/validations/product';
+import { revalidateTag } from 'next/cache';
 
 /**
  * Get all products (admin)
@@ -122,6 +123,9 @@ export async function createProduct(input: CreateProductInput): Promise<Product>
 
   console.log(`[PRODUCT] Created: ${product.slug}`);
 
+  // Invalidate homepage cache
+  revalidateTag('products');
+
   return product;
 }
 
@@ -170,6 +174,9 @@ export async function updateProduct(
 
   console.log(`[PRODUCT] Updated: ${product.slug}`);
 
+  // Invalidate homepage cache
+  revalidateTag('products');
+
   return product;
 }
 
@@ -187,6 +194,9 @@ export async function deleteProduct(id: string): Promise<void> {
   }
 
   console.log(`[PRODUCT] Deleted: ${deleted.slug}`);
+
+  // Invalidate homepage cache
+  revalidateTag('products');
 }
 
 /**
@@ -232,6 +242,9 @@ export async function addProductImages(
     throw new Error('Product not found');
   }
 
+  // Invalidate homepage cache
+  revalidateTag('products');
+
   return updated;
 }
 
@@ -263,6 +276,9 @@ export async function removeProductImage(
   if (!updated) {
     throw new Error('Product not found');
   }
+
+  // Invalidate homepage cache
+  revalidateTag('products');
 
   return updated;
 }

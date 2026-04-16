@@ -6,16 +6,27 @@ import { EditionsLimitees } from '@/components/sections/editions-limitees';
 import { LesArtisans } from '@/components/sections/les-artisans';
 import { Atelier } from '@/components/sections/atelier';
 import { getActiveProducts, getFeaturedProducts } from '@/lib/products';
+import { unstable_cache } from 'next/cache';
 
-// Force dynamic rendering (database required)
-export const dynamic = 'force-dynamic';
+// Cache products for 5 minutes to reduce DB connections
+const getCachedFeaturedProducts = unstable_cache(
+  async () => getFeaturedProducts(),
+  ['featured-products'],
+  { revalidate: 300, tags: ['products'] }
+);
+
+const getCachedActiveProducts = unstable_cache(
+  async () => getActiveProducts(),
+  ['active-products'],
+  { revalidate: 300, tags: ['products'] }
+);
 
 export default async function HomePage() {
-  // Fetch featured products (marked as "à la une" in admin)
-  const featuredProducts = await getFeaturedProducts();
+  // Fetch featured products (marked as "à la une" in admin) - CACHED
+  const featuredProducts = await getCachedFeaturedProducts();
 
-  // Fallback to all active products if no featured products
-  const allProducts = featuredProducts.length > 0 ? featuredProducts : await getActiveProducts();
+  // Fallback to all active products if no featured products - CACHED
+  const allProducts = featuredProducts.length > 0 ? featuredProducts : await getCachedActiveProducts();
 
   // Get featured product for hero section (first featured/active product)
   const featuredProduct = allProducts[0] ?? null;
