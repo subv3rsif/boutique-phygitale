@@ -56,8 +56,8 @@ export function AccrocheTerritorial() {
             className="md:col-span-3 relative aspect-[3/4]"
           >
             <Image
-              src="https://placehold.co/900x1200/F2EDE4/8A8278?text=Atelier+1885"
-              alt="Atelier 1885 Alfortville"
+              src="/atelier-serigraphie.jpg"
+              alt="Atelier de sérigraphie 1885 Alfortville"
               fill
               className="object-cover rounded-lg"
               sizes="(max-width: 768px) 100vw, 60vw"
