@@ -6,29 +6,29 @@ import * as Sentry from "@sentry/nextjs";
 
 const SENTRY_DSN = process.env.NEXT_PUBLIC_SENTRY_DSN;
 
-// Debug: Verify DSN is loaded
-if (!SENTRY_DSN) {
-  console.error('❌ SENTRY DSN NOT LOADED - Check NEXT_PUBLIC_SENTRY_DSN env var');
-} else {
+// Temporarily disable Sentry to fix site blocking issue
+// TODO: Re-enable with proper tunnel configuration
+const SENTRY_ENABLED = false;
+
+if (SENTRY_ENABLED && SENTRY_DSN) {
   console.log('✅ Sentry DSN loaded:', SENTRY_DSN.substring(0, 30) + '...');
+
+  Sentry.init({
+    dsn: SENTRY_DSN,
+
+    // Tunnel to bypass ad-blockers
+    tunnel: '/monitoring',
+
+    // Adjust this value in production, or use tracesSampler for greater control
+    tracesSampleRate: 0.1, // Reduced to 10% in production
+
+    // Disable debug mode in production
+    debug: false,
+
+    // Disable replay for now
+    // replaysOnErrorSampleRate: 1.0,
+    // replaysSessionSampleRate: 0.1,
+  });
+} else {
+  console.log('ℹ️ Sentry monitoring temporarily disabled');
 }
-
-Sentry.init({
-  dsn: SENTRY_DSN,
-
-  // Tunnel to bypass ad-blockers (must be full URL or undefined)
-  // Use full URL in production, relative path works in Next.js dev
-  tunnel: typeof window !== 'undefined'
-    ? `${window.location.origin}/monitoring`
-    : undefined,
-
-  // Adjust this value in production, or use tracesSampler for greater control
-  tracesSampleRate: 1,
-
-  // Setting this option to true will print useful information to the console while you're setting up Sentry.
-  debug: true, // Enable debug mode to troubleshoot
-
-  // Disable replay for now - will enable once basic error tracking works
-  // replaysOnErrorSampleRate: 1.0,
-  // replaysSessionSampleRate: 0.1,
-});
