@@ -1,5 +1,6 @@
 // src/app/api/admin/products/[id]/upload/route.ts
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidateTag } from 'next/cache';
 import { requireAdminAuth } from '@/lib/auth/admin-auth';
 import { getProductById, addProductImages } from '@/lib/products';
 import { uploadProductImage } from '@/lib/supabase-storage';
@@ -86,6 +87,9 @@ export async function POST(
         isPrimary: validation.success ? validation.data.isPrimary : false,
       },
     ]);
+
+    // Invalidate homepage cache
+    revalidateTag('products');
 
     return NextResponse.json({ product: updatedProduct }, { status: 201 });
   } catch (error: any) {

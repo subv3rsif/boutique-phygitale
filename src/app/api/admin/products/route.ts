@@ -1,5 +1,6 @@
 // src/app/api/admin/products/route.ts
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidateTag } from 'next/cache';
 import { requireAdminAuth } from '@/lib/auth/admin-auth';
 import { getAllProducts, createProduct } from '@/lib/products';
 import { productSchema } from '@/lib/validations/product';
@@ -57,6 +58,9 @@ export async function POST(request: NextRequest) {
 
     // Create product
     const product = await createProduct(validation.data);
+
+    // Invalidate homepage cache
+    revalidateTag('products');
 
     return NextResponse.json({ product }, { status: 201 });
   } catch (error: any) {
