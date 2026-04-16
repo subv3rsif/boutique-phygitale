@@ -1,6 +1,6 @@
 // src/app/api/admin/products/[id]/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { revalidateTag } from 'next/cache';
+import { revalidatePath } from 'next/cache';
 import { requireAdminAuth } from '@/lib/auth/admin-auth';
 import { getProductById, updateProduct, deleteProduct } from '@/lib/products';
 import { updateProductSchema } from '@/lib/validations/product';
@@ -77,7 +77,7 @@ export async function PUT(
     const product = await updateProduct(id, validation.data);
 
     // Invalidate homepage cache
-    revalidateTag('products');
+    revalidatePath('/');
 
     return NextResponse.json({ product });
   } catch (error: any) {
@@ -138,7 +138,7 @@ export async function DELETE(
     await deleteProduct(id);
 
     // Invalidate homepage cache
-    revalidateTag('products');
+    revalidatePath('/');
 
     return NextResponse.json({ success: true });
   } catch (error: any) {

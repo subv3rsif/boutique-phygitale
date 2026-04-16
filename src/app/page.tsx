@@ -12,13 +12,13 @@ import { unstable_cache } from 'next/cache';
 const getCachedFeaturedProducts = unstable_cache(
   async () => getFeaturedProducts(),
   ['featured-products'],
-  { revalidate: 300, tags: ['products'] }
+  { revalidate: 300 }
 );
 
 const getCachedActiveProducts = unstable_cache(
   async () => getActiveProducts(),
   ['active-products'],
-  { revalidate: 300, tags: ['products'] }
+  { revalidate: 300 }
 );
 
 export default async function HomePage() {

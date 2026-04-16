@@ -1,6 +1,6 @@
 // src/app/api/admin/products/[id]/upload/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { revalidateTag } from 'next/cache';
+import { revalidatePath } from 'next/cache';
 import { requireAdminAuth } from '@/lib/auth/admin-auth';
 import { getProductById, addProductImages } from '@/lib/products';
 import { uploadProductImage } from '@/lib/supabase-storage';
@@ -89,7 +89,7 @@ export async function POST(
     ]);
 
     // Invalidate homepage cache
-    revalidateTag('products');
+    revalidatePath('/');
 
     return NextResponse.json({ product: updatedProduct }, { status: 201 });
   } catch (error: any) {
