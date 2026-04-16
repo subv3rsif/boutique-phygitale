@@ -16,8 +16,11 @@ if (!SENTRY_DSN) {
 Sentry.init({
   dsn: SENTRY_DSN,
 
-  // Tunnel to bypass ad-blockers
-  tunnel: '/monitoring',
+  // Tunnel to bypass ad-blockers (must be full URL or undefined)
+  // Use full URL in production, relative path works in Next.js dev
+  tunnel: typeof window !== 'undefined'
+    ? `${window.location.origin}/monitoring`
+    : undefined,
 
   // Adjust this value in production, or use tracesSampler for greater control
   tracesSampleRate: 1,
