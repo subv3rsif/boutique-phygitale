@@ -11,24 +11,24 @@ import { ArrowRight } from 'lucide-react';
 const artisans = [
   {
     id: '1',
-    name: 'Marie Dubois',
-    metier: 'Sérigraphe',
-    bio: 'Spécialisée en sérigraphie artisanale depuis 15 ans. Chaque impression est unique.',
-    image: 'https://placehold.co/600x600/F2EDE4/8A8278?text=Marie+Dubois',
+    name: 'Thomas Moreau',
+    metier: 'Chef Pâtissier',
+    bio: 'Créateur de douceurs artisanales inspirées du terroir. Chocolats et confiseries d\'exception.',
+    image: '/artisans/chef-cuisinier.jpg',
   },
   {
     id: '2',
-    name: 'Jean Lefèvre',
-    metier: 'Céramiste',
-    bio: 'Créateur de pièces en céramique tournées à la main dans son atelier alfortvillais.',
-    image: 'https://placehold.co/600x600/F2EDE4/8A8278?text=Jean+Lefevre',
+    name: 'Claire Lefebvre',
+    metier: 'Artisan Textile',
+    bio: 'Spécialisée en sérigraphie et broderie. Chaque pièce textile raconte une histoire.',
+    image: '/artisans/artisan-textile.jpg',
   },
   {
     id: '3',
-    name: 'Sophie Martin',
-    metier: 'Brodeuse',
-    bio: 'Broderie traditionnelle réinterprétée avec des motifs contemporains.',
-    image: 'https://placehold.co/600x600/F2EDE4/8A8278?text=Sophie+Martin',
+    name: 'Emma Rousseau',
+    metier: 'Céramiste',
+    bio: 'Créatrice de pièces en céramique tournées à la main. Design contemporain et savoir-faire ancestral.',
+    image: '/artisans/ceramiste.jpg',
   },
 ];
 

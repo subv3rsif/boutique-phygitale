@@ -33,8 +33,9 @@ export function AccrocheTerritorial() {
 
             {/* Body */}
             <p className="font-sans text-base text-pierre leading-relaxed">
-              À Alfortville, chaque objet porte l'empreinte de son territoire.
-              Nos créations célèbrent l'artisanat local et l'identité de la ville fondée en 1885.
+              Vous êtes d'Alfortville, ou vous l'aimez. Cette boutique est faite pour vous. 
+              Des objets qu'on ne trouve nulle part ailleurs, imaginés avec les gens d'ici, 
+              pour raconter une ville qui mérite d'être portée. 
             </p>
 
             {/* CTA */}
