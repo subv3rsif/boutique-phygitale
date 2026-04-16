@@ -21,12 +21,14 @@ function getDb() {
     // Use DIRECT_URL if available (for Supabase connection pooling)
     const directUrl = process.env.DIRECT_URL || connectionString;
 
-    // Create client with serverless-optimized settings
+    // Create client with aggressive connection recycling for Supabase pooler
     const client = postgres(directUrl, {
       prepare: false, // Required for some serverless environments
       max: 1, // Limit to 1 connection per serverless function instance
-      idle_timeout: 20, // Close idle connections after 20 seconds
-      max_lifetime: 60 * 30, // Max connection lifetime: 30 minutes
+      idle_timeout: 5, // Close idle connections after 5 seconds (aggressive)
+      max_lifetime: 60 * 5, // Max connection lifetime: 5 minutes
+      connect_timeout: 10, // Connection timeout: 10 seconds
+      onnotice: () => {}, // Silence notices to reduce logging
     });
 
     // Create Drizzle instance with schema
