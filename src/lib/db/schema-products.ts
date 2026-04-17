@@ -45,6 +45,9 @@ export const products = pgTable(
     editionTotal: integer('edition_total'),
     active: boolean('active').default(true).notNull(),
     featured: boolean('featured').default(false).notNull(),
+    showInCollectionPage: boolean('show_in_collection_page')
+      .default(false)
+      .notNull(),
     createdAt: timestamp('created_at').defaultNow().notNull(),
     updatedAt: timestamp('updated_at').defaultNow().notNull(),
   },

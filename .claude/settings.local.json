@@ -67,7 +67,9 @@
       "Bash(sentry.server.config.ts << 'EOF'\n// This file configures the initialization of Sentry on the server.\n// The config you add here will be used whenever the server handles a request.\n// https://docs.sentry.io/platforms/javascript/guides/nextjs/\n\nimport * as Sentry from \"@sentry/nextjs\";\n\nSentry.init\\({\n  dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,\n\n  // Adjust this value in production, or use tracesSampler for greater control\n  tracesSampleRate: 1,\n\n  // Setting this option to true will print useful information to the console while you're setting up Sentry.\n  debug: false,\n}\\);\nEOF)",
       "Bash(DATABASE_URL='postgres://postgres.jghoiesnnhhiijtzzfvt:o2jK93fcnvYxULDN@aws-1-eu-central-2.pooler.supabase.com:5432/postgres?sslmode=require' npx tsx:*)",
       "Bash(git pull:*)",
-      "Bash(file:*)"
+      "Bash(file:*)",
+      "Bash(npm run db:generate:*)",
+      "Bash(npm run db:push:*)"
     ]
   }
 }

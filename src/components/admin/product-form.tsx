@@ -43,6 +43,7 @@ type FormData = {
   editionTotal: string;
   active: boolean;
   featured: boolean;
+  showInCollectionPage: boolean;
 };
 
 /**
@@ -83,6 +84,7 @@ export function ProductForm({ product, mode }: ProductFormProps) {
     editionTotal: product?.editionTotal?.toString() || '',
     active: product?.active ?? true,
     featured: product?.featured ?? false,
+    showInCollectionPage: product?.showInCollectionPage ?? false,
   });
 
   // Auto-generate slug when name changes (create mode only)
@@ -116,6 +118,11 @@ export function ProductForm({ product, mode }: ProductFormProps) {
   // Handle featured toggle
   const handleFeaturedChange = (checked: boolean) => {
     setFormData((prev) => ({ ...prev, featured: checked }));
+  };
+
+  // Handle showInCollectionPage toggle
+  const handleShowInCollectionPageChange = (checked: boolean) => {
+    setFormData((prev) => ({ ...prev, showInCollectionPage: checked }));
   };
 
   // Handle tag checkbox toggle
@@ -197,6 +204,7 @@ export function ProductForm({ product, mode }: ProductFormProps) {
         editionTotal: formData.editionTotal ? parseInt(formData.editionTotal) : undefined,
         active: formData.active,
         featured: formData.featured,
+        showInCollectionPage: formData.showInCollectionPage,
       };
 
       // API call
@@ -504,6 +512,21 @@ export function ProductForm({ product, mode }: ProductFormProps) {
         </div>
         <p className="text-xs text-pierre -mt-2 ml-14">
           Les produits à la une apparaissent en priorité sur la page d'accueil
+        </p>
+
+        {/* Show In Collection Page Toggle */}
+        <div className="flex items-center space-x-3">
+          <Switch
+            id="showInCollectionPage"
+            checked={formData.showInCollectionPage}
+            onCheckedChange={handleShowInCollectionPageChange}
+          />
+          <Label htmlFor="showInCollectionPage" className="cursor-pointer">
+            📚 Afficher sur la page collection
+          </Label>
+        </div>
+        <p className="text-xs text-pierre -mt-2 ml-14">
+          Affiche ce produit dans les 3 aperçus de la page collection (max 3 par catégorie)
         </p>
       </div>
 

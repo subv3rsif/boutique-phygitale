@@ -113,6 +113,7 @@ export async function createProduct(input: CreateProductInput): Promise<Product>
       editionTotal: input.editionTotal ?? null,
       active: input.active ?? true,
       featured: input.featured ?? false,
+      showInCollectionPage: input.showInCollectionPage ?? false,
     })
     .returning();
 

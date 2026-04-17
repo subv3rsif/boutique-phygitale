@@ -36,6 +36,7 @@ export type Product = {
   editionTotal: number | null; // Total editions if part of limited series
   active: boolean; // Whether product is active/available for sale
   featured: boolean; // Whether product is featured on homepage
+  showInCollectionPage: boolean; // Whether to show in collection page preview (max 3 per category)
   createdAt: Date; // Timestamp of creation
   updatedAt: Date; // Timestamp of last update
 };
@@ -81,6 +82,7 @@ export type CreateProductInput = {
   editionTotal?: number; // Total editions (optional)
   active?: boolean; // Active status (default: true)
   featured?: boolean; // Featured on homepage (default: false)
+  showInCollectionPage?: boolean; // Show in collection page preview (default: false)
 };
 
 /**

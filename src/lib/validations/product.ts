@@ -43,6 +43,7 @@ export const productSchema = z.object({
   editionTotal: z.number().int().min(1).optional(),
   active: z.boolean().default(true),
   featured: z.boolean().default(false),
+  showInCollectionPage: z.boolean().default(false),
 });
 
 export type ProductInput = z.infer<typeof productSchema>;
