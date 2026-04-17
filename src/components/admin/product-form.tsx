@@ -18,7 +18,7 @@ type ProductFormProps = {
 
 // Predefined category tags for navigation/filtering
 const CATEGORY_TAGS = [
-  { value: 'héritage', label: 'Héritage' },
+  { value: 'heritage', label: 'Héritage' },
   { value: 'graffiti', label: 'Graffiti' },
   { value: 'collection', label: 'Collection' },
   { value: 'artisan', label: 'Artisan' },
