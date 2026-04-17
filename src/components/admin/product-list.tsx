@@ -206,8 +206,10 @@ export function ProductList({ initialProducts }: ProductListProps) {
                         <div className="font-medium text-encre">
                           {product.name}
                         </div>
-                        <div className="text-sm text-pierre line-clamp-1">
-                          {product.description}
+                        <div className="text-sm text-pierre">
+                          {product.description.length > 20
+                            ? `${product.description.substring(0, 20)}...`
+                            : product.description}
                         </div>
                         {product.editionNumber && product.editionTotal && (
                           <Badge
