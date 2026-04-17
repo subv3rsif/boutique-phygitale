@@ -1,6 +1,7 @@
 import { getActiveProducts } from '@/lib/products';
 import { getCategoryConfig } from '@/lib/categories';
 import { CategoryPage } from '@/components/category/category-page';
+import { AtelierStory } from '@/components/atelier/atelier-story';
 import type { Metadata } from 'next';
 
 // Force dynamic rendering (database required)
@@ -22,5 +23,13 @@ export default async function AtelierPage() {
     p.tags?.includes('atelier')
   );
 
-  return <CategoryPage config={config} products={categoryProducts} />;
+  return (
+    <>
+      {/* Story section before catalog */}
+      <AtelierStory />
+
+      {/* Product catalog */}
+      <CategoryPage config={config} products={categoryProducts} />
+    </>
+  );
 }

@@ -2,6 +2,7 @@ import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 import * as schema from './schema';
 import { products, stockMovements } from './schema-products';
+import { dropSubscribers } from './schema-drop-newsletter';
 
 // Lazy database client to avoid build-time errors
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -53,3 +54,6 @@ export * from './schema';
 
 // Export product tables for convenience
 export { products, stockMovements };
+
+// Export drop newsletter table
+export { dropSubscribers };
