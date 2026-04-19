@@ -114,6 +114,7 @@ export async function createProduct(input: CreateProductInput): Promise<Product>
       active: input.active ?? true,
       featured: input.featured ?? false,
       showInCollectionPage: input.showInCollectionPage ?? false,
+      sizes: input.sizes ?? [],
     })
     .returning();
 

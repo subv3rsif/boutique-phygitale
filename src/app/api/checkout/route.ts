@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { checkoutInputSchema } from '@/lib/validations';
-import { calculateCartTotals } from '@/lib/catalogue';
+import { validateCartAndCalculateTotals } from '@/lib/cart-validation';
 import { checkRateLimit, checkoutLimiter, createRateLimitResponse } from '@/lib/rate-limit';
 import { getClientIP, getUserAgent } from '@/lib/utils';
 import { getPayFipService } from '@/lib/payfip/client';
@@ -56,8 +56,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 5. Calculate totals from server-side catalogue (SOURCE OF TRUTH)
-    const calculation = calculateCartTotals(items, fulfillmentMode);
+    // 5. Validate cart and calculate totals from database (SOURCE OF TRUTH)
+    const calculation = await validateCartAndCalculateTotals(items, fulfillmentMode);
 
     if ('error' in calculation) {
       return NextResponse.json(
@@ -95,7 +95,8 @@ export async function POST(request: NextRequest) {
         unitPriceCents: item.product.priceCents,
         shippingCentsPerUnit: item.product.shippingCents,
         nameSnapshot: item.product.name,
-        imageSnapshot: item.product.image,
+        imageSnapshot: item.product.images?.[0]?.url || null,
+        sizeSelected: item.size || null,
         orderId: '', // Will be set by createOrder
       }))
     );

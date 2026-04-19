@@ -48,6 +48,7 @@ export const orderItems = pgTable('order_items', {
   shippingCentsPerUnit: integer('shipping_cents_per_unit').notNull(),
   nameSnapshot: varchar('name_snapshot', { length: 255 }).notNull(),
   imageSnapshot: varchar('image_snapshot', { length: 500 }),
+  sizeSelected: varchar('size_selected', { length: 10 }), // Selected size (S, M, L, XL, XXL) - NULL if no sizes
 }, (table) => ({
   orderIdx: index('idx_order').on(table.orderId),
 }));

@@ -7,8 +7,9 @@ import { persist } from 'zustand/middleware';
  */
 
 export type CartItem = {
-  id: string;
+  id: string; // Product ID
   qty: number;
+  size?: string; // Selected size (S, M, L, XL, XXL) - undefined if product has no sizes
 };
 
 export type FulfillmentMode = 'delivery' | 'pickup';
@@ -21,9 +22,9 @@ type CartStore = {
   customerPhone: string;
 
   // Actions
-  addItem: (id: string, qty: number) => void;
-  removeItem: (id: string) => void;
-  updateQty: (id: string, qty: number) => void;
+  addItem: (id: string, qty: number, size?: string) => void;
+  removeItem: (id: string, size?: string) => void;
+  updateQty: (id: string, qty: number, size?: string) => void;
   setFulfillmentMode: (mode: FulfillmentMode) => void;
   setGdprConsent: (consent: boolean) => void;
   setCustomerEmail: (email: string) => void;
@@ -32,7 +33,7 @@ type CartStore = {
 
   // Computed
   totalItems: () => number;
-  getItem: (id: string) => CartItem | undefined;
+  getItem: (id: string, size?: string) => CartItem | undefined;
 };
 
 export const useCart = create<CartStore>()(
@@ -44,34 +45,41 @@ export const useCart = create<CartStore>()(
       customerEmail: '',
       customerPhone: '',
 
-      addItem: (id: string, qty: number) =>
+      addItem: (id: string, qty: number, size?: string) =>
         set((state) => {
-          const existingItem = state.items.find((i) => i.id === id);
+          // Find existing item with same id AND size (or both without size)
+          const existingItem = state.items.find(
+            (i) => i.id === id && i.size === size
+          );
 
           if (existingItem) {
             // Update existing item quantity (max 10)
             return {
               items: state.items.map((i) =>
-                i.id === id ? { ...i, qty: Math.min(i.qty + qty, 10) } : i
+                i.id === id && i.size === size
+                  ? { ...i, qty: Math.min(i.qty + qty, 10) }
+                  : i
               ),
             };
           }
 
           // Add new item (max 10)
           return {
-            items: [...state.items, { id, qty: Math.min(qty, 10) }],
+            items: [...state.items, { id, qty: Math.min(qty, 10), size }],
           };
         }),
 
-      removeItem: (id: string) =>
+      removeItem: (id: string, size?: string) =>
         set((state) => ({
-          items: state.items.filter((i) => i.id !== id),
+          items: state.items.filter((i) => !(i.id === id && i.size === size)),
         })),
 
-      updateQty: (id: string, qty: number) =>
+      updateQty: (id: string, qty: number, size?: string) =>
         set((state) => ({
           items: state.items.map((i) =>
-            i.id === id ? { ...i, qty: Math.max(1, Math.min(qty, 10)) } : i
+            i.id === id && i.size === size
+              ? { ...i, qty: Math.max(1, Math.min(qty, 10)) }
+              : i
           ),
         })),
 
@@ -98,7 +106,8 @@ export const useCart = create<CartStore>()(
 
       totalItems: () => get().items.reduce((sum, i) => sum + i.qty, 0),
 
-      getItem: (id: string) => get().items.find((i) => i.id === id),
+      getItem: (id: string, size?: string) =>
+        get().items.find((i) => i.id === id && i.size === size),
     }),
     {
       name: 'cart-storage', // localStorage key

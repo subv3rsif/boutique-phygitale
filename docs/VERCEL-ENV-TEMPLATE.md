@@ -44,14 +44,17 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=<anon-key>
 SUPABASE_SERVICE_ROLE_KEY=<service-role-key>
 ```
 
-### Stripe (Paiement)
+### PayFiP (Paiement Public)
 
-Obtenez ces valeurs sur [Stripe Dashboard](https://dashboard.stripe.com)
+Obtenez ces valeurs auprès de votre DGFiP (Direction Générale des Finances Publiques)
 
 ```bash
-STRIPE_SECRET_KEY=sk_live_...
-STRIPE_PUBLISHABLE_KEY=pk_live_...
-STRIPE_WEBHOOK_SECRET=whsec_...
+# Configuration PayFiP
+PAYFIP_USE_MOCK=false  # true pour développement, false pour production
+PAYFIP_NUMCLI=<votre-numero-client>  # Numéro client fourni par la DGFiP
+PAYFIP_EXER=2026  # Année d'exercice
+PAYFIP_URL=<url-production-payfip>  # URL du service PayFiP production
+PAYFIP_MODE=P  # P pour Production, T pour Test
 ```
 
 ### Emails & Infrastructure
@@ -72,8 +75,7 @@ Marquez ces variables comme **Secret** sur Vercel pour chaque environnement (Pro
 - `ADMIN_PASSWORD`
 - `GOOGLE_CLIENT_SECRET`
 - `DATABASE_URL`
-- `STRIPE_SECRET_KEY`
-- `STRIPE_WEBHOOK_SECRET`
+- `PAYFIP_NUMCLI`
 - `RESEND_API_KEY`
 - `UPSTASH_REDIS_REST_TOKEN`
 

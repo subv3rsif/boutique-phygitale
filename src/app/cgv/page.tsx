@@ -69,7 +69,7 @@ export default function CGVPage() {
               politique de confidentialité.
             </p>
             <p>
-              La commande est confirmée après paiement intégral via Stripe.
+              La commande est confirmée après paiement intégral via PayFiP (système de paiement sécurisé du secteur public).
             </p>
           </CardContent>
         </Card>
@@ -80,11 +80,13 @@ export default function CGVPage() {
           </CardHeader>
           <CardContent className="prose prose-sm max-w-none">
             <p>
-              Le paiement s'effectue en ligne via Stripe (CB, Visa, Mastercard).
+              Le paiement s'effectue en ligne via PayFiP, le système de paiement sécurisé
+              du secteur public (CB, Visa, Mastercard).
             </p>
             <p>
               Le paiement est sécurisé et les données bancaires ne sont jamais
-              stockées par la municipalité.
+              stockées par la municipalité. PayFiP est certifié par la Direction
+              Générale des Finances Publiques (DGFiP).
             </p>
           </CardContent>
         </Card>

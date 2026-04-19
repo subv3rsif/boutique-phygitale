@@ -48,6 +48,15 @@ export const products = pgTable(
     showInCollectionPage: boolean('show_in_collection_page')
       .default(false)
       .notNull(),
+    sizes: json('sizes')
+      .$type<
+        Array<{
+          size: 'S' | 'M' | 'L' | 'XL' | 'XXL';
+          stock: number;
+          stockAlertThreshold: number;
+        }>
+      >()
+      .default([]),
     createdAt: timestamp('created_at').defaultNow().notNull(),
     updatedAt: timestamp('updated_at').defaultNow().notNull(),
   },

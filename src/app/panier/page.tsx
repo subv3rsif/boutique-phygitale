@@ -50,7 +50,7 @@ export default function CartPage() {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            items: items.map((item) => ({ id: item.id, qty: item.qty })),
+            items: items.map((item) => ({ id: item.id, qty: item.qty, size: item.size })),
             fulfillmentMode,
           }),
         });
@@ -191,14 +191,14 @@ export default function CartPage() {
                 <div className="divide-y divide-border/40">
                   {items.map((item, i) => (
                     <motion.div
-                      key={item.id}
+                      key={`${item.id}-${item.size || 'no-size'}`}
                       initial={{ opacity: 0, height: 0 }}
                       animate={{ opacity: 1, height: 'auto' }}
                       exit={{ opacity: 0, height: 0, marginTop: 0 }}
                       transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                       className="px-6 py-5"
                     >
-                      <CartItem id={item.id} qty={item.qty} />
+                      <CartItem id={item.id} qty={item.qty} size={item.size} />
                     </motion.div>
                   ))}
                 </div>
@@ -349,7 +349,7 @@ export default function CartPage() {
                     Paiement 100% sécurisé
                   </p>
                   <p className="text-xs font-semibold text-primary/80 font-sans">
-                    Propulsé par Stripe
+                    PayFiP - Paiement public sécurisé
                   </p>
                 </div>
                 <Shield className="h-4 w-4 text-primary/70 shrink-0" />

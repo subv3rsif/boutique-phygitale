@@ -4,7 +4,7 @@ import { test, expect } from '@playwright/test';
  * E2E Tests: Checkout Flow - Delivery Mode
  *
  * Tests the complete user journey from product selection to order confirmation
- * in delivery mode with Stripe payment.
+ * in delivery mode with PayFiP payment.
  */
 
 test.describe('Checkout Flow - Delivery Mode', () => {
@@ -94,7 +94,7 @@ test.describe('Checkout Flow - Delivery Mode', () => {
     await page.locator('[data-testid="cart-link"]').click();
 
     // Try to checkout without GDPR consent
-    const checkoutButton = page.locator('button', { hasText: 'Payer avec Stripe' });
+    const checkoutButton = page.locator('button', { hasText: 'Payer' });
     await expect(checkoutButton).toBeDisabled();
 
     // Check GDPR checkbox
@@ -104,14 +104,14 @@ test.describe('Checkout Flow - Delivery Mode', () => {
     await expect(checkoutButton).toBeEnabled();
   });
 
-  test('should create Stripe checkout session and redirect', async ({ page }) => {
-    // Mock the checkout API to avoid real Stripe redirect in tests
+  test('should create PayFiP checkout session and redirect', async ({ page }) => {
+    // Mock the checkout API to avoid real PayFiP redirect in tests
     await page.route('/api/checkout', async (route) => {
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
         body: JSON.stringify({
-          url: 'https://checkout.stripe.com/test-session'
+          url: 'https://payfip.gouv.fr/test-session'
         })
       });
     });
@@ -126,13 +126,13 @@ test.describe('Checkout Flow - Delivery Mode', () => {
     // Wait for navigation
     const [response] = await Promise.all([
       page.waitForResponse('/api/checkout'),
-      page.locator('button', { hasText: 'Payer avec Stripe' }).click()
+      page.locator('button', { hasText: 'Payer' }).click()
     ]);
 
     // Verify API was called
     expect(response.status()).toBe(200);
 
-    // In real scenario, would redirect to Stripe
+    // In real scenario, would redirect to PayFiP
     // Here we verify the button showed loading state
     await expect(page.locator('text=Création de la session')).toHaveCount(0); // Loading finished
   });
@@ -143,7 +143,7 @@ test.describe('Checkout Flow - Delivery Mode', () => {
 
     // Verify empty state
     await expect(page.locator('text=Votre panier est vide')).toBeVisible();
-    await expect(page.locator('button', { hasText: 'Payer avec Stripe' })).toBeDisabled();
+    await expect(page.locator('button', { hasText: 'Payer' })).toBeDisabled();
 
     // Verify CTA to go back to catalogue
     await expect(page.locator('a', { hasText: 'Voir le catalogue' })).toBeVisible();

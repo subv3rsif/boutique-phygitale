@@ -19,6 +19,15 @@ const productImageSchema = z.object({
 });
 
 /**
+ * Product size schema
+ */
+const productSizeSchema = z.object({
+  size: z.enum(['S', 'M', 'L', 'XL', 'XXL']),
+  stock: z.number().int().min(0, 'Stock doit être >= 0'),
+  stockAlertThreshold: z.number().int().min(0, 'Seuil d\'alerte doit être >= 0'),
+});
+
+/**
  * Complete product creation schema
  * Used for creating new products via admin API
  */
@@ -44,6 +53,7 @@ export const productSchema = z.object({
   active: z.boolean().default(true),
   featured: z.boolean().default(false),
   showInCollectionPage: z.boolean().default(false),
+  sizes: z.array(productSizeSchema).optional().default([]), // Size variants with stock per size
 });
 
 export type ProductInput = z.infer<typeof productSchema>;

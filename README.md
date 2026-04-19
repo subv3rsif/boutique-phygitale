@@ -1,6 +1,6 @@
 # Boutique Phygitale Municipale
 
-Une boutique en ligne "phygitale" pour une municipalité française, permettant la vente de goodies avec paiement Stripe et deux modes de fulfillment (livraison La Poste / retrait sur place).
+Une boutique en ligne "phygitale" pour une municipalité française, permettant la vente de goodies avec paiement PayFiP et deux modes de fulfillment (livraison La Poste / retrait sur place).
 
 ## 🚀 Stack Technique
 
@@ -8,7 +8,7 @@ Une boutique en ligne "phygitale" pour une municipalité française, permettant 
 - **Hosting**: Vercel
 - **Database**: PostgreSQL (Supabase)
 - **ORM**: Drizzle ORM
-- **Paiement**: Stripe Checkout
+- **Paiement**: PayFiP (système de paiement du secteur public français)
 - **Email**: Resend avec React Email
 - **State Management**: Zustand (panier)
 - **Validation**: Zod
@@ -21,7 +21,7 @@ Une boutique en ligne "phygitale" pour une municipalité française, permettant 
 
 ### Pour les clients
 - 🛒 Catalogue de produits avec panier
-- 💳 Paiement sécurisé via Stripe
+- 💳 Paiement sécurisé via PayFiP
 - 📦 Deux modes de livraison :
   - Livraison à domicile (La Poste)
   - Retrait sur place (avec QR code)
@@ -96,7 +96,7 @@ Les clients **peuvent commander sans créer de compte** :
 - QR code pour retrait clic & collect
 - Aucune création de compte requise
 
-**Flux complet :** `Catalogue` → `Panier` → `Paiement Stripe` → `Email de confirmation` → Suivi via lien unique
+**Flux complet :** `Catalogue` → `Panier` → `Paiement PayFiP` → `Email de confirmation` → Suivi via lien unique
 
 ### 🔒 Sécurité
 
@@ -115,7 +115,7 @@ Pour plus de détails, voir [docs/VERCEL-ENV-TEMPLATE.md](./docs/VERCEL-ENV-TEMP
 
 - Node.js 18+ et npm
 - Compte Supabase (PostgreSQL)
-- Compte Stripe (test/production)
+- Accès PayFiP (numéro client DGFiP)
 - Compte Resend (emails)
 - Compte Upstash (Redis pour rate limiting)
 
@@ -136,7 +136,8 @@ cp .env.example .env.local
 
 Variables requises :
 - `DATABASE_URL` : Connexion PostgreSQL Supabase
-- `STRIPE_SECRET_KEY` : Clé secrète Stripe
+- `PAYFIP_NUMCLI` : Numéro client DGFiP
+- `PAYFIP_URL` : URL du service PayFiP
 - `RESEND_API_KEY` : Clé API Resend
 - `UPSTASH_REDIS_REST_URL` et `UPSTASH_REDIS_REST_TOKEN` : Credentials Upstash
 - `ADMIN_EMAILS` : Emails autorisés pour l'admin (séparés par virgules)
@@ -154,17 +155,16 @@ npm run db:push
 npm run db:studio
 ```
 
-4. **Configurer Stripe Webhook (développement local)**
+4. **Configurer PayFiP**
 
-Dans un terminal séparé :
+En mode développement, utilisez le mode mock :
 ```bash
-npm run stripe:listen
+PAYFIP_USE_MOCK=true
+PAYFIP_NUMCLI=MOCK00
+PAYFIP_URL=http://localhost:3000/api/payfip/mock
 ```
 
-Copier le webhook secret affiché et l'ajouter dans `.env.local` :
-```
-STRIPE_WEBHOOK_SECRET=whsec_...
-```
+En production, configurez les valeurs fournies par la DGFiP.
 
 ## 🚦 Commandes
 
@@ -232,8 +232,8 @@ src/
 │   │   ├── products/             # Gestion catalogue
 │   │   └── pickup/
 │   └── api/                      # API Routes
-│       ├── checkout/             # Création session Stripe
-│       ├── stripe/webhook/       # Webhooks Stripe
+│       ├── checkout/             # Création paiement PayFiP
+│       ├── payfip/notification/  # Notifications PayFiP
 │       ├── admin/                # Endpoints admin
 │       └── cron/                 # Tâches planifiées
 ├── components/                   # Composants React
@@ -243,7 +243,7 @@ src/
 │   └── admin/                    # Admin
 ├── lib/                          # Utilitaires
 │   ├── db/                       # Database (schema, clients)
-│   ├── stripe/                   # Stripe helpers
+│   ├── payfip/                   # PayFiP helpers
 │   ├── email/                    # Email queue & templates
 │   ├── qr/                       # Génération QR codes
 │   ├── catalogue.ts              # Catalogue produits
@@ -260,13 +260,13 @@ src/
 
 1. **Recalcul serveur des montants** : Tous les prix sont recalculés côté serveur depuis le catalogue, jamais depuis le payload client
 
-2. **Webhook comme source de vérité** : La confirmation de paiement vient UNIQUEMENT du webhook Stripe `checkout.session.completed`
+2. **Notification PayFiP comme source de vérité** : La confirmation de paiement vient UNIQUEMENT de la notification PayFiP (`URLNOTIF`)
 
 3. **Tokens hashés** : Les tokens QR sont stockés hashés (SHA-256) en base de données, jamais en clair
 
 4. **Rate limiting** : Protection contre les abus (10 sessions checkout/heure par IP)
 
-5. **Idempotence** : Les webhooks Stripe sont traités de manière idempotente via la table `stripe_events`
+5. **Idempotence** : Les notifications PayFiP sont traitées de manière idempotente via la table `payfip_operations`
 
 ### En-têtes de sécurité
 
@@ -290,8 +290,8 @@ La queue traite les emails en arrière-plan avec backoff exponentiel en cas d'é
 1. Client ajoute produits au panier
 2. Sélectionne mode "Livraison"
 3. Accepte consentement RGPD
-4. Paiement via Stripe Checkout
-5. Webhook Stripe confirme paiement → statut "paid"
+4. Paiement via PayFiP
+5. Notification PayFiP confirme paiement → statut "paid"
 6. Email de confirmation envoyé
 7. Admin marque "expédié" avec tracking
 8. Email avec numéro de suivi envoyé
@@ -300,8 +300,8 @@ La queue traite les emails en arrière-plan avec backoff exponentiel en cas d'é
 1. Client ajoute produits au panier
 2. Sélectionne mode "Retrait"
 3. Accepte consentement RGPD
-4. Paiement via Stripe Checkout (sans frais de port)
-5. Webhook Stripe confirme paiement → génération QR code
+4. Paiement via PayFiP (sans frais de port)
+5. Notification PayFiP confirme paiement → génération QR code
 6. Email avec QR code envoyé
 7. Client présente QR à La Fabrik
 8. Admin scanne et valide → statut "fulfilled"
@@ -390,11 +390,10 @@ Routes protégées par middleware + Supabase Auth.
 
 1. **Connecter le repo à Vercel**
 2. **Configurer les variables d'environnement** (voir `.env.example`)
-3. **Configurer le webhook Stripe en production** :
-   - Aller dans Stripe Dashboard → Webhooks
-   - Ajouter endpoint : `https://votre-domaine.vercel.app/api/stripe/webhook`
-   - Sélectionner événements : `checkout.session.completed`, `checkout.session.expired`
-   - Copier le signing secret dans `STRIPE_WEBHOOK_SECRET`
+3. **Configurer PayFiP en production** :
+   - Obtenir les credentials PayFiP auprès de la DGFiP
+   - Configurer `PAYFIP_NUMCLI`, `PAYFIP_EXER`, `PAYFIP_URL`, `PAYFIP_MODE=P`
+   - Configurer l'URL de notification (`URLNOTIF`) dans le back-office PayFiP
 4. **Configurer le cron pour la queue emails** :
    - Ajouter dans `vercel.json` (déjà configuré)
 5. **Build & Deploy**
@@ -403,7 +402,8 @@ Routes protégées par middleware + Supabase Auth.
 
 ### Infrastructure
 - [ ] Variables d'environnement configurées (production)
-- [ ] Webhook Stripe configuré et testé
+- [ ] PayFiP configuré en mode production (`PAYFIP_MODE=P`)
+- [ ] Notification PayFiP configurée (`URLNOTIF`)
 - [ ] Supabase Storage bucket "products" créé et public
 - [ ] Migrations base de données appliquées (tables products, stock_movements)
 - [ ] Admin emails configurés (ADMIN_EMAILS)
@@ -417,7 +417,9 @@ Routes protégées par middleware + Supabase Auth.
 
 ### Paiement & Emails
 - [ ] Emails testés (inbox + spam)
-- [ ] Stripe en mode live (clés production)
+- [ ] PayFiP testé en mode test puis production
+- [ ] Notifications PayFiP reçues et traitées
+- [ ] Idempotence testée (table `payfip_operations`)
 - [ ] Alertes stock testées (email envoyé aux admins)
 - [ ] QR codes testés avec scanner réel
 - [ ] Tests E2E passés (delivery + pickup)
@@ -425,7 +427,7 @@ Routes protégées par middleware + Supabase Auth.
 ### Légal & Sécurité
 - [ ] Mentions légales, CGV, politique de confidentialité complétées
 - [ ] Rate limiting vérifié
-- [ ] Webhook Stripe signature validée
+- [ ] Notifications PayFiP sécurisées (idop unique)
 
 ### UX & Testing
 - [ ] Homepage affiche produits depuis database

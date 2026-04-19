@@ -24,6 +24,7 @@ type PickupConfirmationEmailProps = {
       nameSnapshot: string;
       qty: number;
       unitPriceCents: number;
+      sizeSelected?: string | null; // Size variant (S, M, L, XL, XXL)
     }>;
     itemsTotalCents: number;
     grandTotalCents: number;
@@ -122,7 +123,10 @@ export function PickupConfirmationEmail({
             {order.items.map((item, index) => (
               <Section key={index} style={itemSection}>
                 <Text style={itemName}>
-                  {item.nameSnapshot} <span style={itemQty}>x{item.qty}</span>
+                  {item.nameSnapshot}
+                  {item.sizeSelected && ` (Taille ${item.sizeSelected})`}
+                  {' '}
+                  <span style={itemQty}>x{item.qty}</span>
                 </Text>
                 <Text style={itemPrice}>
                   {formatCurrency(item.unitPriceCents * item.qty)}

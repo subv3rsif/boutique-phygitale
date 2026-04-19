@@ -120,7 +120,7 @@ test.describe('Checkout Flow - Pickup Mode', () => {
         status: 200,
         contentType: 'application/json',
         body: JSON.stringify({
-          url: 'https://checkout.stripe.com/test-pickup-session'
+          url: 'https://payfip.gouv.fr/test-pickup-session'
         })
       });
     });
@@ -137,7 +137,7 @@ test.describe('Checkout Flow - Pickup Mode', () => {
 
     const [response] = await Promise.all([
       page.waitForResponse('/api/checkout'),
-      page.locator('button', { hasText: 'Payer avec Stripe' }).click()
+      page.locator('button', { hasText: 'Payer' }).click()
     ]);
 
     // Verify request was made correctly

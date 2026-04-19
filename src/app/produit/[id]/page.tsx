@@ -13,6 +13,13 @@ import { Badge } from '@/components/ui/badge';
 import { PremiumBadge } from '@/components/ui/premium-badge';
 import { GoldDivider } from '@/components/ui/gold-divider';
 import { SocialShare } from '@/components/ui/social-share';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 
@@ -74,6 +81,7 @@ export default function ProductPage({ params }: PageProps) {
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
+  const [selectedSize, setSelectedSize] = useState<string>('');
   const [isAdding, setIsAdding] = useState(false);
   const [activeAccordion, setActiveAccordion] = useState<string | null>('shipping');
   const addItem = useCart((state) => state.addItem);
@@ -111,20 +119,38 @@ export default function ProductPage({ params }: PageProps) {
     notFound();
   }
 
-  const isOutOfStock = product.stockQuantity !== undefined && product.stockQuantity === 0;
-  const isLowStock = product.stockQuantity !== undefined && product.stockQuantity < 10 && product.stockQuantity > 0;
+  // Check if product has sizes
+  const hasSizes = product.sizes && product.sizes.length > 0;
+
+  // Calculate available stock based on selected size or global stock
+  const availableStock = hasSizes && selectedSize
+    ? product.sizes.find((s) => s.size === selectedSize)?.stock ?? 0
+    : product.stockQuantity ?? 0;
+
+  const isOutOfStock = availableStock === 0;
+  const isLowStock = availableStock < 10 && availableStock > 0;
   const isNew = product.tags?.includes('nouveau') || product.tags?.includes('new');
 
   const handleAddToCart = async () => {
+    // If product has sizes, ensure a size is selected
+    if (hasSizes && !selectedSize) {
+      toast.error('Veuillez sélectionner une taille');
+      return;
+    }
+
     setIsAdding(true);
 
     try {
       await new Promise((resolve) => setTimeout(resolve, 400));
 
-      addItem(product.id, quantity);
+      addItem(product.id, quantity, hasSizes ? selectedSize : undefined);
+
+      const description = hasSizes && selectedSize
+        ? `${quantity} × ${product.name} (${selectedSize})`
+        : `${quantity} × ${product.name}`;
 
       toast.success('Ajouté au panier', {
-        description: `${quantity} × ${product.name}`,
+        description,
         duration: 2500,
       });
     } catch (error) {
@@ -178,9 +204,9 @@ export default function ProductPage({ params }: PageProps) {
                 {isNew && (
                   <PremiumBadge label="Nouveau" variant="solid" size="md" />
                 )}
-                {isLowStock && (
+                {isLowStock && selectedSize && (
                   <Badge className="bg-destructive text-destructive-foreground font-medium">
-                    Plus que {product.stockQuantity}
+                    Plus que {availableStock}
                   </Badge>
                 )}
               </div>
@@ -270,6 +296,41 @@ export default function ProductPage({ params }: PageProps) {
               )}
             </div>
 
+            {/* Size Selector (if product has sizes) */}
+            {hasSizes && (
+              <div className="space-y-3">
+                <label className="text-sm font-medium text-foreground">
+                  Taille <span className="text-red-500">*</span>
+                </label>
+                <Select value={selectedSize} onValueChange={setSelectedSize}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Choisir une taille" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {product.sizes!.map((sizeConfig) => {
+                      const isAvailable = sizeConfig.stock > 0;
+                      return (
+                        <SelectItem
+                          key={sizeConfig.size}
+                          value={sizeConfig.size}
+                          disabled={!isAvailable}
+                        >
+                          {sizeConfig.size}
+                          {!isAvailable && ' (Rupture)'}
+                          {isAvailable && sizeConfig.stock < 10 && ` (${sizeConfig.stock} restant${sizeConfig.stock > 1 ? 's' : ''})`}
+                        </SelectItem>
+                      );
+                    })}
+                  </SelectContent>
+                </Select>
+                {selectedSize && (
+                  <p className="text-sm text-muted-foreground">
+                    Stock disponible : {availableStock}
+                  </p>
+                )}
+              </div>
+            )}
+
             {/* Quantity Selector */}
             <div className="space-y-3">
               <label className="text-sm font-medium text-foreground">
@@ -293,14 +354,14 @@ export default function ProductPage({ params }: PageProps) {
                     variant="ghost"
                     size="sm"
                     onClick={() => setQuantity(Math.min(10, quantity + 1))}
-                    disabled={quantity >= 10 || (product.stockQuantity !== undefined && quantity >= product.stockQuantity)}
+                    disabled={quantity >= 10 || quantity >= availableStock}
                     className="rounded-l-none"
                   >
                     +
                   </Button>
                 </div>
                 <span className="text-sm text-muted-foreground">
-                  (Max : {product.stockQuantity !== undefined ? product.stockQuantity : 10})
+                  (Max : {availableStock > 0 ? availableStock : 10})
                 </span>
               </div>
             </div>
@@ -309,7 +370,7 @@ export default function ProductPage({ params }: PageProps) {
             <motion.div whileTap={{ scale: 0.98 }}>
               <Button
                 onClick={handleAddToCart}
-                disabled={isAdding || isOutOfStock}
+                disabled={isAdding || isOutOfStock || (hasSizes && !selectedSize)}
                 size="lg"
                 className={cn(
                   "w-full relative overflow-hidden group",
@@ -327,6 +388,8 @@ export default function ProductPage({ params }: PageProps) {
                     </>
                   ) : isOutOfStock ? (
                     <>Rupture de stock</>
+                  ) : hasSizes && !selectedSize ? (
+                    <>Sélectionner une taille</>
                   ) : (
                     <>
                       <ShoppingCart className="h-5 w-5" />

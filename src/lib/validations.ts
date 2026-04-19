@@ -11,6 +11,7 @@ import { z } from 'zod';
 export const cartItemSchema = z.object({
   id: z.string().min(1, 'Product ID is required'),
   qty: z.number().int().min(1, 'Quantity must be at least 1').max(10, 'Maximum quantity is 10'),
+  size: z.string().optional(), // S, M, L, XL, XXL (optional for products without sizes)
 });
 
 /**

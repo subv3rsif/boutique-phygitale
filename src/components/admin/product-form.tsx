@@ -9,7 +9,8 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Alert } from '@/components/ui/alert';
 import { generateSlug } from '@/lib/validations/product';
-import type { Product } from '@/types/product';
+import { SizeStockManager } from '@/components/admin/size-stock-manager';
+import type { Product, ProductSize } from '@/types/product';
 
 type ProductFormProps = {
   product?: Product; // If provided, form is in edit mode
@@ -44,6 +45,8 @@ type FormData = {
   active: boolean;
   featured: boolean;
   showInCollectionPage: boolean;
+  sizesEnabled: boolean; // Whether product has size variants
+  sizes: ProductSize[]; // Size configurations (stock per size)
 };
 
 /**
@@ -85,6 +88,8 @@ export function ProductForm({ product, mode }: ProductFormProps) {
     active: product?.active ?? true,
     featured: product?.featured ?? false,
     showInCollectionPage: product?.showInCollectionPage ?? false,
+    sizesEnabled: product?.sizes && product.sizes.length > 0 ? true : false,
+    sizes: product?.sizes || [],
   });
 
   // Auto-generate slug when name changes (create mode only)
@@ -125,6 +130,16 @@ export function ProductForm({ product, mode }: ProductFormProps) {
     setFormData((prev) => ({ ...prev, showInCollectionPage: checked }));
   };
 
+  // Handle sizesEnabled toggle
+  const handleSizesEnabledChange = (checked: boolean) => {
+    setFormData((prev) => ({
+      ...prev,
+      sizesEnabled: checked,
+      // Reset sizes when disabling
+      sizes: checked ? prev.sizes : [],
+    }));
+  };
+
   // Handle tag checkbox toggle
   const handleTagToggle = (tag: string) => {
     setFormData((prev) => {
@@ -150,12 +165,32 @@ export function ProductForm({ product, mode }: ProductFormProps) {
     if (!formData.shippingCents || parseFloat(formData.shippingCents) < 0) {
       return 'Les frais de port doivent être >= 0';
     }
-    if (!formData.stockQuantity || parseInt(formData.stockQuantity) < 0) {
-      return 'Le stock doit être >= 0';
+
+    // Stock validation: either global stock OR sizes stock
+    if (formData.sizesEnabled) {
+      // Validate sizes
+      if (formData.sizes.length === 0) {
+        return 'Au moins une taille doit être sélectionnée si les tailles sont activées';
+      }
+      // Validate each size has valid stock
+      for (const size of formData.sizes) {
+        if (size.stock < 0) {
+          return `Le stock de la taille ${size.size} doit être >= 0`;
+        }
+        if (size.stockAlertThreshold < 0) {
+          return `Le seuil d'alerte de la taille ${size.size} doit être >= 0`;
+        }
+      }
+    } else {
+      // Validate global stock
+      if (!formData.stockQuantity || parseInt(formData.stockQuantity) < 0) {
+        return 'Le stock doit être >= 0';
+      }
+      if (!formData.stockAlertThreshold || parseInt(formData.stockAlertThreshold) < 0) {
+        return 'Le seuil d\'alerte doit être >= 0';
+      }
     }
-    if (!formData.stockAlertThreshold || parseInt(formData.stockAlertThreshold) < 0) {
-      return 'Le seuil d\'alerte doit être >= 0';
-    }
+
     if (formData.weightGrams && parseInt(formData.weightGrams) < 0) {
       return 'Le poids doit être >= 0';
     }
@@ -194,8 +229,8 @@ export function ProductForm({ product, mode }: ProductFormProps) {
         description: formData.description.trim(),
         priceCents: Math.round(parseFloat(formData.priceCents) * 100),
         shippingCents: Math.round(parseFloat(formData.shippingCents) * 100),
-        stockQuantity: parseInt(formData.stockQuantity),
-        stockAlertThreshold: parseInt(formData.stockAlertThreshold),
+        stockQuantity: formData.sizesEnabled ? 0 : parseInt(formData.stockQuantity),
+        stockAlertThreshold: formData.sizesEnabled ? 0 : parseInt(formData.stockAlertThreshold),
         weightGrams: formData.weightGrams ? parseInt(formData.weightGrams) : undefined,
         tags: formData.selectedTags.length > 0 ? formData.selectedTags.join(',') : undefined,
         badges: formData.badges.trim() || undefined,
@@ -205,6 +240,7 @@ export function ProductForm({ product, mode }: ProductFormProps) {
         active: formData.active,
         featured: formData.featured,
         showInCollectionPage: formData.showInCollectionPage,
+        sizes: formData.sizesEnabled ? formData.sizes : [],
       };
 
       // API call
@@ -385,39 +421,62 @@ export function ProductForm({ product, mode }: ProductFormProps) {
       <div className="space-y-4">
         <h2 className="text-xl font-display font-semibold text-encre">Stock</h2>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          {/* Stock Quantity */}
-          <div className="space-y-2">
-            <Label htmlFor="stockQuantity">
-              Quantité en Stock <span className="text-red-500">*</span>
-            </Label>
-            <Input
-              id="stockQuantity"
-              name="stockQuantity"
-              type="number"
-              min="0"
-              value={formData.stockQuantity}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          {/* Stock Alert Threshold */}
-          <div className="space-y-2">
-            <Label htmlFor="stockAlertThreshold">Seuil d&apos;Alerte</Label>
-            <Input
-              id="stockAlertThreshold"
-              name="stockAlertThreshold"
-              type="number"
-              min="0"
-              value={formData.stockAlertThreshold}
-              onChange={handleChange}
-            />
-            <p className="text-xs text-pierre">
-              Alerte lorsque le stock descend sous ce seuil (défaut: 5)
-            </p>
-          </div>
+        {/* Sizes Enabled Toggle */}
+        <div className="flex items-center space-x-3">
+          <Switch
+            id="sizesEnabled"
+            checked={formData.sizesEnabled}
+            onCheckedChange={handleSizesEnabledChange}
+          />
+          <Label htmlFor="sizesEnabled" className="cursor-pointer">
+            Tailles disponibles (S, M, L, XL, XXL)
+          </Label>
         </div>
+        <p className="text-xs text-pierre -mt-2 ml-14">
+          Activez cette option pour gérer le stock par taille
+        </p>
+
+        {/* Conditional: Global Stock OR Sizes Stock */}
+        {!formData.sizesEnabled ? (
+          <div className="grid gap-4 sm:grid-cols-2">
+            {/* Stock Quantity */}
+            <div className="space-y-2">
+              <Label htmlFor="stockQuantity">
+                Quantité en Stock <span className="text-red-500">*</span>
+              </Label>
+              <Input
+                id="stockQuantity"
+                name="stockQuantity"
+                type="number"
+                min="0"
+                value={formData.stockQuantity}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            {/* Stock Alert Threshold */}
+            <div className="space-y-2">
+              <Label htmlFor="stockAlertThreshold">Seuil d&apos;Alerte</Label>
+              <Input
+                id="stockAlertThreshold"
+                name="stockAlertThreshold"
+                type="number"
+                min="0"
+                value={formData.stockAlertThreshold}
+                onChange={handleChange}
+              />
+              <p className="text-xs text-pierre">
+                Alerte lorsque le stock descend sous ce seuil (défaut: 5)
+              </p>
+            </div>
+          </div>
+        ) : (
+          <SizeStockManager
+            sizes={formData.sizes}
+            onChange={(sizes) => setFormData({ ...formData, sizes })}
+          />
+        )}
       </div>
 
       {/* Section 4: Informations Complémentaires */}

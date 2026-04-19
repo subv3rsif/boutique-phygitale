@@ -12,6 +12,7 @@ import { getProductById } from '@/lib/products';
 const cartItemSchema = z.object({
   id: z.string(),
   qty: z.number().int().min(1).max(10),
+  size: z.string().optional(), // S, M, L, XL, XXL
 });
 
 const requestSchema = z.object({
@@ -57,18 +58,40 @@ export async function POST(req: NextRequest) {
         );
       }
 
-      // Check stock if enabled
-      if (
-        product.stockQuantity !== null &&
-        product.stockQuantity !== undefined &&
-        product.stockQuantity < item.qty
-      ) {
-        return NextResponse.json(
-          {
-            error: `Insufficient stock for ${product.name}. Available: ${product.stockQuantity}, Requested: ${item.qty}`,
-          },
-          { status: 400 }
-        );
+      // Check stock (by size or global)
+      if (item.size) {
+        // Product has size variants - check size-specific stock
+        const sizeConfig = product.sizes?.find((s) => s.size === item.size);
+
+        if (!sizeConfig) {
+          return NextResponse.json(
+            { error: `Size ${item.size} not available for ${product.name}` },
+            { status: 400 }
+          );
+        }
+
+        if (sizeConfig.stock < item.qty) {
+          return NextResponse.json(
+            {
+              error: `Insufficient stock for ${product.name} (${item.size}). Available: ${sizeConfig.stock}, Requested: ${item.qty}`,
+            },
+            { status: 400 }
+          );
+        }
+      } else {
+        // Global stock check
+        if (
+          product.stockQuantity !== null &&
+          product.stockQuantity !== undefined &&
+          product.stockQuantity < item.qty
+        ) {
+          return NextResponse.json(
+            {
+              error: `Insufficient stock for ${product.name}. Available: ${product.stockQuantity}, Requested: ${item.qty}`,
+            },
+            { status: 400 }
+          );
+        }
       }
 
       // Calculate item total

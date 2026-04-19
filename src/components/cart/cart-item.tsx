@@ -10,6 +10,7 @@ import { Trash2, Minus, Plus, Loader2 } from 'lucide-react';
 type CartItemProps = {
   id: string;
   qty: number;
+  size?: string;
 };
 
 // Format currency helper
@@ -29,7 +30,7 @@ type Product = {
   images: Array<{ url: string; isPrimary?: boolean }>;
 };
 
-export function CartItem({ id, qty }: CartItemProps) {
+export function CartItem({ id, qty, size }: CartItemProps) {
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -78,7 +79,7 @@ export function CartItem({ id, qty }: CartItemProps) {
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => removeItem(id)}
+          onClick={() => removeItem(id, size)}
           className="text-destructive hover:text-destructive hover:bg-destructive/8"
         >
           <Trash2 className="h-3.5 w-3.5" />
@@ -90,11 +91,11 @@ export function CartItem({ id, qty }: CartItemProps) {
   const itemTotal = product.priceCents * qty;
 
   const handleDecrement = () => {
-    if (qty > 1) updateQty(id, qty - 1);
+    if (qty > 1) updateQty(id, qty - 1, size);
   };
 
   const handleIncrement = () => {
-    if (qty < 10) updateQty(id, qty + 1);
+    if (qty < 10) updateQty(id, qty + 1, size);
   };
 
   return (
@@ -123,6 +124,7 @@ export function CartItem({ id, qty }: CartItemProps) {
           {/* Name */}
           <h3 className="font-display text-base sm:text-lg font-normal text-foreground line-clamp-1 mb-0.5">
             {product.name}
+            {size && <span className="text-muted-foreground font-sans"> (Taille {size})</span>}
           </h3>
           <p className="text-xs text-muted-foreground font-sans font-light">
             {formatCurrency(product.priceCents)} l'unité
@@ -166,7 +168,7 @@ export function CartItem({ id, qty }: CartItemProps) {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => removeItem(id)}
+              onClick={() => removeItem(id, size)}
               aria-label="Retirer du panier"
               className="h-9 px-3 text-muted-foreground hover:text-destructive hover:bg-destructive/8 gap-1.5 rounded-xl transition-all duration-200"
             >

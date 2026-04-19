@@ -15,6 +15,16 @@ export type ProductImage = {
 };
 
 /**
+ * Product size configuration
+ * Stores size-specific stock information
+ */
+export type ProductSize = {
+  size: 'S' | 'M' | 'L' | 'XL' | 'XXL'; // Available size
+  stock: number; // Stock quantity for this size
+  stockAlertThreshold: number; // Low stock alert threshold for this size
+};
+
+/**
  * Complete Product entity
  * Represents a product in the catalog with all its properties
  */
@@ -37,6 +47,7 @@ export type Product = {
   active: boolean; // Whether product is active/available for sale
   featured: boolean; // Whether product is featured on homepage
   showInCollectionPage: boolean; // Whether to show in collection page preview (max 3 per category)
+  sizes: ProductSize[] | null; // Size configurations (if product has sizes)
   createdAt: Date; // Timestamp of creation
   updatedAt: Date; // Timestamp of last update
 };
@@ -83,6 +94,7 @@ export type CreateProductInput = {
   active?: boolean; // Active status (default: true)
   featured?: boolean; // Featured on homepage (default: false)
   showInCollectionPage?: boolean; // Show in collection page preview (default: false)
+  sizes?: ProductSize[]; // Size configurations (optional, default: [])
 };
 
 /**

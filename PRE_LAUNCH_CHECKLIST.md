@@ -11,14 +11,17 @@ Cette checklist exhaustive garantit que tous les aspects critiques sont validés
 - [ ] Logout fonctionne et invalide la session
 - [ ] Pas de backdoor ou credentials hardcodés dans le code
 
-### Stripe & Paiements
-- [ ] **Clés Stripe en mode LIVE** (pas de `sk_test_` ou `pk_test_`)
-- [ ] Webhook Stripe configuré avec URL production
-- [ ] Signature webhook vérifiée (`stripe.webhooks.constructEvent()`)
-- [ ] Idempotence webhook active (table `stripe_events`)
-- [ ] Test webhook réussi (Stripe Dashboard → Send test event)
-- [ ] Montants **toujours recalculés côté serveur** depuis le catalogue
+### PayFiP & Paiements
+- [ ] **Configuration PayFiP en mode PRODUCTION** (`PAYFIP_USE_MOCK=false`)
+- [ ] `PAYFIP_NUMCLI` configuré avec le numéro client réel
+- [ ] `PAYFIP_EXER` configuré avec l'année d'exercice correcte
+- [ ] `PAYFIP_URL` pointe vers l'environnement de production PayFiP
+- [ ] Webhook PayFiP configuré avec URL production (`URLNOTIF`)
+- [ ] Idempotence idop active (table `payfip_operations`)
+- [ ] Test paiement réussi en environnement de test PayFiP
+- [ ] Montants **toujours recalculés côté serveur** depuis la base de données
 - [ ] Payload client jamais utilisé pour les prix/totaux
+- [ ] REFDET généré séquentiellement (numérotation cohérente)
 
 ### Tokens & QR Codes
 - [ ] Tokens générés avec `crypto.randomBytes(32)` (256 bits)
@@ -67,11 +70,11 @@ Cette checklist exhaustive garantit que tous les aspects critiques sont validés
 - [ ] Calcul frais de port correct (basé sur catalogue)
 - [ ] Total TTC affiché correctement
 - [ ] Checkbox RGPD obligatoire bloque si non cochée
-- [ ] Bouton "Payer" crée session Stripe
-- [ ] Redirection vers Stripe Checkout fonctionne
-- [ ] Paiement test réussit (carte `4242 4242 4242 4242`)
-- [ ] Retour sur page `/commande/success`
-- [ ] Webhook `checkout.session.completed` reçu et traité
+- [ ] Bouton "Payer" crée paiement sécurisé PayFiP
+- [ ] Redirection vers page de paiement PayFiP fonctionne
+- [ ] Paiement test réussit (CB test selon environnement)
+- [ ] Retour sur page `/commande/resultat`
+- [ ] Notification PayFiP (`URLNOTIF`) reçue et traitée
 - [ ] Order status passe à `'paid'` en DB
 - [ ] Email confirmation envoyé
 - [ ] Email reçu dans inbox (pas spam)
@@ -264,7 +267,7 @@ Cette checklist exhaustive garantit que tous les aspects critiques sont validés
 - [ ] **Token réutilisé** : 2ème scan retourne 409
 - [ ] **Rate limit** : 11ème checkout bloqué (429)
 - [ ] **Stock épuisé** : Gestion si product.stockQuantity = 0 (si activé)
-- [ ] **Session expirée** : Stripe session expire après 24h, order canceled
+- [ ] **Idop expiré** : Idop PayFiP expire après 15 minutes, order resté en pending
 
 ### Tests Cross-Browser
 - [ ] Chrome (Desktop + Mobile)
@@ -290,10 +293,11 @@ Cette checklist exhaustive garantit que tous les aspects critiques sont validés
 - [ ] Alertes email/Slack configurées
 - [ ] Performance monitoring activé
 
-### Stripe
-- [ ] Webhooks dashboard : événements récents visibles
-- [ ] Aucun webhook échoué (ou résolu)
-- [ ] Logs détaillés accessibles (Developers → Events)
+### PayFiP
+- [ ] Notifications PayFiP reçues et traitées correctement
+- [ ] Aucune notification échouée dans les logs
+- [ ] Table `payfip_operations` : idops consommés correctement
+- [ ] Ordres passent bien de pending à paid après notification
 
 ### Upstash
 - [ ] Redis dashboard : connexions actives
@@ -321,7 +325,7 @@ Cette checklist exhaustive garantit que tous les aspects critiques sont validés
 ### Jour 1
 - [ ] Monitoring actif (vérifier toutes les 2 heures)
 - [ ] Première commande réelle testée manuellement
-- [ ] Webhooks Stripe : aucun échec
+- [ ] Notifications PayFiP : aucun échec
 - [ ] Emails : aucun bounce
 - [ ] QR codes : premiers scans validés
 

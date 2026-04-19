@@ -36,7 +36,7 @@ export function CheckoutButton({ disabled }: CheckoutButtonProps) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          items: items.map((item) => ({ id: item.id, qty: item.qty })),
+          items: items.map((item) => ({ id: item.id, qty: item.qty, size: item.size })),
           fulfillmentMode,
           pickupLocationId: fulfillmentMode === 'pickup' ? 'la-fabrik' : undefined,
           gdprConsent,

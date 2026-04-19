@@ -17,14 +17,12 @@
     "type-check": "tsc --noEmit",
     "db:generate": "drizzle-kit generate",
     "db:push": "drizzle-kit push",
-    "db:studio": "drizzle-kit studio",
-    "stripe:listen": "stripe listen --forward-to localhost:3000/api/stripe/webhook"
+    "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.11.1",
     "@radix-ui/react-avatar": "^1.1.11",
     "@sentry/nextjs": "^10.48.0",
-    "@stripe/stripe-js": "^8.11.0",
     "@supabase/ssr": "^0.10.2",
     "@supabase/supabase-js": "^2.103.0",
     "@upstash/ratelimit": "^2.0.8",

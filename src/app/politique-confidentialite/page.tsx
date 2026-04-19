@@ -26,7 +26,7 @@ export default function PolitiqueConfidentialitePage() {
               <li>Email (obligatoire pour la confirmation de commande)</li>
               <li>Numéro de téléphone (optionnel, recommandé pour les retraits)</li>
               <li>Adresse de livraison (uniquement pour les livraisons)</li>
-              <li>Informations de paiement (traitées par Stripe, jamais stockées par nous)</li>
+              <li>Informations de paiement (traitées par PayFiP - DGFiP, jamais stockées par nous)</li>
             </ul>
           </CardContent>
         </Card>
@@ -94,7 +94,7 @@ export default function PolitiqueConfidentialitePage() {
             </p>
             <ul>
               <li>Chiffrement HTTPS pour toutes les communications</li>
-              <li>Paiements sécurisés via Stripe (certifié PCI-DSS)</li>
+              <li>Paiements sécurisés via PayFiP (système de paiement du secteur public français - DGFiP)</li>
               <li>Tokens QR hashés (non stockés en clair)</li>
               <li>Accès restreint aux données (équipe autorisée uniquement)</li>
             </ul>
@@ -120,7 +120,7 @@ export default function PolitiqueConfidentialitePage() {
           <CardContent className="prose prose-sm max-w-none">
             <p>Nous utilisons les services suivants :</p>
             <ul>
-              <li><strong>Stripe</strong> (paiement) - <a href="https://stripe.com/privacy" className="underline">Politique de confidentialité</a></li>
+              <li><strong>PayFiP</strong> (paiement) - Système de paiement sécurisé de la Direction Générale des Finances Publiques (DGFiP)</li>
               <li><strong>Resend</strong> (emails) - <a href="https://resend.com/privacy" className="underline">Politique de confidentialité</a></li>
               <li><strong>Vercel</strong> (hébergement) - <a href="https://vercel.com/legal/privacy-policy" className="underline">Politique de confidentialité</a></li>
             </ul>
