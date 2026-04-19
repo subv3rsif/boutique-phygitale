@@ -120,11 +120,11 @@ export default function ProductPage({ params }: PageProps) {
   }
 
   // Check if product has sizes
-  const hasSizes = product.sizes && product.sizes.length > 0;
+  const hasSizes = (product.sizes?.length ?? 0) > 0;
 
   // Calculate available stock based on selected size or global stock
   const availableStock = hasSizes && selectedSize
-    ? product.sizes.find((s) => s.size === selectedSize)?.stock ?? 0
+    ? product.sizes?.find((s) => s.size === selectedSize)?.stock ?? 0
     : product.stockQuantity ?? 0;
 
   const isOutOfStock = availableStock === 0;

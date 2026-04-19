@@ -28,9 +28,13 @@ export async function decrementStock(
     }
 
     const updatedSizes = [...product.sizes];
-    const currentStock = updatedSizes[sizeIndex].stock;
+    const sizeConfig = updatedSizes[sizeIndex];
+    if (!sizeConfig) {
+      throw new Error(`Invalid size index for product ${product.slug}`);
+    }
+    const currentStock = sizeConfig.stock;
     const newStock = Math.max(0, currentStock - quantity);
-    updatedSizes[sizeIndex] = { ...updatedSizes[sizeIndex], stock: newStock };
+    updatedSizes[sizeIndex] = { ...sizeConfig, stock: newStock };
 
     // Update product with new sizes
     await db
