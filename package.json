@@ -42,7 +42,7 @@
     "radix-ui": "^1.4.3",
     "react": "19.2.5",
     "react-dom": "19.2.5",
-    "react-email": "^5.2.10",
+    "react-email": "^5.2.11",
     "resend": "^6.9.1",
     "soap": "^1.8.0",
     "sonner": "^2.0.7",
