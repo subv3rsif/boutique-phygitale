@@ -24,6 +24,7 @@ export function DrawerMenu({ isOpen, onClose }: DrawerMenuProps) {
   ];
 
   const footerLinks = [
+    { href: '/a-propos', label: 'À propos' },
     { href: '/mentions-legales', label: 'Mentions légales' },
     { href: '/cgv', label: 'CGV' },
     { href: '/politique-confidentialite', label: 'Politique de confidentialité' },
