@@ -6,20 +6,13 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/store/cart';
 import { Trash2, Minus, Plus, Loader2 } from 'lucide-react';
+import { formatCurrency } from '@/lib/utils';
 
 type CartItemProps = {
   id: string;
   qty: number;
   size?: string;
 };
-
-// Format currency helper
-function formatCurrency(cents: number): string {
-  return new Intl.NumberFormat('fr-FR', {
-    style: 'currency',
-    currency: 'EUR',
-  }).format(cents / 100);
-}
 
 // Product type from DB
 type Product = {

@@ -54,7 +54,7 @@ function SimpleProductCard({ product }: { product: Product }) {
   return (
     <div className="group relative bg-card border border-border rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300">
       {/* Image */}
-      <Link href={`/produits/${product.slug}`} className="block relative aspect-[3/4] overflow-hidden bg-muted">
+      <Link href={`/produit/${product.id}`} className="block relative aspect-[3/4] overflow-hidden bg-muted">
         <Image
           src={primaryImage}
           alt={product.name}
@@ -83,7 +83,7 @@ function SimpleProductCard({ product }: { product: Product }) {
 
       {/* Content */}
       <div className="p-4 space-y-3">
-        <Link href={`/produits/${product.slug}`} className="block">
+        <Link href={`/produit/${product.id}`} className="block">
           <h3 className="font-display font-semibold text-encre line-clamp-2 group-hover:text-terra transition-colors">
             {product.name}
           </h3>

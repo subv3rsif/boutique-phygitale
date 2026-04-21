@@ -256,14 +256,9 @@ export function calculateCartTotals(
 
 /**
  * Format price in cents to euros (e.g., 1250 -> "12,50 €")
+ * Re-exported from utils for backward compatibility
  */
-export function formatCurrency(cents: number): string {
-  const euros = cents / 100;
-  return new Intl.NumberFormat('fr-FR', {
-    style: 'currency',
-    currency: 'EUR',
-  }).format(euros);
-}
+export { formatCurrency } from './utils';
 
 /**
  * Validate cart items before checkout

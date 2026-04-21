@@ -7,6 +7,12 @@ import { LesArtisans } from '@/components/sections/les-artisans';
 import { Atelier } from '@/components/sections/atelier';
 import { getActiveProducts, getFeaturedProducts } from '@/lib/products';
 import { unstable_cache } from 'next/cache';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Boutique 1885 – Goodies officiels d\'Alfortville',
+  description: 'Découvrez la collection officielle 1885 : goodies, éditions limitées et créations artisanales made in Alfortville. Sérigraphie locale et qualité premium.',
+};
 
 // Cache products for 5 minutes to reduce DB connections
 const getCachedFeaturedProducts = unstable_cache(

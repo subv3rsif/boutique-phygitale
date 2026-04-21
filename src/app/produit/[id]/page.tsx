@@ -21,19 +21,14 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { toast } from 'sonner';
-import { cn } from '@/lib/utils';
-
-// Format currency helper
-function formatCurrency(cents: number): string {
-  return new Intl.NumberFormat('fr-FR', {
-    style: 'currency',
-    currency: 'EUR',
-  }).format(cents / 100);
-}
+import { cn, formatCurrency } from '@/lib/utils';
 
 interface PageProps {
   params: Promise<{ id: string }>;
 }
+
+// Note: Dynamic metadata must be generated server-side in a Server Component wrapper
+// or in layout.tsx. This is a Client Component, so metadata is handled by layout.
 
 const accordionItems = [
   {

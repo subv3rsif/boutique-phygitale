@@ -50,9 +50,13 @@ export function sleep(ms: number): Promise<void> {
 }
 
 /**
- * Format cents to currency string (e.g., 1250 -> "12,50 €")
+ * Format cents to currency string with French locale (e.g., 1250 -> "12,50 €")
+ * Uses Intl.NumberFormat to ensure proper formatting with comma decimal separator
  */
 export function formatCurrency(cents: number): string {
-  const euros = (cents / 100).toFixed(2);
-  return `${euros.replace('.', ',')} €`;
+  const euros = cents / 100;
+  return new Intl.NumberFormat('fr-FR', {
+    style: 'currency',
+    currency: 'EUR',
+  }).format(euros);
 }

@@ -11,14 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { ShoppingBag, ArrowLeft, Package, Info, Shield, Lock, Loader2 } from 'lucide-react';
-
-// Format currency helper
-function formatCurrency(cents: number): string {
-  return new Intl.NumberFormat('fr-FR', {
-    style: 'currency',
-    currency: 'EUR',
-  }).format(cents / 100);
-}
+import { formatCurrency } from '@/lib/utils';
 
 export default function CartPage() {
   // Fix hydration mismatch: wait for client-side mount before reading from Zustand (localStorage)
