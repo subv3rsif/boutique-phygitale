@@ -46,12 +46,19 @@ export class ErrorBoundary extends Component<Props, State> {
       console.error('ErrorBoundary caught an error:', error, errorInfo);
     }
 
-    // In production, you could send to error tracking service
-    // Example: Sentry.captureException(error, { extra: errorInfo });
+    // Send to Sentry in production
+    if (typeof window !== 'undefined' && (window as any).Sentry) {
+      (window as any).Sentry.captureException(error, {
+        contexts: {
+          react: {
+            componentStack: errorInfo.componentStack,
+          },
+        },
+      });
+    }
   }
 
   handleReset = () => {
-    this.setState({ hasError: false, error: null });
     // Reload the page to reset state
     window.location.reload();
   };

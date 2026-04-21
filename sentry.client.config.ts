@@ -5,32 +5,47 @@
 import * as Sentry from "@sentry/nextjs";
 
 const SENTRY_DSN = process.env.NEXT_PUBLIC_SENTRY_DSN;
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL;
 
-// Temporarily disable Sentry to fix site blocking issue
-// TODO: Re-enable with proper tunnel configuration
-const SENTRY_ENABLED = false;
+// Enable Sentry monitoring with proper tunnel configuration
+const SENTRY_ENABLED = true;
 
-if (SENTRY_ENABLED && SENTRY_DSN) {
-  console.log('✅ Sentry DSN loaded:', SENTRY_DSN.substring(0, 30) + '...');
+if (SENTRY_ENABLED) {
+  // Validate required configuration
+  if (!SENTRY_DSN) {
+    console.error('❌ SENTRY_DSN not configured - monitoring disabled');
+  } else if (!APP_URL) {
+    console.warn('⚠️ NEXT_PUBLIC_APP_URL not configured - Sentry tunnel disabled');
+    console.warn('   Sentry will work but may be blocked by ad-blockers');
 
-  Sentry.init({
-    dsn: SENTRY_DSN,
+    // Initialize without tunnel
+    Sentry.init({
+      dsn: SENTRY_DSN,
+      tracesSampleRate: 0.1,
+      debug: false,
+    });
+  } else {
+    // Full configuration with tunnel
+    const tunnelUrl = `${APP_URL}/monitoring`;
+    console.log('✅ Sentry initialized with tunnel:', tunnelUrl);
 
-    // Tunnel to bypass ad-blockers (must be full URL)
-    tunnel: process.env.NEXT_PUBLIC_APP_URL
-      ? `${process.env.NEXT_PUBLIC_APP_URL}/monitoring`
-      : undefined,
+    Sentry.init({
+      dsn: SENTRY_DSN,
 
-    // Adjust this value in production, or use tracesSampler for greater control
-    tracesSampleRate: 0.1, // Reduced to 10% in production
+      // Tunnel to bypass ad-blockers (must be full URL)
+      tunnel: tunnelUrl,
 
-    // Disable debug mode in production
-    debug: false,
+      // Adjust this value in production, or use tracesSampler for greater control
+      tracesSampleRate: 0.1, // Reduced to 10% in production
 
-    // Disable replay for now
-    // replaysOnErrorSampleRate: 1.0,
-    // replaysSessionSampleRate: 0.1,
-  });
+      // Disable debug mode in production
+      debug: false,
+
+      // Disable replay for now
+      // replaysOnErrorSampleRate: 1.0,
+      // replaysSessionSampleRate: 0.1,
+    });
+  }
 } else {
-  console.log('ℹ️ Sentry monitoring temporarily disabled');
+  console.log('ℹ️ Sentry monitoring disabled');
 }
