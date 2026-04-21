@@ -16,8 +16,10 @@ if (SENTRY_ENABLED && SENTRY_DSN) {
   Sentry.init({
     dsn: SENTRY_DSN,
 
-    // Tunnel to bypass ad-blockers
-    tunnel: '/monitoring',
+    // Tunnel to bypass ad-blockers (must be full URL)
+    tunnel: process.env.NEXT_PUBLIC_APP_URL
+      ? `${process.env.NEXT_PUBLIC_APP_URL}/monitoring`
+      : undefined,
 
     // Adjust this value in production, or use tracesSampler for greater control
     tracesSampleRate: 0.1, // Reduced to 10% in production

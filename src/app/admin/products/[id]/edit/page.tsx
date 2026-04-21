@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { getProductById } from '@/lib/products';
 import { ProductForm } from '@/components/admin/product-form';
 import { ImageUpload } from '@/components/admin/image-upload';
+import { ErrorBoundary } from '@/components/admin/error-boundary';
 
 export const metadata = {
   title: 'Modifier Produit - Admin',
@@ -40,16 +41,20 @@ export default async function EditProductPage({
         </p>
       </div>
 
-      {/* Image Upload Gallery */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <h2 className="text-xl font-semibold text-encre mb-4">
-          Images du Produit
-        </h2>
-        <ImageUpload product={product} />
-      </div>
+      {/* Image Upload Gallery - Wrapped in ErrorBoundary */}
+      <ErrorBoundary>
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <h2 className="text-xl font-semibold text-encre mb-4">
+            Images du Produit
+          </h2>
+          <ImageUpload product={product} />
+        </div>
+      </ErrorBoundary>
 
-      {/* Product Form (includes stock management) */}
-      <ProductForm mode="edit" product={product} />
+      {/* Product Form - Wrapped in ErrorBoundary */}
+      <ErrorBoundary>
+        <ProductForm mode="edit" product={product} />
+      </ErrorBoundary>
     </div>
   );
 }
