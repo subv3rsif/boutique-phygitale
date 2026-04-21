@@ -357,4 +357,10 @@
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
+
+  /* ── Animations au scroll (page À propos) ──────────────────── */
+  .animate-in {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+  }
 }
