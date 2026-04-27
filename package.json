@@ -22,7 +22,7 @@
   "dependencies": {
     "@auth/drizzle-adapter": "^1.11.2",
     "@radix-ui/react-avatar": "^1.1.11",
-    "@sentry/nextjs": "^10.49.0",
+    "@sentry/nextjs": "^10.50.0",
     "@supabase/ssr": "^0.10.2",
     "@supabase/supabase-js": "^2.103.3",
     "@upstash/ratelimit": "^2.0.8",
