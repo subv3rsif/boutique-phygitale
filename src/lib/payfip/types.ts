@@ -25,7 +25,7 @@ export interface CreerPaiementSecuriseParams {
   MEL: string;         // Email (6-80 chars)
   URLNOTIF: string;    // Notification callback URL (<250 chars)
   URLREDIRECT: string; // Redirect URL after payment (<250 chars)
-  SAISIE: 'T' | 'X' | 'W';  // Mode: T=test, X=activation, W=production
+  SAISIE: 'T' | 'P' | 'X';  // Mode: T=test, P=production, X=activation (first use)
 }
 
 export interface CreerPaiementSecuriseResponse {

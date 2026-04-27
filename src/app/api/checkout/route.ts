@@ -8,7 +8,8 @@ import { generateREFDET } from '@/lib/payfip/refdet';
 import { storeIdop } from '@/lib/payfip/idop-manager';
 import { PayFipSOAPError, getUserFriendlyErrorMessage } from '@/lib/payfip/errors';
 import { createOrder } from '@/lib/db/helpers';
-import { db, gdprConsents } from '@/lib/db';
+import { db, gdprConsents, orders } from '@/lib/db';
+import { eq } from 'drizzle-orm';
 
 /**
  * POST /api/checkout
@@ -123,7 +124,7 @@ export async function POST(request: NextRequest) {
       MEL: customerEmail,
       URLNOTIF: `${appUrl}/api/payfip/notification`,
       URLREDIRECT: `${appUrl}/commande/resultat`,
-      SAISIE: (process.env.PAYFIP_MODE || 'T') as 'T' | 'X' | 'W',
+      SAISIE: (process.env.PAYFIP_MODE || 'T') as 'T' | 'P' | 'X',
     });
 
     const { idop } = payfipResponse;
@@ -131,15 +132,15 @@ export async function POST(request: NextRequest) {
     // 10. Store idop in database (15 min expiration)
     await storeIdop(idop, orderId, refdet);
 
-    // 11. Update order with idop
-    await db.execute(
-      `UPDATE orders SET idop = '${idop}' WHERE id = '${orderId}'`
-    );
+    // 11. Update order with idop (using parameterized query to prevent SQL injection)
+    await db.update(orders)
+      .set({ idop })
+      .where(eq(orders.id, orderId));
 
     // 12. Return redirect URL (mock or real PayFiP)
     const redirectUrl = useMock
       ? `${appUrl}/payfip-mock/${idop}`
-      : `${process.env.PAYFIP_URL}?idop=${idop}`;
+      : `${process.env.PAYFIP_WEB_URL}?idop=${idop}`;
 
     return NextResponse.json({
       url: redirectUrl,
