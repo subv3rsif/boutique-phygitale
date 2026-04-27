@@ -65,3 +65,31 @@ coverage/
 
 # Google OAuth credentials (sensitive)
 docs/client_secret_*.json
+
+# Documentation et fichiers explicatifs (non nécessaires pour Vercel)
+/docs/
+/scripts/
+DEPLOYMENT.md
+SECURITY.md
+TESTING.md
+NOTICE.md
+PERFORMANCE_*.md
+QUICK_START.md
+VERIFICATION_CHECKLIST.md
+MANUEL_WEBMASTER.md
+PRE_LAUNCH_CHECKLIST.md
+*_GUIDE.md
+*_SUMMARY.md
+*_REPORT.md
+*_SETUP.md
+*_CHECKLIST.md
+*_PROPOSAL.md
+*_FIXES_SUMMARY.md
+*_CHANGES.md
+*_INDEX.md
+LIGHTHOUSE_RESULTS.md
+performance-fixes/
+
+# Migrations Drizzle (non nécessaires pour Vercel - schéma appliqué via db:push)
+/drizzle/*.sql
+/drizzle/meta/
