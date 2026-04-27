@@ -21,10 +21,10 @@ export function DrawerMenu({ isOpen, onClose }: DrawerMenuProps) {
     { href: '/editions', label: 'Éditions' },
     { href: '/artisans', label: 'Artisans' },
     { href: '/atelier', label: "L'Atelier" },
+    { href: '/a-propos', label: 'À propos' },
   ];
 
   const footerLinks = [
-    { href: '/a-propos', label: 'À propos' },
     { href: '/mentions-legales', label: 'Mentions légales' },
     { href: '/cgv', label: 'CGV' },
     { href: '/politique-confidentialite', label: 'Politique de confidentialité' },
