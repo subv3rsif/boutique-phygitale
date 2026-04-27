@@ -2,8 +2,18 @@ import { db } from '@/lib/db';
 import { sql } from 'drizzle-orm';
 
 /**
+ * Validate REFDET format according to PayFiP specification
+ * Must be 1-30 alphanumeric characters only (no special chars, no spaces)
+ * Based on eopayment/payfip_ws.py pattern
+ */
+export function validateREFDET(refdet: string): boolean {
+  return /^[A-Za-z0-9]{1,30}$/.test(refdet);
+}
+
+/**
  * Generate sequential invoice reference (REFDET)
- * Format: YYYY-NNN (e.g., "2026-042")
+ * Format: YYYYNNN (e.g., "2026042")
+ * Strictly alphanumeric (no hyphen) per PayFiP spec
  * Thread-safe with atomic SQL increment
  */
 export async function generateREFDET(): Promise<string> {
@@ -26,8 +36,13 @@ export async function generateREFDET(): Promise<string> {
   }
   const number = row.current_number;
 
-  // Format: "2026-042" (3 digits zero-padded)
-  const refdet = `${year}-${number.toString().padStart(3, '0')}`;
+  // Format: "2026042" (3 digits zero-padded, no hyphen)
+  const refdet = `${year}${number.toString().padStart(3, '0')}`;
+
+  // Validate before returning
+  if (!validateREFDET(refdet)) {
+    throw new Error(`Generated REFDET "${refdet}" does not match PayFiP specification (alphanumeric 1-30 chars)`);
+  }
 
   console.log(`Generated REFDET: ${refdet}`);
   return refdet;
@@ -56,9 +71,10 @@ export async function getCurrentSequenceNumber(year: number): Promise<number> {
 
 /**
  * Parse REFDET to extract year and number (for validation)
+ * Format: YYYYNNN (no hyphen)
  */
 export function parseREFDET(refdet: string): { year: number; number: number } | null {
-  const match = refdet.match(/^(\d{4})-(\d{3})$/);  // Exactly 3 digits, not 3+
+  const match = refdet.match(/^(\d{4})(\d{3})$/);  // YYYY followed by exactly 3 digits
   if (!match) {
     return null;
   }

@@ -19,7 +19,7 @@ export interface PayFipService {
 export interface CreerPaiementSecuriseParams {
   NUMCLI: string;      // Client number (6 chars) - from DGFiP
   EXER: string;        // Exercise year (4 chars) - e.g., "2026"
-  REFDET: string;      // Invoice reference (6-30 chars) - sequential "2026-001"
+  REFDET: string;      // Invoice reference (1-30 alphanumeric chars) - sequential "2026042"
   OBJET: string;       // Payment object (<100 chars) - e.g., "Boutique municipale 1885"
   MONTANT: string;     // Amount in cents (max 11 chars) - e.g., "1450" for 14,50€
   MEL: string;         // Email (6-80 chars)
@@ -75,6 +75,7 @@ export interface IdopValidationResult {
     id: string;
     orderId: string;
     refdet: string;
+    createdAt: Date;
     expiresAt: Date;
     consumedAt: Date | null;
   };

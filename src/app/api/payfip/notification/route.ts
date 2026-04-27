@@ -6,6 +6,8 @@ import { db, emailQueue, pickupTokens } from '@/lib/db';
 import { generatePickupToken, generateTokenExpiration, hashToken } from '@/lib/qr/token-generator';
 import { decrementStock } from '@/lib/stock';
 import { getProductBySlug } from '@/lib/products';
+import { checkPaymentStatus } from '@/lib/payfip/payment-status';
+import { getPayFipService } from '@/lib/payfip/client';
 
 /**
  * POST /api/payfip/notification
@@ -56,6 +58,48 @@ export async function POST(request: NextRequest) {
     if (order.status !== 'pending') {
       console.log(`Order ${order.id} already processed (status: ${order.status})`);
       return new NextResponse('OK', { status: 200 });
+    }
+
+    // 5.5. DOUBLE-CHECK PATTERN: Verify payment status with PayFiP
+    // Based on eopayment/payfip_ws.py - always call recupererDetailPaiementSecurise
+    // to verify the notification is legitimate and get authoritative payment status
+    try {
+      console.log(`🔍 Double-checking payment status with PayFiP for idop ${idop}`);
+      const paymentStatusResult = await checkPaymentStatus(idop, operation.createdAt);
+
+      // If PayFiP says WAITING, payment is still in progress - don't process yet
+      if (paymentStatusResult.status === 'WAITING') {
+        console.log('Payment still in progress (P5 < 120 min), skipping processing');
+        return new NextResponse('OK', { status: 200 });
+      }
+
+      // If PayFiP says EXPIRED, payment timeout - mark as canceled
+      if (paymentStatusResult.status === 'EXPIRED') {
+        console.log('Payment expired (P5 ≥ 120 min), marking order as canceled');
+        await updateOrderWithPayFipResult(operation.orderId, {
+          status: 'canceled',
+          idop,
+          payfipResultTrans: 'A', // Treat as cancelled
+          paidAt: undefined,
+        });
+        return new NextResponse('OK', { status: 200 });
+      }
+
+      // Compare notification status with PayFiP double-check result
+      const notificationStatus = resultrans === 'P' || resultrans === 'V' ? 'PAID' :
+                                 resultrans === 'A' ? 'CANCELLED' :
+                                 resultrans === 'R' ? 'REFUSED' :
+                                 resultrans === 'Z' ? 'REJECTED' : 'UNKNOWN';
+
+      if (paymentStatusResult.status !== notificationStatus) {
+        console.warn(`⚠️ Payment status mismatch! Notification: ${notificationStatus}, PayFiP: ${paymentStatusResult.status}`);
+        console.warn(`Using PayFiP double-check result as authoritative source`);
+      } else {
+        console.log(`✅ Double-check confirmed: ${paymentStatusResult.status} (${paymentStatusResult.reason})`);
+      }
+    } catch (doubleCheckError) {
+      console.error('⚠️ Double-check failed, proceeding with notification data:', doubleCheckError);
+      // Continue processing with notification data if double-check fails
     }
 
     // 6. Determine order status based on RESULTRANS

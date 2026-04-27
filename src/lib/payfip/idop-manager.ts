@@ -57,6 +57,7 @@ export async function validateIdop(idop: string): Promise<IdopValidationResult> 
       id: operation.id,
       orderId: operation.orderId,
       refdet: operation.refdet,
+      createdAt: operation.createdAt,
       expiresAt: operation.expiresAt,
       consumedAt: operation.consumedAt,
     },
