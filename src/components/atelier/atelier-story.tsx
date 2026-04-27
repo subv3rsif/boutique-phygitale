@@ -124,19 +124,19 @@ export function AtelierStory() {
           </motion.h2>
         </div>
 
-        {/* Image 3 - Full width drops */}
+        {/* Image 3 - Flatlay drops (square format) */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={isInView ? { opacity: 1 } : {}}
           transition={{ duration: 1, delay: 0.2 }}
-          className="relative h-[400px] w-full mb-12"
+          className="relative aspect-square w-full max-w-[800px] mx-auto mb-12"
         >
           <Image
             src="/atelier/flatlay-drops.jpg"
             alt="Collection drop sérigraphie 1885 Alfortville, série numérotée"
             fill
-            className="object-cover"
-            sizes="100vw"
+            className="object-cover rounded-lg"
+            sizes="(max-width: 768px) 100vw, 800px"
           />
         </motion.div>
 
