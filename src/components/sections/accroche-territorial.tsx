@@ -59,6 +59,7 @@ export function AccrocheTerritorial() {
               src="/atelier-serigraphie.jpg"
               alt="Atelier de sérigraphie 1885 Alfortville"
               fill
+              priority
               className="object-cover rounded-lg"
               sizes="(max-width: 768px) 100vw, 60vw"
             />
