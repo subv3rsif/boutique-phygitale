@@ -1,13 +1,40 @@
+import dynamic from 'next/dynamic';
 import { Hero1885 } from '@/components/sections/hero-1885';
-import { AccrocheTerritorial } from '@/components/sections/accroche-territorial';
-import { ProduitHero } from '@/components/sections/produit-hero';
-import { GrilleCollection } from '@/components/sections/grille-collection';
-import { EditionsLimitees } from '@/components/sections/editions-limitees';
-import { LesArtisans } from '@/components/sections/les-artisans';
-import { Atelier } from '@/components/sections/atelier';
 import { getActiveProducts, getFeaturedProducts } from '@/lib/products';
 import { unstable_cache } from 'next/cache';
 import type { Metadata } from 'next';
+
+// Lazy load below-the-fold sections to reduce First Load JS
+// These sections use Framer Motion (341KB), so deferring them improves TTI
+const AccrocheTerritorial = dynamic(
+  () => import('@/components/sections/accroche-territorial').then(mod => ({ default: mod.AccrocheTerritorial })),
+  { ssr: true }
+);
+
+const ProduitHero = dynamic(
+  () => import('@/components/sections/produit-hero').then(mod => ({ default: mod.ProduitHero })),
+  { ssr: true }
+);
+
+const GrilleCollection = dynamic(
+  () => import('@/components/sections/grille-collection').then(mod => ({ default: mod.GrilleCollection })),
+  { ssr: true }
+);
+
+const EditionsLimitees = dynamic(
+  () => import('@/components/sections/editions-limitees').then(mod => ({ default: mod.EditionsLimitees })),
+  { ssr: true }
+);
+
+const LesArtisans = dynamic(
+  () => import('@/components/sections/les-artisans').then(mod => ({ default: mod.LesArtisans })),
+  { ssr: true }
+);
+
+const Atelier = dynamic(
+  () => import('@/components/sections/atelier').then(mod => ({ default: mod.Atelier })),
+  { ssr: true }
+);
 
 export const metadata: Metadata = {
   title: 'Boutique 1885 – Goodies officiels d\'Alfortville',

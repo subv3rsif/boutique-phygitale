@@ -2,7 +2,7 @@
 export const dynamic = 'force-dynamic';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { QRScanner } from '@/components/admin/qr-scanner';
+import { QRScannerLazy } from '@/components/admin/qr-scanner-lazy';
 import { QrCode } from 'lucide-react';
 
 export default async function PickupScannerPage() {
@@ -29,7 +29,7 @@ export default async function PickupScannerPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <QRScanner />
+            <QRScannerLazy />
           </CardContent>
         </Card>
 
