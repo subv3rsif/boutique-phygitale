@@ -10,7 +10,8 @@ import { FulfillmentSelector } from '@/components/cart/fulfillment-selector';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import { ShoppingBag, ArrowLeft, Package, Info, Shield, Lock, Loader2 } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { ShoppingBag, ArrowLeft, Package, Info, Shield, Lock, Loader2, Mail, Phone } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils';
 
 export default function CartPage() {
@@ -25,7 +26,7 @@ export default function CartPage() {
     setMounted(true);
   }, []);
 
-  const { items, fulfillmentMode, gdprConsent, setGdprConsent, totalItems } = useCart();
+  const { items, fulfillmentMode, gdprConsent, setGdprConsent, customerEmail, setCustomerEmail, customerPhone, setCustomerPhone, totalItems } = useCart();
 
   // Fetch cart totals from API (database validation)
   useEffect(() => {
@@ -287,6 +288,56 @@ export default function CartPage() {
                         </motion.span>
                       </div>
                     </div>
+                  </div>
+
+                  <div className="h-px bg-border/50" />
+
+                  {/* Contact Information */}
+                  <div className="space-y-4">
+                    <h3 className="text-sm font-semibold text-foreground font-sans">
+                      Informations de contact
+                    </h3>
+
+                    {/* Email Field (Required) */}
+                    <div className="space-y-2">
+                      <Label htmlFor="email" className="text-xs font-medium text-foreground flex items-center gap-1.5">
+                        <Mail className="h-3.5 w-3.5" />
+                        Email <span className="text-destructive">*</span>
+                      </Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        placeholder="votre@email.fr"
+                        value={customerEmail}
+                        onChange={(e) => setCustomerEmail(e.target.value)}
+                        className="h-11 bg-background/50 border-border focus-visible:ring-primary"
+                        required
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        Pour recevoir la confirmation de commande
+                      </p>
+                    </div>
+
+                    {/* Phone Field (Optional for pickup) */}
+                    {fulfillmentMode === 'pickup' && (
+                      <div className="space-y-2">
+                        <Label htmlFor="phone" className="text-xs font-medium text-foreground flex items-center gap-1.5">
+                          <Phone className="h-3.5 w-3.5" />
+                          Téléphone (recommandé)
+                        </Label>
+                        <Input
+                          id="phone"
+                          type="tel"
+                          placeholder="06 12 34 56 78"
+                          value={customerPhone}
+                          onChange={(e) => setCustomerPhone(e.target.value)}
+                          className="h-11 bg-background/50 border-border focus-visible:ring-primary"
+                        />
+                        <p className="text-xs text-muted-foreground">
+                          Pour être contacté en cas de retrait
+                        </p>
+                      </div>
+                    )}
                   </div>
 
                   <div className="h-px bg-border/50" />
