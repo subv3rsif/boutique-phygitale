@@ -36,6 +36,11 @@ const Atelier = dynamic(
   { ssr: true }
 );
 
+const ImpactSocial = dynamic(
+  () => import('@/components/sections/impact-social').then(mod => ({ default: mod.ImpactSocial })),
+  { ssr: true }
+);
+
 export const metadata: Metadata = {
   title: 'Boutique 1885 – Goodies officiels d\'Alfortville',
   description: 'Découvrez la collection officielle 1885 : goodies, éditions limitées et créations artisanales made in Alfortville. Sérigraphie locale et qualité premium.',
@@ -81,6 +86,7 @@ export default async function HomePage() {
       <EditionsLimitees editions={limitedEditions} />
       <LesArtisans />
       <Atelier />
+      <ImpactSocial />
     </>
   );
 }
