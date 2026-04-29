@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { mockPayFipService } from '@/lib/payfip/mock-service';
+import { db } from '@/lib/db';
+import { payfipOperations, orders } from '@/lib/db/schema';
+import { eq, and, gt } from 'drizzle-orm';
 
 /**
  * GET /api/payfip/mock/details?idop=xxx
@@ -30,10 +32,25 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Get payment details from mock service
-    const details = mockPayFipService.getIdopDetails(idop);
+    // Get payment details from database (not memory - fixes serverless issue)
+    const operations = await db
+      .select({
+        refdet: payfipOperations.refdet,
+        expiresAt: payfipOperations.expiresAt,
+        customerEmail: orders.customerEmail,
+        grandTotalCents: orders.grandTotalCents,
+      })
+      .from(payfipOperations)
+      .innerJoin(orders, eq(payfipOperations.orderId, orders.id))
+      .where(and(
+        eq(payfipOperations.idop, idop),
+        gt(payfipOperations.expiresAt, new Date())
+      ))
+      .limit(1);
 
-    if (!details) {
+    const operation = operations[0];
+
+    if (!operation) {
       return NextResponse.json(
         { error: 'idop not found or expired' },
         { status: 404 }
@@ -42,9 +59,9 @@ export async function GET(request: NextRequest) {
 
     // Return payment details for mock UI
     return NextResponse.json({
-      refdet: details.refdet,
-      montant: details.montant,
-      mel: details.mel,
+      refdet: operation.refdet,
+      montant: operation.grandTotalCents.toString(),
+      mel: operation.customerEmail,
     });
 
   } catch (error) {

@@ -84,10 +84,10 @@ export function CheckoutButton({ disabled }: CheckoutButtonProps) {
     >
       {/* Shimmer on active */}
       {!isDisabled && (
-        <div className="absolute inset-0 shimmer-auto pointer-events-none opacity-40" />
+        <div className="absolute inset-0 shimmer-auto pointer-events-none opacity-40 z-0" />
       )}
 
-      <span className="relative z-10 flex items-center justify-center gap-3">
+      <span className="relative z-20 flex items-center justify-center gap-3 h-full w-full">
         {isLoading ? (
           <>
             <Loader2 className="h-5 w-5 animate-spin" />
