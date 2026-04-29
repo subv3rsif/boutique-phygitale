@@ -57,7 +57,7 @@ export function AccrocheTerritorial() {
           >
             <Image
               src="/atelier-serigraphie.jpg"
-              alt="Atelier de sérigraphie 1885 Alfortville"
+              alt="Artisan sérigraphiant le logo 1885 Manufacture Alfortvillaise en atelier"
               fill
               priority
               className="object-cover rounded-lg"
