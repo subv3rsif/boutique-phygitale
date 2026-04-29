@@ -34,17 +34,18 @@ export async function GET(
     // Get pickup token if pickup mode
     let pickupToken = null;
     if (order.fulfillmentMode === 'pickup') {
-      const [token] = await db
+      const [tokenRecord] = await db
         .select()
         .from(pickupTokens)
         .where(eq(pickupTokens.orderId, order.id))
         .limit(1);
 
-      if (token) {
-        // Don't expose the full token, just indicate it exists
+      if (tokenRecord && tokenRecord.metadata) {
+        // Extract clear token from metadata for QR code generation
+        const metadata = tokenRecord.metadata as { clearToken?: string };
         pickupToken = {
-          expiresAt: token.expiresAt.toISOString(),
-          // Token will be included in email, not exposed here for security
+          token: metadata.clearToken || '',
+          expiresAt: tokenRecord.expiresAt.toISOString(),
         };
       }
     }

@@ -87,17 +87,17 @@ export function CheckoutButton({ disabled }: CheckoutButtonProps) {
         <div className="absolute inset-0 shimmer-auto pointer-events-none opacity-40 z-0" />
       )}
 
-      <span className="relative z-20 flex items-center justify-center gap-3 h-full w-full">
+      <span className="relative z-20 flex items-center justify-center gap-3 h-full w-full text-white">
         {isLoading ? (
           <>
-            <Loader2 className="h-5 w-5 animate-spin" />
-            <span>Redirection vers le paiement sécurisé…</span>
+            <Loader2 className="h-5 w-5 animate-spin text-white" />
+            <span className="text-white">Redirection vers le paiement sécurisé…</span>
           </>
         ) : (
           <>
-            <Lock className="h-4 w-4 opacity-70" />
-            <span>Procéder au paiement</span>
-            <ArrowRight className="h-4 w-4" />
+            <Lock className="h-4 w-4 opacity-70 text-white" />
+            <span className="text-white font-semibold">Procéder au paiement</span>
+            <ArrowRight className="h-4 w-4 text-white" />
           </>
         )}
       </span>

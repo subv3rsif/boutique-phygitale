@@ -142,13 +142,14 @@ export async function POST(request: NextRequest) {
         const { token, tokenHash } = generatePickupToken();
         const expiresAt = generateTokenExpiration(30); // 30 days
 
-        // Store token
+        // Store token (with clear token in metadata for QR code generation)
         await db.insert(pickupTokens).values({
           orderId: order.id,
           tokenHash,
           expiresAt,
           usedAt: null,
           usedBy: null,
+          metadata: { clearToken: token }, // Store clear token for later retrieval
         });
 
         console.log(`Generated pickup token for order ${order.id}`);
