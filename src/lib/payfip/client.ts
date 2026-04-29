@@ -16,6 +16,10 @@ export type { PayFipService, CreerPaiementSecuriseParams, CreerPaiementSecuriseR
 export function createPayFipService(): PayFipService {
   const useMock = process.env.PAYFIP_USE_MOCK === 'true';
 
+  // DEBUG: Log environment variable value
+  console.log('🔍 DEBUG - PAYFIP_USE_MOCK value:', process.env.PAYFIP_USE_MOCK);
+  console.log('🔍 DEBUG - useMock computed:', useMock);
+
   if (useMock) {
     console.log('✅ Using Mock PayFiP Service (test mode)');
     return mockPayFipService;
