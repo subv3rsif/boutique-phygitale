@@ -46,14 +46,12 @@ export function createPayFipService(): PayFipService {
 }
 
 /**
- * Lazy-loaded singleton PayFiP service instance
- * Call this function to get the PayFiP service (avoids initialization during build)
+ * Get PayFiP service instance
+ *
+ * Note: No singleton pattern to avoid caching issues on Vercel serverless.
+ * Each call creates a new service instance based on current environment variables.
+ * This ensures that environment variable changes are picked up immediately.
  */
-let _payfipService: PayFipService | null = null;
-
 export function getPayFipService(): PayFipService {
-  if (!_payfipService) {
-    _payfipService = createPayFipService();
-  }
-  return _payfipService;
+  return createPayFipService();
 }
