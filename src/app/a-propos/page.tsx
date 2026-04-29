@@ -60,20 +60,20 @@ export default function AProposPage() {
         </section>
       </AnimatedSection>
 
-      {/* Image 1 - Archive */}
+      {/* Image 1 - Archive historique (Casino des Fleurs, circa 1900) */}
       <AnimatedSection>
-        <section className="relative w-full h-[480px]">
+        <section className="relative w-full h-[480px] md:h-[600px]">
           <Image
-            src="https://images.unsplash.com/photo-1499781350541-7783f6c6a0c8?w=1600&q=80"
-            alt="Alfortville, circa 1920 — Archives municipales"
+            src="/a-propos/archive-historique.jpg"
+            alt="Casino des Fleurs et commerces d'Alfortville, début du XXe siècle — Archives municipales"
             fill
+            priority
             className="object-cover"
-            style={{ filter: 'sepia(20%)' }}
             sizes="100vw"
           />
-          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-encre/60 to-transparent p-6">
-            <p className="text-ivoire text-sm font-['DM_Sans'] max-w-7xl mx-auto">
-              Alfortville, circa 1920 — Archives municipales
+          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-encre/70 to-transparent p-6 md:p-8">
+            <p className="text-ivoire text-sm md:text-base font-['DM_Sans'] max-w-7xl mx-auto">
+              Casino des Fleurs, Alfortville — Début du XX<sup>e</sup> siècle, Archives municipales
             </p>
           </div>
         </section>
@@ -207,19 +207,19 @@ export default function AProposPage() {
         </section>
       </AnimatedSection>
 
-      {/* Image 2 - Berges */}
+      {/* Image 2 - Berges contemporaines (Pont sur la Seine) */}
       <AnimatedSection>
-        <section className="relative w-full h-[400px]">
+        <section className="relative w-full h-[400px] md:h-[550px]">
           <Image
-            src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1600&q=80"
-            alt="Les berges d'Alfortville — entre Seine et Marne"
+            src="/a-propos/berges-alfortville.jpg"
+            alt="Pont suspendu sur la Seine au coucher de soleil, berges d'Alfortville"
             fill
             className="object-cover"
             sizes="100vw"
           />
-          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-encre/60 to-transparent p-6">
-            <p className="text-ivoire text-sm font-['DM_Sans'] max-w-7xl mx-auto">
-              Les berges d'Alfortville — entre Seine et Marne
+          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-encre/70 to-transparent p-6 md:p-8">
+            <p className="text-ivoire text-sm md:text-base font-['DM_Sans'] max-w-7xl mx-auto">
+              Les berges d'Alfortville — à la confluence de la Seine et de la Marne
             </p>
           </div>
         </section>
