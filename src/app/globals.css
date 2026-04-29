@@ -142,8 +142,30 @@
     100% { background-position: 200% center; }
   }
 
+  @keyframes gradient-shift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
   .animate-shimmer {
     animation: shimmer 3s linear infinite;
+  }
+
+  .animate-gradient {
+    background-size: 200% 200%;
+    animation: gradient-shift 8s ease infinite;
+  }
+
+  /* Shimmer effect for buttons */
+  .shimmer-auto {
+    background: linear-gradient(
+      120deg,
+      transparent 30%,
+      rgba(255, 255, 255, 0.3) 50%,
+      transparent 70%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 3s ease-in-out infinite;
   }
 }
 
@@ -191,6 +213,15 @@
     background-size: 24px 24px;
   }
 
+  /* Radial gradient overlay */
+  .radial-gradient-overlay {
+    background: radial-gradient(
+      circle at center top,
+      rgba(80, 59, 100, 0.08) 0%,
+      transparent 50%
+    );
+  }
+
   /* ── 1885 Custom Utilities ────────────────────────────────── */
 
   /* Text gradients */
@@ -219,6 +250,26 @@
 
   .gradient-ivoire {
     background: linear-gradient(135deg, rgb(var(--ivoire)), rgb(var(--ivoire-2)));
+  }
+
+  /* Love Symbol gradients */
+  .bg-gradient-love {
+    background: linear-gradient(135deg, #503B64, #826E96);
+  }
+
+  .bg-gradient-love-cloud {
+    background: linear-gradient(135deg, #503B64, #F3EFEA);
+  }
+
+  .bg-gradient-love-vibrant {
+    background: linear-gradient(135deg, #503B64, #A091AF);
+  }
+
+  .text-gradient-love {
+    background: linear-gradient(135deg, #503B64, #826E96);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
   /* Focus states */
@@ -253,6 +304,23 @@
     box-shadow: 0 8px 24px rgba(26, 22, 19, 0.2);
   }
 
+  /* Shadows love/vibrant */
+  .shadow-vibrant {
+    box-shadow: 0 4px 20px rgba(80, 59, 100, 0.12), 0 2px 8px rgba(80, 59, 100, 0.08);
+  }
+
+  .shadow-vibrant-lg {
+    box-shadow: 0 10px 40px rgba(80, 59, 100, 0.18), 0 4px 16px rgba(80, 59, 100, 0.12);
+  }
+
+  .love-glow {
+    box-shadow: 0 0 30px rgba(80, 59, 100, 0.25);
+  }
+
+  .love-glow-sm {
+    box-shadow: 0 0 15px rgba(80, 59, 100, 0.2);
+  }
+
   /* Glass effect ivoire */
   .glass-1885 {
     background: rgba(242, 237, 228, 0.8);
@@ -280,6 +348,20 @@
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(92, 62, 123, 0.2);
+  }
+
+  .glass-love {
+    background: rgba(80, 59, 100, 0.08);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(80, 59, 100, 0.15);
+  }
+
+  .glass-vibrant {
+    background: rgba(242, 237, 228, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(228, 219, 208, 0.6);
   }
 
   /* Background utilities */
@@ -330,6 +412,20 @@
 
   .text-pierre {
     color: rgb(var(--pierre));
+  }
+
+  /* Hover and transition effects */
+  .hover-glow {
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .hover-glow:hover {
+    box-shadow: 0 0 30px rgba(80, 59, 100, 0.3), 0 10px 40px rgba(80, 59, 100, 0.2);
+    transform: translateY(-2px);
+  }
+
+  .transition-vibrant {
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   /* Border utilities */
