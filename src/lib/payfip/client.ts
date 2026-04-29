@@ -14,10 +14,15 @@ export type { PayFipService, CreerPaiementSecuriseParams, CreerPaiementSecuriseR
  * Create PayFiP service instance based on environment configuration
  */
 export function createPayFipService(): PayFipService {
-  const useMock = process.env.PAYFIP_USE_MOCK === 'true';
+  // DEBUG: Log ALL PayFiP-related env vars
+  console.log('🔍 DEBUG - All PayFiP env vars:', {
+    PAYFIP_USE_MOCK: process.env.PAYFIP_USE_MOCK,
+    PAYFIP_SOAP_URL: process.env.PAYFIP_SOAP_URL ? 'SET' : 'NOT SET',
+    PAYFIP_NUMCLI: process.env.PAYFIP_NUMCLI ? 'SET' : 'NOT SET',
+    PAYFIP_EXER: process.env.PAYFIP_EXER ? 'SET' : 'NOT SET',
+  });
 
-  // DEBUG: Log environment variable value
-  console.log('🔍 DEBUG - PAYFIP_USE_MOCK value:', process.env.PAYFIP_USE_MOCK);
+  const useMock = process.env.PAYFIP_USE_MOCK === 'true';
   console.log('🔍 DEBUG - useMock computed:', useMock);
 
   if (useMock) {
@@ -53,5 +58,6 @@ export function createPayFipService(): PayFipService {
  * This ensures that environment variable changes are picked up immediately.
  */
 export function getPayFipService(): PayFipService {
+  console.log('📞 getPayFipService() called - creating new service instance');
   return createPayFipService();
 }
