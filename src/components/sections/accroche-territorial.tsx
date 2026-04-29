@@ -53,11 +53,11 @@ export function AccrocheTerritorial() {
             initial={{ x: 50, opacity: 0 }}
             animate={isInView ? { x: 0, opacity: 1 } : {}}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-            className="md:col-span-3 relative aspect-[3/4]"
+            className="md:col-span-3 relative aspect-square"
           >
             <Image
               src="/atelier-serigraphie.jpg"
-              alt="Artisan sérigraphiant le logo 1885 Manufacture Alfortvillaise en atelier"
+              alt="Collection de produits 1885 Manufacture Alfortvillaise : tote bag, mug, torchons en lin, carnet édition limitée"
               fill
               priority
               className="object-cover rounded-lg"
