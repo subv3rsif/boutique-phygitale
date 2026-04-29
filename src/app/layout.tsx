@@ -117,7 +117,18 @@ export default function RootLayout({
               </div>
             </footer>
             <ClientLayoutWrapper />
-            <Toaster />
+            <Toaster
+              position="bottom-right"
+              toastOptions={{
+                style: {
+                  fontFamily: 'var(--font-sans)',
+                  background: 'hsl(var(--encre))',
+                  color: 'hsl(var(--ivoire))',
+                  border: '1px solid hsl(var(--terra) / 0.3)',
+                },
+                className: 'group toast',
+              }}
+            />
           </ThemeProvider>
         </SessionProvider>
         <Analytics />
