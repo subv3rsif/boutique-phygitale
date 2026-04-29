@@ -1,10 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 import { useCart } from '@/store/cart';
-import { CreditCard, Loader2, ArrowRight, Lock } from 'lucide-react';
+import { Loader2, ArrowRight, Lock } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 type CheckoutButtonProps = {
@@ -87,32 +87,20 @@ export function CheckoutButton({ disabled }: CheckoutButtonProps) {
         <div className="absolute inset-0 shimmer-auto pointer-events-none opacity-40" />
       )}
 
-      <AnimatePresence mode="wait">
+      <span className="relative z-10 flex items-center justify-center gap-3">
         {isLoading ? (
-          <motion.span
-            key="loading"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="absolute inset-0 flex items-center justify-center gap-2"
-          >
+          <>
             <Loader2 className="h-5 w-5 animate-spin" />
             <span>Redirection vers le paiement sécurisé…</span>
-          </motion.span>
+          </>
         ) : (
-          <motion.span
-            key="idle"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="absolute inset-0 flex items-center justify-center gap-3"
-          >
+          <>
             <Lock className="h-4 w-4 opacity-70" />
             <span>Procéder au paiement</span>
             <ArrowRight className="h-4 w-4" />
-          </motion.span>
+          </>
         )}
-      </AnimatePresence>
+      </span>
     </motion.button>
   );
 }
