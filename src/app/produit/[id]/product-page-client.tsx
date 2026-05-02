@@ -156,6 +156,7 @@ export function ProductPageClient({ product }: ProductPageClientProps) {
                 priority={true}
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 className="rounded-2xl"
+                enableLightbox={true}
               />
 
               {/* Premium Badges - positioned above carousel */}

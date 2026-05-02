@@ -3,8 +3,9 @@
 import { useState, useCallback } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ZoomIn } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { ImageLightbox } from '@/components/ui/image-lightbox';
 import type { ProductImage } from '@/types/product';
 
 type ProductImageCarouselProps = {
@@ -14,6 +15,7 @@ type ProductImageCarouselProps = {
   priority?: boolean;
   sizes?: string;
   className?: string;
+  enableLightbox?: boolean; // Active la lightbox au click (page produit)
 };
 
 /**
@@ -39,11 +41,13 @@ export function ProductImageCarousel({
   priority = false,
   sizes = '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw',
   className,
+  enableLightbox = false,
 }: ProductImageCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const [direction, setDirection] = useState<'left' | 'right'>('right');
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
 
   // Trier les images par order, puis mettre l'image primaire en premier
   const sortedImages = [...images].sort((a, b) => {
@@ -121,6 +125,27 @@ export function ProductImageCarousel({
     setTimeout(() => setIsAnimating(false), 300);
   };
 
+  // Lightbox handlers
+  const handleOpenLightbox = () => {
+    if (enableLightbox && sortedImages.length > 0) {
+      setIsLightboxOpen(true);
+    }
+  };
+
+  const handleCloseLightbox = () => {
+    setIsLightboxOpen(false);
+  };
+
+  const handleLightboxNavigate = (direction: 'prev' | 'next') => {
+    setCurrentIndex((prevIndex) => {
+      if (direction === 'next') {
+        return (prevIndex + 1) % sortedImages.length;
+      } else {
+        return (prevIndex - 1 + sortedImages.length) % sortedImages.length;
+      }
+    });
+  };
+
   // Navigation clavier
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
@@ -187,7 +212,11 @@ export function ProductImageCarousel({
                 paginate('left');
               }
             }}
-            className="absolute inset-0 cursor-grab active:cursor-grabbing"
+            onClick={handleOpenLightbox}
+            className={cn(
+              'absolute inset-0',
+              enableLightbox ? 'cursor-zoom-in' : 'cursor-grab active:cursor-grabbing'
+            )}
           >
             <Image
               src={sortedImages[currentIndex]?.url || ''}
@@ -197,6 +226,20 @@ export function ProductImageCarousel({
               sizes={sizes}
               priority={priority || currentIndex === 0}
             />
+
+            {/* Indicateur zoom visible au hover (page produit uniquement) */}
+            {enableLightbox && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: isHovered ? 1 : 0 }}
+                transition={{ duration: 0.2 }}
+                className="absolute inset-0 bg-black/20 flex items-center justify-center pointer-events-none"
+              >
+                <div className="bg-white/90 backdrop-blur-sm rounded-full p-4 shadow-lg">
+                  <ZoomIn className="w-8 h-8 text-encre" />
+                </div>
+              </motion.div>
+            )}
           </motion.div>
         </AnimatePresence>
       </div>
@@ -285,6 +328,18 @@ export function ProductImageCarousel({
       <span className="sr-only" aria-live="polite" aria-atomic="true">
         Image {currentIndex + 1} sur {sortedImages.length}
       </span>
+
+      {/* Lightbox (page produit uniquement) */}
+      {enableLightbox && (
+        <ImageLightbox
+          images={sortedImages}
+          currentIndex={currentIndex}
+          isOpen={isLightboxOpen}
+          onClose={handleCloseLightbox}
+          onNavigate={handleLightboxNavigate}
+          productName={productName}
+        />
+      )}
     </div>
   );
 }
