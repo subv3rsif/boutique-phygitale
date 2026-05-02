@@ -16,6 +16,7 @@ type ProductImageCarouselProps = {
   sizes?: string;
   className?: string;
   enableLightbox?: boolean; // Active la lightbox au click (page produit)
+  onImageClick?: () => void; // Callback au tap (sans drag) - pour navigation vers page produit
 };
 
 /**
@@ -42,12 +43,14 @@ export function ProductImageCarousel({
   sizes = '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw',
   className,
   enableLightbox = false,
+  onImageClick,
 }: ProductImageCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const [direction, setDirection] = useState<'left' | 'right'>('right');
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const [dragDistance, setDragDistance] = useState(0);
 
   // Trier les images par order, puis mettre l'image primaire en premier
   const sortedImages = [...images].sort((a, b) => {
@@ -103,10 +106,17 @@ export function ProductImageCarousel({
         onMouseLeave={() => setIsHovered(false)}
       >
         <div
-          onClick={handleOpenLightbox}
+          onClick={() => {
+            if (enableLightbox) {
+              handleOpenLightbox();
+            } else if (onImageClick) {
+              onImageClick();
+            }
+          }}
           className={cn(
             'relative w-full h-full',
-            enableLightbox && 'cursor-zoom-in'
+            enableLightbox && 'cursor-zoom-in',
+            onImageClick && !enableLightbox && 'cursor-pointer'
           )}
         >
           <Image
@@ -244,16 +254,29 @@ export function ProductImageCarousel({
             drag="x"
             dragConstraints={{ left: 0, right: 0 }}
             dragElastic={0.2}
+            onDragStart={() => {
+              setDragDistance(0);
+            }}
+            onDrag={(e, { offset }) => {
+              setDragDistance(Math.abs(offset.x));
+            }}
             onDragEnd={(e, { offset, velocity }) => {
               const swipe = swipePower(offset.x, velocity.x);
+              const wasTap = Math.abs(offset.x) < 10; // Tap si mouvement < 10px
 
-              if (swipe < -swipeConfidenceThreshold) {
+              if (wasTap) {
+                // C'était un tap, pas un swipe
+                if (enableLightbox) {
+                  handleOpenLightbox();
+                } else if (onImageClick) {
+                  onImageClick();
+                }
+              } else if (swipe < -swipeConfidenceThreshold) {
                 paginate('right');
               } else if (swipe > swipeConfidenceThreshold) {
                 paginate('left');
               }
             }}
-            onClick={handleOpenLightbox}
             className={cn(
               'absolute inset-0',
               enableLightbox ? 'cursor-zoom-in' : 'cursor-grab active:cursor-grabbing'

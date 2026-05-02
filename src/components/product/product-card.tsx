@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -31,11 +32,16 @@ type ProductCardProps = {
 export function ProductCard({ product, index = 0 }: ProductCardProps) {
   const [isAdding, setIsAdding] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const router = useRouter();
   const addItem = useCart((state) => state.addItem);
 
   const isOutOfStock = product.stockQuantity === 0;
   const isLowStock = product.stockQuantity < 10 && product.stockQuantity > 0;
   const isNew = product.badges?.includes('nouveauté') || product.badges?.includes('nouveau');
+
+  const handleImageClick = () => {
+    router.push(`/produit/${product.id}`);
+  };
 
   const handleAddToCart = async () => {
     setIsAdding(true);
@@ -95,6 +101,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
             variant="card"
             priority={index < 3}
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            onImageClick={handleImageClick}
           />
         </motion.div>
 

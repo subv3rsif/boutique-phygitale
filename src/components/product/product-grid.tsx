@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -22,6 +23,7 @@ type ProductGridProps = {
 function SimpleProductCard({ product }: { product: Product }) {
   const [isAdding, setIsAdding] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const router = useRouter();
   const addItem = useCart((state) => state.addItem);
 
   const isOutOfStock = product.stockQuantity === 0;
@@ -40,6 +42,10 @@ function SimpleProductCard({ product }: { product: Product }) {
     }
   };
 
+  const handleImageClick = () => {
+    router.push(`/produit/${product.id}`);
+  };
+
   return (
     <div
       className="group relative bg-card border border-border rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300"
@@ -47,7 +53,7 @@ function SimpleProductCard({ product }: { product: Product }) {
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Image Carousel */}
-      <Link href={`/produit/${product.id}`} className="block relative aspect-[3/4] overflow-hidden bg-muted">
+      <div className="block relative aspect-[3/4] overflow-hidden bg-muted">
         <motion.div
           animate={{ scale: isHovered ? 1.05 : 1 }}
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
@@ -59,6 +65,7 @@ function SimpleProductCard({ product }: { product: Product }) {
             variant="card"
             priority={false}
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+            onImageClick={handleImageClick}
           />
         </motion.div>
         {/* Badges */}
@@ -78,7 +85,7 @@ function SimpleProductCard({ product }: { product: Product }) {
             </Badge>
           </div>
         )}
-      </Link>
+      </div>
 
       {/* Content */}
       <div className="p-4 space-y-3">

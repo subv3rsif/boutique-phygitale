@@ -2,6 +2,7 @@
 
 import { useRef, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { motion, useMotionValue, useTransform } from 'framer-motion';
 import { toast } from 'sonner';
 import { Loader2, ArrowUpRight, Crown } from 'lucide-react';
@@ -64,6 +65,7 @@ function AnimatedBorderCard({
 // ─── Bento Card — Hero (large) ────────────────────────────────────────────────
 function BentoCardHero({ product }: { product: Product }) {
   const [isAdding, setIsAdding] = useState(false);
+  const router = useRouter();
   const addItem = useCart((s) => s.addItem);
 
   const isOutOfStock = product.stockQuantity === 0;
@@ -80,9 +82,13 @@ function BentoCardHero({ product }: { product: Product }) {
     setIsAdding(false);
   };
 
+  const handleImageClick = () => {
+    router.push(`/produit/${product.id}`);
+  };
+
   return (
     <AnimatedBorderCard className="h-full">
-      <Link href={`/produit/${product.id}`} className="group/hero relative block h-full min-h-[600px] bg-muted">
+      <div className="group/hero relative block h-full min-h-[600px] bg-muted">
         {/* Product Image Carousel */}
         <ProductImageCarousel
           images={product.images}
@@ -91,6 +97,7 @@ function BentoCardHero({ product }: { product: Product }) {
           priority={true}
           sizes="(max-width: 768px) 100vw, 66vw"
           className="absolute inset-0"
+          onImageClick={handleImageClick}
         />
 
         {/* Gradient overlay */}
@@ -141,7 +148,7 @@ function BentoCardHero({ product }: { product: Product }) {
             </Link>
           </div>
         </div>
-      </Link>
+      </div>
     </AnimatedBorderCard>
   );
 }
@@ -150,6 +157,7 @@ function BentoCardHero({ product }: { product: Product }) {
 function BentoCardSmall({ product, index }: { product: Product; index: number }) {
   const [isAdding, setIsAdding] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const router = useRouter();
   const addItem = useCart((s) => s.addItem);
 
   const isOutOfStock = product.stockQuantity === 0;
@@ -166,6 +174,10 @@ function BentoCardSmall({ product, index }: { product: Product; index: number })
     setIsAdding(false);
   };
 
+  const handleImageClick = () => {
+    router.push(`/produit/${product.id}`);
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -176,7 +188,7 @@ function BentoCardSmall({ product, index }: { product: Product; index: number })
       className="h-full"
     >
       <AnimatedBorderCard className="h-full">
-        <Link href={`/produit/${product.id}`} className="group/small relative block h-full min-h-[400px] bg-muted">
+        <div className="group/small relative block h-full min-h-[400px] bg-muted">
           {/* Product Image Carousel with scale animation */}
           <motion.div
             animate={{ scale: isHovered ? 1.07 : 1 }}
@@ -190,6 +202,7 @@ function BentoCardSmall({ product, index }: { product: Product; index: number })
               priority={false}
               sizes="(max-width: 768px) 50vw, 25vw"
               className="absolute inset-0"
+              onImageClick={handleImageClick}
             />
           </motion.div>
 
@@ -231,7 +244,7 @@ function BentoCardSmall({ product, index }: { product: Product; index: number })
               </Button>
             </motion.div>
           </div>
-        </Link>
+        </div>
       </AnimatedBorderCard>
     </motion.div>
   );

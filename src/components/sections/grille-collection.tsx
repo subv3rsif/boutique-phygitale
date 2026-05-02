@@ -3,6 +3,7 @@
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { ArrowRight } from 'lucide-react';
 import type { Product } from '@/types/product';
 import { ProductImageCarousel } from '@/components/product/product-image-carousel';
@@ -15,11 +16,16 @@ interface GrilleCollectionProps {
 
 // Component pour une carte produit individuelle
 function CollectionCard({ product, index, isInView }: { product: Product; index: number; isInView: boolean }) {
+  const router = useRouter();
   const addItem = useCart((state) => state.addItem);
 
   const handleAddToCart = () => {
     addItem(product.id, 1);
     toast.success(`${product.name} ajouté au panier`);
+  };
+
+  const handleImageClick = () => {
+    router.push(`/produit/${product.id}`);
   };
 
   return (
@@ -46,6 +52,7 @@ function CollectionCard({ product, index, isInView }: { product: Product; index:
             variant="card"
             priority={index < 3}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            onImageClick={handleImageClick}
           />
         </motion.div>
 
