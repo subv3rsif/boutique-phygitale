@@ -23,11 +23,12 @@ export function Atelier() {
             className="md:col-span-7 relative min-h-[400px] md:min-h-full"
           >
             <Image
-              src="https://placehold.co/1200x1400/2D2620/F2EDE4?text=Atelier+Serigraphie"
+              src="/atelier/hero-serigraphie.jpg"
               alt="Atelier de sérigraphie 1885"
               fill
               className="object-cover"
               sizes="(max-width: 768px) 100vw, 55vw"
+              priority
             />
           </motion.div>
 

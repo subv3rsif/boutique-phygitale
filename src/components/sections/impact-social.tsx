@@ -2,7 +2,7 @@
 
 import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { Heart, Users, Sprout, MapPin } from 'lucide-react';
+import { Heart, Sprout, MapPin } from 'lucide-react';
 
 const impactStats = [
   {
@@ -16,12 +16,6 @@ const impactStats = [
     value: '100%',
     label: 'fabrication locale',
     description: 'Sérigraphie artisanale en atelier municipal, circuit court garanti',
-  },
-  {
-    icon: Users,
-    value: '60',
-    label: 'nationalités',
-    description: 'Une ville qui se construit ensemble depuis 1885',
   },
   {
     icon: MapPin,
@@ -59,7 +53,7 @@ export function ImpactSocial() {
         </motion.div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-6">
           {impactStats.map((stat, index) => {
             const Icon = stat.icon;
             return (
