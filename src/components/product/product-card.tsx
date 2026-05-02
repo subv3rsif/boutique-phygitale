@@ -1,16 +1,17 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { PremiumBadge } from '@/components/ui/premium-badge';
-import { type Product, formatCurrency } from '@/lib/catalogue';
+import { ProductImageCarousel } from '@/components/product/product-image-carousel';
+import { formatCurrency } from '@/lib/catalogue';
+import type { Product } from '@/types/product';
 import { useCart } from '@/store/cart';
-import { ShoppingCart, Loader2, Sparkles, Package } from 'lucide-react';
+import { ShoppingCart, Loader2, Package } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 type ProductCardProps = {
@@ -29,13 +30,12 @@ type ProductCardProps = {
  */
 export function ProductCard({ product, index = 0 }: ProductCardProps) {
   const [isAdding, setIsAdding] = useState(false);
-  const [imageLoaded, setImageLoaded] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const addItem = useCart((state) => state.addItem);
 
-  const isOutOfStock = product.stockQuantity !== undefined && product.stockQuantity === 0;
-  const isLowStock = product.stockQuantity !== undefined && product.stockQuantity < 10 && product.stockQuantity > 0;
-  const isNew = product.tags?.includes('nouveau') || product.tags?.includes('new');
+  const isOutOfStock = product.stockQuantity === 0;
+  const isLowStock = product.stockQuantity < 10 && product.stockQuantity > 0;
+  const isNew = product.badges?.includes('nouveauté') || product.badges?.includes('nouveau');
 
   const handleAddToCart = async () => {
     setIsAdding(true);
@@ -78,12 +78,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
     >
       {/* Product Image Section */}
       <div className="relative aspect-[4/5] w-full overflow-hidden bg-muted">
-        {/* Skeleton loader */}
-        {!imageLoaded && (
-          <div className="absolute inset-0 animate-pulse bg-muted" />
-        )}
-
-        {/* Product Image with parallax hover */}
+        {/* Product Image Carousel with parallax hover */}
         <motion.div
           animate={{
             scale: isHovered ? 1.08 : 1,
@@ -94,17 +89,12 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
           }}
           className="relative w-full h-full"
         >
-          <Image
-            src={product.image}
-            alt={`Photo du produit ${product.name}`}
-            fill
-            className={cn(
-              "object-cover transition-opacity duration-500",
-              imageLoaded ? 'opacity-100' : 'opacity-0'
-            )}
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            onLoad={() => setImageLoaded(true)}
+          <ProductImageCarousel
+            images={product.images}
+            productName={product.name}
+            variant="card"
             priority={index < 3}
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           />
         </motion.div>
 

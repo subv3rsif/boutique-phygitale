@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import Image from 'next/image';
 import Link from 'next/link';
 import { ChevronLeft, ShoppingCart, Package, MapPin, Truck, Sparkles, Check, Loader2, ChevronDown } from 'lucide-react';
 import type { Product } from '@/types/product';
@@ -10,6 +9,7 @@ import { useCart } from '@/store/cart';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { PremiumBadge } from '@/components/ui/premium-badge';
+import { ProductImageCarousel } from '@/components/product/product-image-carousel';
 import { GoldDivider } from '@/components/ui/gold-divider';
 import { SocialShare } from '@/components/ui/social-share';
 import {
@@ -147,19 +147,19 @@ export function ProductPageClient({ product }: ProductPageClientProps) {
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] as const }}
             className="space-y-4"
           >
-            {/* Main Image */}
+            {/* Product Image Carousel */}
             <div className="relative aspect-square rounded-2xl overflow-hidden bg-muted shadow-premium-lg">
-              <Image
-                src={product.images?.[0]?.url || 'https://placehold.co/600x750/503B64/F3EFEA?text=No+Image'}
-                alt={product.name}
-                fill
-                className="object-cover"
+              <ProductImageCarousel
+                images={product.images}
+                productName={product.name}
+                variant="detail"
+                priority={true}
                 sizes="(max-width: 1024px) 100vw, 50vw"
-                priority
+                className="rounded-2xl"
               />
 
-              {/* Premium Badges */}
-              <div className="absolute top-4 left-4 flex flex-col gap-2 z-10">
+              {/* Premium Badges - positioned above carousel */}
+              <div className="absolute top-4 left-4 flex flex-col gap-2 z-20 pointer-events-none">
                 {isNew && (
                   <PremiumBadge label="Nouveau" variant="solid" size="md" />
                 )}

@@ -1,15 +1,15 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { ProductImageCarousel } from '@/components/product/product-image-carousel';
 import { formatCurrency } from '@/lib/catalogue';
 import { useCart } from '@/store/cart';
-import { ShoppingCart, Loader2, Package } from 'lucide-react';
+import { ShoppingCart, Loader2 } from 'lucide-react';
 import type { Product } from '@/types/product';
 
 type ProductGridProps = {
@@ -17,25 +17,14 @@ type ProductGridProps = {
 };
 
 /**
- * Get primary image from product images array
- */
-function getPrimaryImage(product: Product): string {
-  if (!product.images || product.images.length === 0) {
-    return 'https://placehold.co/600x750/503B64/F3EFEA?text=No+Image&font=playfair-display';
-  }
-  const primary = product.images.find((img) => img.isPrimary);
-  return primary?.url || product.images[0]?.url || 'https://placehold.co/600x750/503B64/F3EFEA?text=No+Image&font=playfair-display';
-}
-
-/**
  * Simple product card for DB products
  */
 function SimpleProductCard({ product }: { product: Product }) {
   const [isAdding, setIsAdding] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const addItem = useCart((state) => state.addItem);
 
   const isOutOfStock = product.stockQuantity === 0;
-  const primaryImage = getPrimaryImage(product);
 
   const handleAddToCart = async () => {
     setIsAdding(true);
@@ -52,16 +41,26 @@ function SimpleProductCard({ product }: { product: Product }) {
   };
 
   return (
-    <div className="group relative bg-card border border-border rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300">
-      {/* Image */}
+    <div
+      className="group relative bg-card border border-border rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {/* Image Carousel */}
       <Link href={`/produit/${product.id}`} className="block relative aspect-[3/4] overflow-hidden bg-muted">
-        <Image
-          src={primaryImage}
-          alt={product.name}
-          fill
-          className="object-cover group-hover:scale-105 transition-transform duration-500"
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
-        />
+        <motion.div
+          animate={{ scale: isHovered ? 1.05 : 1 }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          className="absolute inset-0"
+        >
+          <ProductImageCarousel
+            images={product.images}
+            productName={product.name}
+            variant="card"
+            priority={false}
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+          />
+        </motion.div>
         {/* Badges */}
         {product.badges && product.badges.length > 0 && (
           <div className="absolute top-3 left-3 flex flex-col gap-2">

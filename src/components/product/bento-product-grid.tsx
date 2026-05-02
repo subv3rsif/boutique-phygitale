@@ -1,10 +1,8 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { useState } from 'react';
+import { motion, useMotionValue, useTransform } from 'framer-motion';
 import { toast } from 'sonner';
 import { Loader2, ArrowUpRight, Crown } from 'lucide-react';
 import type { Product } from '@/types/product';
@@ -13,19 +11,7 @@ import { useCart } from '@/store/cart';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { PremiumBadge, PremiumBadgeIcon } from '@/components/ui/premium-badge';
-
-/**
- * Get primary image from product images array
- * Falls back to first image if no primary is set, or placeholder if no images
- */
-function getPrimaryImage(product: Product): string {
-  if (!product.images || product.images.length === 0) {
-    return 'https://placehold.co/600x750/503B64/F3EFEA?text=No+Image&font=playfair-display';
-  }
-
-  const primary = product.images.find((img) => img.isPrimary);
-  return primary?.url || product.images[0]?.url || 'https://placehold.co/600x750/503B64/F3EFEA?text=No+Image&font=playfair-display';
-}
+import { ProductImageCarousel } from '@/components/product/product-image-carousel';
 
 // ─── Animated Border Card ─────────────────────────────────────────────────────
 // Technique "conic-gradient spotlight" : le liseret suit le curseur via JS
@@ -78,11 +64,10 @@ function AnimatedBorderCard({
 // ─── Bento Card — Hero (large) ────────────────────────────────────────────────
 function BentoCardHero({ product }: { product: Product }) {
   const [isAdding, setIsAdding] = useState(false);
-  const [imageLoaded, setImageLoaded] = useState(false);
   const addItem = useCart((s) => s.addItem);
 
-  const isOutOfStock = product.stockQuantity !== undefined && product.stockQuantity === 0;
-  const isNew = product.tags?.includes('nouveau') || product.tags?.includes('new');
+  const isOutOfStock = product.stockQuantity === 0;
+  const isNew = product.badges?.includes('nouveauté') || product.badges?.includes('nouveau');
 
   const handleAdd = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -98,26 +83,18 @@ function BentoCardHero({ product }: { product: Product }) {
   return (
     <AnimatedBorderCard className="h-full">
       <Link href={`/produit/${product.id}`} className="group/hero relative block h-full min-h-[600px] bg-muted">
-        {/* Background image */}
-        {!imageLoaded && (
-          <div className="absolute inset-0 animate-pulse bg-stone-200 dark:bg-purple-900/50" />
-        )}
-        <Image
-          src={getPrimaryImage(product)}
-          alt={product.name}
-          fill
-          priority
-          className={cn(
-            'object-cover transition-all duration-700',
-            imageLoaded ? 'opacity-100' : 'opacity-0',
-            'group-hover/hero:scale-105'
-          )}
+        {/* Product Image Carousel */}
+        <ProductImageCarousel
+          images={product.images}
+          productName={product.name}
+          variant="card"
+          priority={true}
           sizes="(max-width: 768px) 100vw, 66vw"
-          onLoad={() => setImageLoaded(true)}
+          className="absolute inset-0"
         />
 
         {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
 
         {/* Premium Badges */}
         <div className="absolute top-5 left-5 flex gap-2 z-10">
@@ -172,12 +149,11 @@ function BentoCardHero({ product }: { product: Product }) {
 // ─── Bento Card — Small ────────────────────────────────────────────────────────
 function BentoCardSmall({ product, index }: { product: Product; index: number }) {
   const [isAdding, setIsAdding] = useState(false);
-  const [imageLoaded, setImageLoaded] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const addItem = useCart((s) => s.addItem);
 
-  const isOutOfStock = product.stockQuantity !== undefined && product.stockQuantity === 0;
-  const isNew = product.tags?.includes('nouveau') || product.tags?.includes('new');
+  const isOutOfStock = product.stockQuantity === 0;
+  const isNew = product.badges?.includes('nouveauté') || product.badges?.includes('nouveau');
 
   const handleAdd = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -201,30 +177,24 @@ function BentoCardSmall({ product, index }: { product: Product; index: number })
     >
       <AnimatedBorderCard className="h-full">
         <Link href={`/produit/${product.id}`} className="group/small relative block h-full min-h-[400px] bg-muted">
-          {/* Background image - Full card */}
-          {!imageLoaded && (
-            <div className="absolute inset-0 animate-pulse bg-stone-200 dark:bg-purple-900/50" />
-          )}
+          {/* Product Image Carousel with scale animation */}
           <motion.div
             animate={{ scale: isHovered ? 1.07 : 1 }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             className="absolute inset-0"
           >
-            <Image
-              src={getPrimaryImage(product)}
-              alt={product.name}
-              fill
-              className={cn(
-                'object-cover transition-opacity duration-500',
-                imageLoaded ? 'opacity-100' : 'opacity-0'
-              )}
+            <ProductImageCarousel
+              images={product.images}
+              productName={product.name}
+              variant="card"
+              priority={false}
               sizes="(max-width: 768px) 50vw, 25vw"
-              onLoad={() => setImageLoaded(true)}
+              className="absolute inset-0"
             />
           </motion.div>
 
           {/* Gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
 
           {/* Premium Badge */}
           {isNew && (
