@@ -42,16 +42,10 @@ type ProductPageMobileProps = {
  */
 export function ProductPageMobile({ product }: ProductPageMobileProps) {
   const [isFavorite, setIsFavorite] = useState(false);
-  const [favoriteCount, setFavoriteCount] = useState(0);
+  const [favoriteCount, setFavoriteCount] = useState(product.favoriteCount);
   const [isAdding, setIsAdding] = useState(false);
   const [showStickyCTA, setShowStickyCTA] = useState(false);
   const addItem = useCart((state) => state.addItem);
-
-  // Social proof: simuler un compteur de favoris
-  useEffect(() => {
-    // Random entre 5 et 25 pour sembler réaliste
-    setFavoriteCount(Math.floor(Math.random() * 20) + 5);
-  }, [product.id]);
 
   // Détection scroll pour sticky CTA
   useEffect(() => {
@@ -69,9 +63,17 @@ export function ProductPageMobile({ product }: ProductPageMobileProps) {
   const isLimitedEdition = product.editionNumber && product.editionTotal;
   const isNew = product.badges?.includes('nouveauté') || product.badges?.includes('nouveau');
 
-  // Calculer date d'ajout (simulation)
-  const daysAgo = Math.floor(Math.random() * 30) + 1;
-  const addedDate = daysAgo === 1 ? 'Il y a 1 jour' : `Il y a ${daysAgo} jours`;
+  // Calculer date d'ajout réelle depuis createdAt
+  const daysAgo = Math.floor((Date.now() - new Date(product.createdAt).getTime()) / (1000 * 60 * 60 * 24));
+  const addedDate = daysAgo === 0
+    ? "Aujourd'hui"
+    : daysAgo === 1
+    ? 'Il y a 1 jour'
+    : daysAgo < 30
+    ? `Il y a ${daysAgo} jours`
+    : daysAgo < 60
+    ? 'Il y a 1 mois'
+    : `Il y a ${Math.floor(daysAgo / 30)} mois`;
 
   const handleAddToCart = async () => {
     setIsAdding(true);

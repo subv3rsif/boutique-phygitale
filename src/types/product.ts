@@ -44,6 +44,7 @@ export type Product = {
   payfipProductCode: string | null; // PayFIP product code for administrative tracking
   editionNumber: number | null; // Edition number if part of limited series
   editionTotal: number | null; // Total editions if part of limited series
+  favoriteCount: number; // Number of times this product has been favorited
   active: boolean; // Whether product is active/available for sale
   featured: boolean; // Whether product is featured on homepage
   showInCollectionPage: boolean; // Whether to show in collection page preview (max 3 per category)
@@ -91,6 +92,7 @@ export type CreateProductInput = {
   payfipProductCode?: string; // PayFIP code (default: '11')
   editionNumber?: number; // Edition number (optional)
   editionTotal?: number; // Total editions (optional)
+  favoriteCount?: number; // Number of favorites (default: 0)
   active?: boolean; // Active status (default: true)
   featured?: boolean; // Featured on homepage (default: false)
   showInCollectionPage?: boolean; // Show in collection page preview (default: false)

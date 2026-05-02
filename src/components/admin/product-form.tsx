@@ -42,6 +42,7 @@ type FormData = {
   payfipProductCode: string;
   editionNumber: string;
   editionTotal: string;
+  favoriteCount: string;
   active: boolean;
   featured: boolean;
   showInCollectionPage: boolean;
@@ -85,6 +86,7 @@ export function ProductForm({ product, mode }: ProductFormProps) {
     payfipProductCode: product?.payfipProductCode || '11',
     editionNumber: product?.editionNumber?.toString() || '',
     editionTotal: product?.editionTotal?.toString() || '',
+    favoriteCount: product?.favoriteCount?.toString() || '0',
     active: product?.active ?? true,
     featured: product?.featured ?? false,
     showInCollectionPage: product?.showInCollectionPage ?? false,
@@ -203,6 +205,9 @@ export function ProductForm({ product, mode }: ProductFormProps) {
     if (formData.editionTotal && parseInt(formData.editionTotal) < 1) {
       return 'Le total d\'édition doit être >= 1';
     }
+    if (formData.favoriteCount && parseInt(formData.favoriteCount) < 0) {
+      return 'Le nombre de favoris doit être >= 0';
+    }
 
     return null;
   };
@@ -237,6 +242,7 @@ export function ProductForm({ product, mode }: ProductFormProps) {
         payfipProductCode: formData.payfipProductCode.trim(),
         editionNumber: formData.editionNumber ? parseInt(formData.editionNumber) : undefined,
         editionTotal: formData.editionTotal ? parseInt(formData.editionTotal) : undefined,
+        favoriteCount: formData.favoriteCount ? parseInt(formData.favoriteCount) : 0,
         active: formData.active,
         featured: formData.featured,
         showInCollectionPage: formData.showInCollectionPage,
@@ -544,6 +550,23 @@ export function ProductForm({ product, mode }: ProductFormProps) {
             />
             <p className="text-xs text-pierre">Nombre total d&apos;éditions produites</p>
           </div>
+        </div>
+
+        {/* Favorite Count */}
+        <div className="space-y-2">
+          <Label htmlFor="favoriteCount">Nombre de Favoris</Label>
+          <Input
+            id="favoriteCount"
+            name="favoriteCount"
+            type="number"
+            min="0"
+            value={formData.favoriteCount}
+            onChange={handleChange}
+            placeholder="0"
+          />
+          <p className="text-xs text-pierre">
+            Nombre de fois que ce produit a été ajouté aux favoris (pour social proof)
+          </p>
         </div>
 
         {/* Active Toggle */}

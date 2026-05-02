@@ -43,6 +43,7 @@ export const products = pgTable(
     ),
     editionNumber: integer('edition_number'),
     editionTotal: integer('edition_total'),
+    favoriteCount: integer('favorite_count').default(0).notNull(),
     active: boolean('active').default(true).notNull(),
     featured: boolean('featured').default(false).notNull(),
     showInCollectionPage: boolean('show_in_collection_page')

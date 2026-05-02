@@ -50,6 +50,7 @@ export const productSchema = z.object({
   payfipProductCode: z.string().max(10).default('11'),
   editionNumber: z.number().int().min(1).optional(),
   editionTotal: z.number().int().min(1).optional(),
+  favoriteCount: z.number().int().min(0, 'Nombre de favoris >= 0').default(0),
   active: z.boolean().default(true),
   featured: z.boolean().default(false),
   showInCollectionPage: z.boolean().default(false),
