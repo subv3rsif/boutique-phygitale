@@ -56,6 +56,30 @@ export function ProductImageCarousel({
     return a.order - b.order;
   });
 
+  // Lightbox handlers (définis avant les early returns)
+  const handleOpenLightbox = useCallback(() => {
+    if (enableLightbox && sortedImages.length > 0) {
+      setIsLightboxOpen(true);
+    }
+  }, [enableLightbox, sortedImages.length]);
+
+  const handleCloseLightbox = useCallback(() => {
+    setIsLightboxOpen(false);
+  }, []);
+
+  const handleLightboxNavigate = useCallback(
+    (direction: 'prev' | 'next') => {
+      setCurrentIndex((prevIndex) => {
+        if (direction === 'next') {
+          return (prevIndex + 1) % sortedImages.length;
+        } else {
+          return (prevIndex - 1 + sortedImages.length) % sortedImages.length;
+        }
+      });
+    },
+    [sortedImages.length]
+  );
+
   // Cas limite: pas d'images
   if (sortedImages.length === 0) {
     return (
@@ -67,21 +91,59 @@ export function ProductImageCarousel({
     );
   }
 
-  // Cas limite: une seule image (pas de carousel)
+  // Cas limite: une seule image (pas de carousel mais avec lightbox si activée)
   if (sortedImages.length === 1) {
     const singleImage = sortedImages[0];
     if (!singleImage) return null;
 
     return (
-      <div className={cn('relative w-full h-full', className)}>
-        <Image
-          src={singleImage.url}
-          alt={`Photo du produit ${productName}`}
-          fill
-          className="object-cover"
-          sizes={sizes}
-          priority={priority}
-        />
+      <div
+        className={cn('relative w-full h-full group/single', className)}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        <div
+          onClick={handleOpenLightbox}
+          className={cn(
+            'relative w-full h-full',
+            enableLightbox && 'cursor-zoom-in'
+          )}
+        >
+          <Image
+            src={singleImage.url}
+            alt={`Photo du produit ${productName}`}
+            fill
+            className="object-cover"
+            sizes={sizes}
+            priority={priority}
+          />
+
+          {/* Indicateur zoom visible au hover (si lightbox activée) */}
+          {enableLightbox && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: isHovered ? 1 : 0 }}
+              transition={{ duration: 0.2 }}
+              className="absolute inset-0 bg-black/20 flex items-center justify-center pointer-events-none"
+            >
+              <div className="bg-white/90 backdrop-blur-sm rounded-full p-4 shadow-lg">
+                <ZoomIn className="w-8 h-8 text-encre" />
+              </div>
+            </motion.div>
+          )}
+        </div>
+
+        {/* Lightbox pour image unique */}
+        {enableLightbox && (
+          <ImageLightbox
+            images={sortedImages}
+            currentIndex={0}
+            isOpen={isLightboxOpen}
+            onClose={handleCloseLightbox}
+            onNavigate={handleLightboxNavigate}
+            productName={productName}
+          />
+        )}
       </div>
     );
   }
@@ -123,27 +185,6 @@ export function ProductImageCarousel({
     setCurrentIndex(index);
 
     setTimeout(() => setIsAnimating(false), 300);
-  };
-
-  // Lightbox handlers
-  const handleOpenLightbox = () => {
-    if (enableLightbox && sortedImages.length > 0) {
-      setIsLightboxOpen(true);
-    }
-  };
-
-  const handleCloseLightbox = () => {
-    setIsLightboxOpen(false);
-  };
-
-  const handleLightboxNavigate = (direction: 'prev' | 'next') => {
-    setCurrentIndex((prevIndex) => {
-      if (direction === 'next') {
-        return (prevIndex + 1) % sortedImages.length;
-      } else {
-        return (prevIndex - 1 + sortedImages.length) % sortedImages.length;
-      }
-    });
   };
 
   // Navigation clavier
